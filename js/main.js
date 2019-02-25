@@ -1,4 +1,4 @@
-import CanvasManager from './classes/CanvasManager';
+import CanvasManager from './classes/CanvasManager.js';
 
 let can = new CanvasManager();
 can.canvases.get('ui')[0].setAttribute('height', 100);
