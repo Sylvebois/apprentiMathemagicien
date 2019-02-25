@@ -3,27 +3,22 @@ body {
 }
 
 #container {
-  border: 1px solid black;
   position: relative;
 }
 
 canvas {
-  position: absolute;
   top: 0;
   left: 0;
 }
 
 #back {
-  border: 1px solid blue;
   z-index: 1;
 }
 
 #front {
-  border: 1px solid green;
   z-index: 2;
 }
 
 #ui {
-  border: 1px solid red;
   z-index: 10;
 }
