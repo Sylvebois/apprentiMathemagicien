@@ -19,6 +19,7 @@ window.onresize = e => {
   can.setSize();
 
   if (can.state === 'start') {
+    view.ratio = can.ratio;
     view.drawHomeScreen();
   }
   else if (can.state === 'game') {
