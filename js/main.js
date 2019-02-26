@@ -19,6 +19,7 @@ can.canvases.get('ui')[0].onclick = e => {
     }
     else if (e.clientX >= creditMenuPos[0] && e.clientX <= creditMenuPos[1] && e.clientY >= creditMenuPos[2] && e.clientY <= creditMenuPos[3]) {
       can.state = 'credits';
+      view.drawCreditsScreen();
     }
   }
   else if (can.state === 'credits') {
@@ -37,10 +38,13 @@ can.canvases.get('ui')[0].onclick = e => {
 window.onresize = e => {
   let uiSize = can.canvases.get('ui')[0].getAttribute('height');
   can.setSize();
+  view.ratio = can.ratio;
 
   if (can.state === 'start') {
-    view.ratio = can.ratio;
     view.drawHomeScreen();
+  }
+  else if (can.state === 'credits') {
+    view.drawCreditsScreen();
   }
   else if (can.state === 'game') {
     can.canvases.get('ui')[0].setAttribute('height', uiSize);
