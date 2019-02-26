@@ -1,6 +1,7 @@
 import CanvasManager from './classes/CanvasManager.js';
 import View from './classes/View.js';
 
+const TILESIZE = 32;
 let can = new CanvasManager();
 let view = new View(can.canvases, can.ratio);
 
@@ -9,7 +10,7 @@ can.canvases.get('ui')[0].onclick = e => {
 
   }
   else if (can.state === 'game') {
-    let size = (e.target.getAttribute('height') < can.size)? can.size : 100;
+    let size = (e.target.getAttribute('height') < can.size)? can.size : TILESIZE * can.ratio;
     e.target.setAttribute('height', size);
   }
 };
