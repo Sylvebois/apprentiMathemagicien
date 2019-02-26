@@ -12,17 +12,17 @@ export default class View {
     let menus = (localStorage.getItem('hero'))? ['Commencer', 'Continuer', 'Crédits'] : ['Commencer', 'Crédits'];
 
     //Size and position
-    let titleFontSize = 50*this.ratio;
-    let fontSize = 40*this.ratio;
-    let fontPosY = titleFontSize*1.5;
+    let titleFontSize = 50 * this.ratio;
+    let fontSize = 40 * this.ratio;
+    let fontPosY = titleFontSize * 1.5;
     let middle = this.canMap.get('ui')[0].getAttribute('width')/2;
     this.menuTextPos = new Map();
 
-    //Draw Title
     this.canMap.get('ui')[1].textAlign = 'center';
     this.canMap.get('ui')[1].fillStyle = '#FFFFFF';
-    this.canMap.get('ui')[1].font = `${titleFontSize}px Arial`;
 
+    //Draw Title
+    this.canMap.get('ui')[1].font = `${titleFontSize}px Arial`;
     this.canMap.get('ui')[1].fillText(title, middle, fontPosY);
     fontPosY += titleFontSize * 4;
 
@@ -39,6 +39,30 @@ export default class View {
 
       this.canMap.get('ui')[1].fillText(text, middle, fontPosY);
       fontPosY += fontSize * 3;
+    });
+  }
+  drawCreditsScreen() {
+    this.drawInterfaceBox();
+
+    //Text
+    let credits = ['Auteur :', 'Sylvebois', 'Remerciements :', 'Open Game Art', 'http://opengameart.org', 'Dungeon Crawl Stone Soup', 'http://crawl.develz.org'];
+
+    //Size and position
+    let fontSize = 40 * this.ratio;
+    let fontPosY = fontSize * 3;
+
+    this.canMap.get('ui')[1].font = `${fontSize}px Arial`;
+    this.canMap.get('ui')[1].textAlign = 'center';
+    this.canMap.get('ui')[1].fillStyle = '#FFFFFF';
+
+    //Draw credits
+    credits.forEach(text => {
+      if(text.startsWith('Remerciements')) {
+        fontPosY += fontSize * 2.5;
+      }
+
+      this.canMap.get('ui')[1].fillText(text, this.canMap.get('ui')[0].getAttribute('width')/2, fontPosY);
+      fontPosY += fontSize * (text.startsWith('http') ? 2 : 1.5);
     });
   }
   drawInterfaceBox() {
