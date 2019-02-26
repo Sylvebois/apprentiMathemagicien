@@ -42,6 +42,8 @@ export default class View {
     });
   }
   drawInterfaceBox() {
+    this.canMap.get('ui')[1].clearRect(0, 0, this.canMap.get('ui')[0].getAttribute('width'), this.canMap.get('ui')[0].getAttribute('height'));
+
     this.canMap.get('ui')[1].fillStyle = '#1B52EF';
     this.canMap.get('ui')[1].fillRect(0, 0, this.canMap.get('ui')[0].getAttribute('width'), this.canMap.get('ui')[0].getAttribute('height'));
 
