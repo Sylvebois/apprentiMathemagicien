@@ -1,10 +1,14 @@
 import CanvasManager from './classes/CanvasManager.js';
+import View from './classes/View.js';
 
 let can = new CanvasManager();
-can.canvases.get('ui')[0].setAttribute('height', 100);
+let view = new View(can.canvases, can.ratio);
 
 can.canvases.get('ui')[0].onclick = e => {
-  if(can.state === 'game') {
+  if (can.state === 'start') {
+
+  }
+  else if (can.state === 'game') {
     let size = (e.target.getAttribute('height') < can.size)? can.size : 100;
     e.target.setAttribute('height', size);
   }
@@ -13,5 +17,11 @@ can.canvases.get('ui')[0].onclick = e => {
 window.onresize = e => {
   let uiSize = can.canvases.get('ui')[0].getAttribute('height');
   can.setSize();
-  can.canvases.get('ui')[0].setAttribute('height', uiSize);
+
+  if (can.state === 'start') {
+    view.drawHomeScreen();
+  }
+  else if (can.state === 'game') {
+    can.canvases.get('ui')[0].setAttribute('height', uiSize);
+  }
 };
