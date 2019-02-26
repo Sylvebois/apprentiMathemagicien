@@ -13,7 +13,7 @@ export default class View {
 
     //Size and starting position
     let titleFontSize = 50*this.ratio;
-    let fontSize = 35*this.ratio;
+    let fontSize = 40*this.ratio;
     let fontPosY = titleFontSize*1.5;
 
     //Draw Title
@@ -29,7 +29,7 @@ export default class View {
 
     menus.forEach(e => {
       this.canMap.get('ui')[1].fillText(e, this.canMap.get('ui')[0].getAttribute('width')/2, fontPosY);
-      fontPosY += fontSize * 1.5;
+      fontPosY += fontSize * 3;
     });
   }
   drawInterfaceBox() {
