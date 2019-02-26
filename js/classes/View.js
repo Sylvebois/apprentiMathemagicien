@@ -11,24 +11,33 @@ export default class View {
     let title = 'L\'apprenti mathémagicien';
     let menus = (localStorage.getItem('hero'))? ['Commencer', 'Continuer', 'Crédits'] : ['Commencer', 'Crédits'];
 
-    //Size and starting position
+    //Size and position
     let titleFontSize = 50*this.ratio;
     let fontSize = 40*this.ratio;
     let fontPosY = titleFontSize*1.5;
+    let middle = this.canMap.get('ui')[0].getAttribute('width')/2;
+    this.menuTextPos = new Map();
 
     //Draw Title
     this.canMap.get('ui')[1].textAlign = 'center';
     this.canMap.get('ui')[1].fillStyle = '#FFFFFF';
     this.canMap.get('ui')[1].font = `${titleFontSize}px Arial`;
 
-    this.canMap.get('ui')[1].fillText(title, this.canMap.get('ui')[0].getAttribute('width')/2, fontPosY);
+    this.canMap.get('ui')[1].fillText(title, middle, fontPosY);
     fontPosY += titleFontSize * 4;
 
     //Draw Menus
     this.canMap.get('ui')[1].font = `${fontSize}px Arial`;
 
-    menus.forEach(e => {
-      this.canMap.get('ui')[1].fillText(e, this.canMap.get('ui')[0].getAttribute('width')/2, fontPosY);
+    menus.forEach(text => {
+      this.menuTextPos.set(text, [
+        middle - this.canMap.get('ui')[1].measureText(text).width/2,  //startX
+        middle + this.canMap.get('ui')[1].measureText(text).width/2,  //endX
+        fontPosY - fontSize,                                          //startY
+        fontPosY                                                      //endY
+      ]);
+
+      this.canMap.get('ui')[1].fillText(text, middle, fontPosY);
       fontPosY += fontSize * 3;
     });
   }
