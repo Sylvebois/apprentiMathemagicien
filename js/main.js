@@ -4,6 +4,7 @@ import View from './classes/View.js';
 const TILESIZE = 32;
 let can = new CanvasManager();
 let view = new View(can.canvases, can.ratio);
+let playerName = '';
 
 can.canvases.get('ui')[0].onclick = e => {
   if (can.state === 'start') {
@@ -12,7 +13,9 @@ can.canvases.get('ui')[0].onclick = e => {
     let creditMenuPos = view.menuTextPos.get('Crédits');
 
     if (e.clientX >= beginMenuPos[0] && e.clientX <= beginMenuPos[1] && e.clientY >= beginMenuPos[2] && e.clientY <= beginMenuPos[3]) {
-      can.state = 'story';
+      can.state = 'name';
+      playerName = '';
+      view.drawNewGameScreen();
     }
     else if (continueMenuPos && e.clientX >= continueMenuPos[0] && e.clientX <= continueMenuPos[1] && e.clientY >= continueMenuPos[2] && e.clientY <= continueMenuPos[3]) {
       can.state = 'load';
@@ -35,6 +38,30 @@ can.canvases.get('ui')[0].onclick = e => {
   }
 };
 
+document.onkeydown = e => {
+  e.preventDefault;
+
+  if (can.state === 'name') {
+    let regex = new RegExp(/\w/);
+
+    if (e.key.length === 1 && regex.test(e.key) && playerName.length < 30) {
+      playerName += e.key;
+      view.drawNewGameScreen(playerName);
+    }
+    else if (e.keyCode === 8 && playerName.length > 0) { //backspace
+      playerName = playerName.slice(0, -1);
+      view.drawNewGameScreen(playerName);
+    }
+    else if (e.keyCode === 13) { //return
+      can.state = 'game';
+    }
+  }
+  else if (can.state === 'game') {
+
+  }
+  return false;
+}
+
 window.onresize = e => {
   let uiSize = can.canvases.get('ui')[0].getAttribute('height');
   can.setSize();
@@ -42,6 +69,9 @@ window.onresize = e => {
 
   if (can.state === 'start') {
     view.drawHomeScreen();
+  }
+  else if (can.state === 'name') {
+    view.drawNewGameScreen(playerName);
   }
   else if (can.state === 'credits') {
     view.drawCreditsScreen();

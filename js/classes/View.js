@@ -41,6 +41,25 @@ export default class View {
       fontPosY += fontSize * 3;
     });
   }
+  drawNewGameScreen(name = '') {
+    this.drawInterfaceBox();
+
+    //Text
+    let text = 'Quel est ton nom jeune apprenti ?';
+
+    //Size and position
+    let fontSize = 40 * this.ratio;
+    let fontPosY = fontSize * 3;
+    let middle = this.canMap.get('ui')[0].getAttribute('width')/2;
+
+    this.canMap.get('ui')[1].font = `${fontSize}px Arial`;
+    this.canMap.get('ui')[1].textAlign = 'center';
+    this.canMap.get('ui')[1].fillStyle = '#FFFFFF';
+
+    //Draw text and name
+    this.canMap.get('ui')[1].fillText(text, middle, fontPosY);
+    this.canMap.get('ui')[1].fillText(name, middle, fontPosY + fontSize * 3);
+  }
   drawCreditsScreen() {
     this.drawInterfaceBox();
 
