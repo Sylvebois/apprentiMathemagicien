@@ -2,6 +2,7 @@ export default class View {
   constructor(canvasesMap, ratio) {
     this.ratio = ratio;
     this.canMap = canvasesMap;
+    this.keyboard = document.getElementsByClassName('simple-keyboard')[0];
     this.drawHomeScreen();
   }
   drawHomeScreen() {
@@ -43,6 +44,9 @@ export default class View {
   }
   drawNewGameScreen(name = '') {
     this.drawInterfaceBox();
+
+    //Display keyboard
+    this.keyboard.style.display = 'inline-block';
 
     //Text
     let text = 'Quel est ton nom jeune apprenti ?';
