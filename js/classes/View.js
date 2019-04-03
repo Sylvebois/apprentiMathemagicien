@@ -42,11 +42,13 @@ export default class View {
       fontPosY += fontSize * 3;
     });
   }
-  drawNewGameScreen(name = '') {
+  drawNewGameScreen(name = '', touchscreen = false) {
     this.drawInterfaceBox();
 
     //Display keyboard
-    this.keyboard.style.display = 'inline-block';
+    if(touchscreen) {
+      this.keyboard.style.display = 'inline-block';
+    }
 
     //Text
     let text = 'Quel est ton nom jeune apprenti ?';

@@ -3,6 +3,8 @@ import View from './classes/View.js';
 import * as Keyboard from './classes/SimpleKeyboard.js';
 
 const TILESIZE = 32;
+
+let touchscreen = true;
 let can = new CanvasManager();
 let view = new View(can.canvases, can.ratio);
 let playerName = '';
@@ -16,7 +18,7 @@ can.canvases.get('ui')[0].onclick = e => {
     if (e.clientX >= beginMenuPos[0] && e.clientX <= beginMenuPos[1] && e.clientY >= beginMenuPos[2] && e.clientY <= beginMenuPos[3]) {
       can.state = 'name';
       playerName = '';
-      view.drawNewGameScreen();
+      view.drawNewGameScreen('', touchscreen);
     }
     else if (continueMenuPos && e.clientX >= continueMenuPos[0] && e.clientX <= continueMenuPos[1] && e.clientY >= continueMenuPos[2] && e.clientY <= continueMenuPos[3]) {
       can.state = 'load';
@@ -47,11 +49,11 @@ document.onkeydown = e => {
 
     if (e.key.length === 1 && regex.test(e.key) && playerName.length < 30) {
       playerName += e.key;
-      view.drawNewGameScreen(playerName);
+      view.drawNewGameScreen(playerName, touchscreen);
     }
     else if (e.keyCode === 8 && playerName.length > 0) { //backspace
       playerName = playerName.slice(0, -1);
-      view.drawNewGameScreen(playerName);
+      view.drawNewGameScreen(playerName, touchscreen);
     }
     else if (e.keyCode === 13) { //return
       can.state = 'game';
@@ -63,6 +65,11 @@ document.onkeydown = e => {
   return false;
 }
 
+document.ontouchstart = e => {
+  console.log('touché !');
+  touchscreen = true;
+}
+
 window.onresize = e => {
   let uiSize = can.canvases.get('ui')[0].getAttribute('height');
   can.setSize();
@@ -72,7 +79,7 @@ window.onresize = e => {
     view.drawHomeScreen();
   }
   else if (can.state === 'name') {
-    view.drawNewGameScreen(playerName);
+    view.drawNewGameScreen(playerName, touchscreen);
   }
   else if (can.state === 'credits') {
     view.drawCreditsScreen();
