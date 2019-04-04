@@ -103,23 +103,23 @@ export default class View {
     this.canMap.get('back')[1].rect(0, 0, this.canMap.get('back')[0].getAttribute('width'), this.canMap.get('back')[0].getAttribute('height'));
     this.canMap.get('back')[1].stroke();
   }
-  animateTextBottomToTop(textList, fontSize) {
+  animateTextBottomToTop(textList, fontSize, align = 'center') {
     let ui = this.canMap.get('ui');
     let bottom = ui[0].getAttribute('height');
-    let nbLines = textList.length;
 
     function draw() {
       ui[1].clearRect(0, 0, ui[0].getAttribute('width'), ui[0].getAttribute('height'));
 
+      let fontPosX = (align === 'center')? ui[0].getAttribute('width')/2 : 10;
       let fontPosY = bottom;
 
       ui[1].font = `${fontSize}px Arial`;
-      ui[1].textAlign = 'center';
+      ui[1].textAlign = align;
       ui[1].fillStyle = '#FFFFFF';
 
       //Draw text
       textList.forEach(text => {
-        ui[1].fillText(text, ui[0].getAttribute('width')/2, fontPosY);
+        ui[1].fillText(text, fontPosX, fontPosY);
         fontPosY += fontSize * (text.startsWith('http') ? 2 : 1.5);
       });
 
