@@ -75,7 +75,18 @@ export default class View {
     this.clearCanvases();
     this.drawInterfaceBox();
 
-    let credits = ['Auteur :', 'Sylvebois', ' ', 'Remerciements :', 'Open Game Art', 'http://opengameart.org', 'Dungeon Crawl Stone Soup', 'http://crawl.develz.org'];
+    let credits = [
+      'Auteur :',
+      'Sylvebois',
+      ' ',
+      'Remerciements :',
+      'Open Game Art',
+      'http://opengameart.org',
+      'Dungeon Crawl Stone Soup',
+      'http://crawl.develz.org',
+      'Francisco Hodge (virtual keyboard)',
+      'https://franciscohodge.com'
+    ];
     let fontSize = 40 * this.ratio;
 
     this.animateTextBottomToTop(credits, fontSize);
