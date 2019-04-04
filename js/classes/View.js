@@ -5,7 +5,11 @@ export default class View {
     this.keyboard = document.getElementsByClassName('simple-keyboard')[0];
     this.drawHomeScreen();
   }
+  clearCanvases() {
+    this.canMap.forEach(canvas => canvas[1].clearRect(0, 0, canvas[0].getAttribute('width'), canvas[0].getAttribute('height')));
+  }
   drawHomeScreen() {
+    this.clearCanvases();
     this.drawInterfaceBox();
 
     //Text
@@ -43,6 +47,7 @@ export default class View {
     });
   }
   drawNewGameScreen(name = '', touchscreen = false) {
+    this.clearCanvases();
     this.drawInterfaceBox();
 
     //Display keyboard
@@ -67,39 +72,53 @@ export default class View {
     this.canMap.get('ui')[1].fillText(name, middle, fontPosY + fontSize * 3);
   }
   drawCreditsScreen() {
+    this.clearCanvases();
     this.drawInterfaceBox();
 
-    //Text
-    let credits = ['Auteur :', 'Sylvebois', 'Remerciements :', 'Open Game Art', 'http://opengameart.org', 'Dungeon Crawl Stone Soup', 'http://crawl.develz.org'];
-
-    //Size and position
+    let credits = ['Auteur :', 'Sylvebois', ' ', 'Remerciements :', 'Open Game Art', 'http://opengameart.org', 'Dungeon Crawl Stone Soup', 'http://crawl.develz.org'];
     let fontSize = 40 * this.ratio;
-    let fontPosY = fontSize * 3;
 
-    this.canMap.get('ui')[1].font = `${fontSize}px Arial`;
-    this.canMap.get('ui')[1].textAlign = 'center';
-    this.canMap.get('ui')[1].fillStyle = '#FFFFFF';
-
-    //Draw credits
-    credits.forEach(text => {
-      if(text.startsWith('Remerciements')) {
-        fontPosY += fontSize * 2.5;
-      }
-
-      this.canMap.get('ui')[1].fillText(text, this.canMap.get('ui')[0].getAttribute('width')/2, fontPosY);
-      fontPosY += fontSize * (text.startsWith('http') ? 2 : 1.5);
-    });
+    this.animateTextBottomToTop(credits, fontSize);
   }
   drawInterfaceBox() {
-    this.canMap.get('ui')[1].clearRect(0, 0, this.canMap.get('ui')[0].getAttribute('width'), this.canMap.get('ui')[0].getAttribute('height'));
+    this.canMap.get('back')[1].clearRect(0, 0, this.canMap.get('back')[0].getAttribute('width'), this.canMap.get('back')[0].getAttribute('height'));
 
-    this.canMap.get('ui')[1].fillStyle = '#1B52EF';
-    this.canMap.get('ui')[1].fillRect(0, 0, this.canMap.get('ui')[0].getAttribute('width'), this.canMap.get('ui')[0].getAttribute('height'));
+    this.canMap.get('back')[1].fillStyle = '#1B52EF';
+    this.canMap.get('back')[1].fillRect(0, 0, this.canMap.get('back')[0].getAttribute('width'), this.canMap.get('back')[0].getAttribute('height'));
 
-    this.canMap.get('ui')[1].beginPath();
-    this.canMap.get('ui')[1].lineWidth = '12';
-    this.canMap.get('ui')[1].strokeStyle = '#C0C0C0';
-    this.canMap.get('ui')[1].rect(0, 0, this.canMap.get('ui')[0].getAttribute('width'), this.canMap.get('ui')[0].getAttribute('height'));
-    this.canMap.get('ui')[1].stroke();
+    this.canMap.get('back')[1].beginPath();
+    this.canMap.get('back')[1].lineWidth = '12';
+    this.canMap.get('back')[1].strokeStyle = '#C0C0C0';
+    this.canMap.get('back')[1].rect(0, 0, this.canMap.get('back')[0].getAttribute('width'), this.canMap.get('back')[0].getAttribute('height'));
+    this.canMap.get('back')[1].stroke();
+  }
+  animateTextBottomToTop(textList, fontSize) {
+    let ui = this.canMap.get('ui');
+    let bottom = ui[0].getAttribute('height');
+    let nbLines = textList.length;
+
+    function draw() {
+      ui[1].clearRect(0, 0, ui[0].getAttribute('width'), ui[0].getAttribute('height'));
+
+      let fontPosY = bottom;
+
+      ui[1].font = `${fontSize}px Arial`;
+      ui[1].textAlign = 'center';
+      ui[1].fillStyle = '#FFFFFF';
+
+      //Draw text
+      textList.forEach(text => {
+        ui[1].fillText(text, ui[0].getAttribute('width')/2, fontPosY);
+        fontPosY += fontSize * (text.startsWith('http') ? 2 : 1.5);
+      });
+
+      bottom--;
+
+      if(parseInt(fontPosY) > 0) {
+        requestAnimationFrame(draw);
+      }
+    }
+
+    requestAnimationFrame(draw);
   }
 }
