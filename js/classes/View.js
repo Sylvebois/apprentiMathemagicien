@@ -71,6 +71,17 @@ export default class View {
     this.canMap.get('ui')[1].fillText(text, middle, fontPosY);
     this.canMap.get('ui')[1].fillText(name, middle, fontPosY + fontSize * 3);
   }
+  drawStoryScreen() {
+    this.clearCanvases();
+    this.drawInterfaceBox();
+
+    let story = 'Il était une fois dans une contrée lointaine, très lointaine, un royaume gouverné par un bon roi qui savait calculer. Mais un jour, un méchant sorcier entrepris de semer le chaos dans le royaume. Après de si nombreuses années de paix, le roi fit appel à son vieux mathémagicien. Trop vieux pour régler ce genre de chose, l\'homme se choisit un apprenti pour l\'aider';
+    let fontSize = 20 * this.ratio;
+    let storyList = this.splitText(story, fontSize, 10);
+    let align = 'left';
+
+    this.animateTextBottomToTop(storyList, fontSize, align);
+  }
   drawCreditsScreen() {
     this.clearCanvases();
     this.drawInterfaceBox();
@@ -131,5 +142,39 @@ export default class View {
     }
 
     requestAnimationFrame(draw);
+  }
+  splitText(text, border) {
+    let result = [];
+
+    let textLength = this.canMap.get('ui')[1].measureText(text).width;
+    let canWidth = parseInt(this.canMap.get('ui')[0].getAttribute('width'));
+
+    if(textLength > canWidth) {
+      let tmpText = '';
+
+      while (text.length > 0) {
+        tmpText += text.substring(0, 1);
+        let tmpTextLength = this.canMap.get('ui')[1].measureText(tmpText).width;
+        text = text.substring(1);
+
+        if(tmpTextLength > 2 * canWidth || text.length === 0) {
+          //If we are in the middle of a word, go back to the beginning of it
+          if(text.length !== 0 && !tmpText.endsWith(' ') && !text.startsWith(' ')) {
+            while (!tmpText.endsWith(' ')) {
+              text = tmpText.slice(-1) + text;
+              tmpText = tmpText.slice(0, -1);
+            }
+          }
+
+          result.push(tmpText);
+          tmpText = '';
+        }
+      }
+    }
+    else {
+      result.push(text);
+    }
+
+    return result;
   }
 }
