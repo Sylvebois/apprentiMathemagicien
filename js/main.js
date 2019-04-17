@@ -4,10 +4,11 @@ import * as Keyboard from './classes/SimpleKeyboard.js';
 
 const TILESIZE = 32;
 
-let touchscreen = true;
+let touchscreen = false;
+let playerName = '';
+
 let can = new CanvasManager();
 let view = new View(can.canvases, can.ratio);
-let playerName = '';
 
 can.canvases.get('ui')[0].onclick = e => {
   if (can.state === 'start') {
@@ -32,8 +33,14 @@ can.canvases.get('ui')[0].onclick = e => {
     can.state = 'start';
     view.drawHomeScreen();
   }
+  else if(can.state === 'name') {
+    can.state = 'story';
+    view.drawStoryScreen();
+  }
   else if (can.state === 'story') {
     can.state = 'game';
+    e.target.setAttribute('height', TILESIZE * can.ratio);
+    view.drawGame();
   }
   else if (can.state === 'game') {
     let size = (e.target.getAttribute('height') < can.size)? can.size : TILESIZE * can.ratio;
@@ -66,7 +73,6 @@ document.onkeydown = e => {
 }
 
 document.ontouchstart = e => {
-  console.log('touché !');
   touchscreen = true;
 }
 
