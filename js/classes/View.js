@@ -75,7 +75,7 @@ export default class View {
     this.clearCanvases();
     this.drawInterfaceBox();
 
-    let story = 'Il était une fois dans une contrée lointaine, très lointaine, un royaume gouverné par un bon roi qui savait calculer. Mais un jour, un méchant sorcier entrepris de semer le chaos dans le royaume. Après de si nombreuses années de paix, le roi fit appel à son vieux mathémagicien. Trop vieux pour régler ce genre de chose, l\'homme se choisit un apprenti pour l\'aider';
+    let story = 'Il était une fois dans une contrée lointaine, très lointaine, un royaume gouverné par un bon roi qui savait calculer. Mais un jour, un méchant sorcier entrepris de semer le chaos dans le royaume. Après de si nombreuses années de paix, le roi fit appel à son vieux mathémagicien. Trop vieux pour régler ce genre de chose, l\'homme se choisit un apprenti pour l\'aider ...';
     let fontSize = 20 * this.ratio;
     let storyList = this.splitText(story, fontSize, 10);
     let align = 'left';
@@ -134,7 +134,7 @@ export default class View {
         fontPosY += fontSize * (text.startsWith('http') ? 2 : 1.5);
       });
 
-      bottom--;
+      bottom -= 0.75;
 
       if(parseInt(fontPosY) > 0) {
         requestAnimationFrame(draw);
