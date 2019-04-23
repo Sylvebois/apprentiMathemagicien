@@ -39,11 +39,13 @@ can.canvases.get('ui')[0].onclick = e => {
   }
   else if(can.state === 'name') {
     can.state = 'story';
+    game.hero.name = playerName;
     view.drawStoryScreen();
   }
   else if (can.state === 'story') {
     can.state = 'game';
     e.target.setAttribute('height', TILESIZE * can.ratio);
+    currentDungeon = game.generateLevel(level);
     view.drawGame(currentDungeon);
   }
   else if (can.state === 'game') {
