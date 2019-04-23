@@ -102,6 +102,9 @@ export default class View {
 
     this.animateTextBottomToTop(credits, fontSize);
   }
+  drawGame(dungeon) {
+
+  }
   drawInterfaceBox() {
     this.canMap.get('back')[1].clearRect(0, 0, this.canMap.get('back')[0].getAttribute('width'), this.canMap.get('back')[0].getAttribute('height'));
 

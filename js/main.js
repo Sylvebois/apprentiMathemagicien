@@ -1,4 +1,5 @@
 import CanvasManager from './classes/CanvasManager.js';
+import GameManager from './classes/GameManager.js';
 import View from './classes/View.js';
 import * as Keyboard from './classes/SimpleKeyboard.js';
 
@@ -6,9 +7,12 @@ const TILESIZE = 32;
 
 let touchscreen = false;
 let playerName = '';
+let level = 0;
 
 let can = new CanvasManager();
 let view = new View(can.canvases, can.ratio);
+let game = new GameManager();
+let currentDungeon;
 
 can.canvases.get('ui')[0].onclick = e => {
   if (can.state === 'start') {
@@ -40,7 +44,7 @@ can.canvases.get('ui')[0].onclick = e => {
   else if (can.state === 'story') {
     can.state = 'game';
     e.target.setAttribute('height', TILESIZE * can.ratio);
-    view.drawGame();
+    view.drawGame(currentDungeon);
   }
   else if (can.state === 'game') {
     let size = (e.target.getAttribute('height') < can.size)? can.size : TILESIZE * can.ratio;
