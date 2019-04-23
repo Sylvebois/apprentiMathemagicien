@@ -69,7 +69,9 @@ document.onkeydown = e => {
       view.drawNewGameScreen(playerName, touchscreen);
     }
     else if (e.keyCode === 13) { //return
-      can.state = 'game';
+      can.state = 'story';
+      game.hero.name = playerName;
+      view.drawStoryScreen();
     }
   }
   else if (can.state === 'game') {
