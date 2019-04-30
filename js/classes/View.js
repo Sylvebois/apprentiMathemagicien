@@ -3,7 +3,21 @@ export default class View {
     this.ratio = ratio;
     this.canMap = canvasesMap;
     this.keyboard = document.getElementsByClassName('simple-keyboard')[0];
+    this.images = {};
+
+    this.loadImages();
     this.drawHomeScreen();
+  }
+  loadImages() {
+    let imgList = ['crossRoad.png', 'heart.png', 'hero.png', 'mathemagician.png'];
+
+    imgList.map(name => {
+      let paramName = name.split('.')[0];
+      let url = 'images/' + name;
+
+      this.images[paramName] = new Image();
+      this.images[paramName].src = url;
+    });
   }
   clearCanvases() {
     this.canMap.forEach(canvas => canvas[1].clearRect(0, 0, canvas[0].getAttribute('width'), canvas[0].getAttribute('height')));
@@ -104,24 +118,23 @@ export default class View {
   }
   drawGame(dungeon, tilesize = 32) {
     this.clearCanvases();
-console.log(dungeon);
+
     dungeon.map(lines => {
       lines.map(tile => {
-        console.log(tile.backPart.img);
         this.canMap.get('back')[1].drawImage(
-          tile.backPart.img,
+          this.images[tile.backPart.img],
           tile.backPart.imgX, tile.backPart.imgY,
           tilesize, tilesize,
-          tile.backPart.x, tile.backPart.y,
+          tile.backPart.x * tilesize, tile.backPart.y * tilesize,
           tilesize, tilesize
         );
 
         if(tile.frontPart) {
           this.canMap.get('front')[1].drawImage(
-            tile.frontPart.img,
+            this.images[tile.frontPart.img],
             tile.frontPart.imgX, tile.frontPart.imgY,
             tilesize, tilesize,
-            tile.frontPart.x, tile.frontPart.y,
+            tile.frontPart.x * tilesize, tile.frontPart.y * tilesize,
             tilesize, tilesize
           );
 
