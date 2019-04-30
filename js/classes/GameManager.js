@@ -10,7 +10,7 @@ export default class GameManager {
     let bossLvl = (dungeonLvl === 9)? true : false;
 
     if (this.lvl >= 0 && this.lvl < 10) {
-      this.imgTileset = 'crossRoad.png';
+      this.imgTileset = 'crossRoad';
       this.enemySet = [
         { name: 'Loup', imgX: 6 },
         { name: 'Mouche géante', imgX: 7 },
@@ -21,23 +21,23 @@ export default class GameManager {
       console.log('La croisée des chemins');
     }
     else if (this.lvl >= 10 && this.lvl < 20) {
-      this.imgTileset = 'farDesert.png';
+      this.imgTileset = 'farDesert';
       console.log('Le désert retiré');
     }
     else if (this.lvl >= 20 && this.lvl < 30) {
-      this.imgTileset = 'multiplicatedWoods.png';
+      this.imgTileset = 'multiplicatedWoods';
       console.log('La forêt multipliée');
     }
     else if (this.lvl >= 30 && this.lvl < 40) {
-      this.imgTileset = 'dividedValley.png';
+      this.imgTileset = 'dividedValley';
       console.log('La vallée divisée');
     }
     else if (this.lvl >= 40 && this.lvl < 50) {
-      this.imgTileset = 'dungeonOfPower.png';
+      this.imgTileset = 'dungeonOfPower';
       console.log('Le donjon de puissance');
     }
     else if (this.lvl >= 50 && this.lvl < 60) {
-      this.imgTileset = 'rootOfTheWorld.png';
+      this.imgTileset = 'rootOfTheWorld';
       console.log('Les racines du monde');
     }
 
@@ -77,7 +77,7 @@ class Tile {
 }
 
 class Hero extends Tile {
-  constructor(x = 0, y = 0, img = 'hero.png', imgX = 0, imgY = 0, canWalkOnIt = false, name = 'John Doe') {
+  constructor(x = 0, y = 0, img = 'hero', imgX = 0, imgY = 0, canWalkOnIt = false, name = 'John Doe') {
     super(x, y, img, imgX, imgY, canWalkOnIt);
     this.live = 3;
     this.name = name;
