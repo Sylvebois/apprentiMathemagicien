@@ -119,33 +119,34 @@ export default class View {
   drawGame(dungeon, tilesize = 32) {
     this.clearCanvases();
 
+    this.canMap.get('ui')[1].fillStyle = '#000000';
+    this.canMap.get('ui')[1].fillRect(0, 0, this.canMap.get('ui')[0].getAttribute('width'), this.canMap.get('ui')[0].getAttribute('height'));
+
+    let tileDrawSize = parseInt(tilesize * this.ratio);
+
     dungeon.map(lines => {
       lines.map(tile => {
         this.canMap.get('back')[1].drawImage(
           this.images[tile.backPart.img],
-          tile.backPart.imgX, tile.backPart.imgY,
+          tile.backPart.imgX * tilesize, tile.backPart.imgY * tilesize,
           tilesize, tilesize,
-          tile.backPart.x * tilesize, tile.backPart.y * tilesize,
-          tilesize, tilesize
+          tile.backPart.x * tileDrawSize, tile.backPart.y * tileDrawSize,
+          tileDrawSize, tileDrawSize
         );
 
         if(tile.frontPart) {
           this.canMap.get('front')[1].drawImage(
             this.images[tile.frontPart.img],
-            tile.frontPart.imgX, tile.frontPart.imgY,
+            tile.frontPart.imgX * tilesize, tile.frontPart.imgY * tilesize,
             tilesize, tilesize,
-            tile.frontPart.x * tilesize, tile.frontPart.y * tilesize,
-            tilesize, tilesize
+            tile.frontPart.x * tileDrawSize, tile.frontPart.y * tileDrawSize,
+            tileDrawSize, tileDrawSize
           );
 
           if(tile.frontPart instanceof Hero) {
             let middle = this.canMap.get('ui')[0].getAttribute('width')/2;
-
-            this.canMap.get('ui')[1].fillStyle = '#000000';
-            this.canMap.get('ui')[1].fillRect(0, 0, this.canMap.get('ui')[0].getAttribute('width'), this.canMap.get('ui')[0].getAttribute('height'));
-
             this.canMap.get('ui')[1].fillStyle = '#FFFFFF';
-            this.canMap.get('ui')[1].fillText(tile.frontPart.live, middle, tilesize);
+            this.canMap.get('ui')[1].fillText(tile.frontPart.live, middle, tileDrawSize);
           }
         }
       });
@@ -167,15 +168,16 @@ export default class View {
     let ui = this.canMap.get('ui');
     let bottom = ui[0].getAttribute('height');
 
+    ui[1].font = `${fontSize}px Arial`;
+    ui[1].textAlign = align;
+    ui[1].fillStyle = '#FFFFFF';
+
     function draw() {
+      console.log(this);
       ui[1].clearRect(0, 0, ui[0].getAttribute('width'), ui[0].getAttribute('height'));
 
       let fontPosX = (align === 'center')? ui[0].getAttribute('width')/2 : 10;
       let fontPosY = bottom;
-
-      ui[1].font = `${fontSize}px Arial`;
-      ui[1].textAlign = align;
-      ui[1].fillStyle = '#FFFFFF';
 
       //Draw text
       textList.forEach(text => {
