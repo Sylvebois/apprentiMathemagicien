@@ -1,9 +1,12 @@
 export default class GameManager {
-  constructor() {
-    this.nbTilesPerLine = 20;
+  constructor(tilesPerLine) {
+    this.nbTilesPerLine = tilesPerLine;
     this.lvl = 0;
     this.nbEnemies = 10;
     this.hero = new Hero();
+  }
+  random(min = 0, max = 1, int = true) {
+    return (int)?  Math.floor(Math.random() * (max - min + 1)) + min : Math.random() * (max - min) + min;
   }
   generateLevel() {
     let dungeonLvl = this.lvl % 10;
@@ -53,7 +56,7 @@ export default class GameManager {
 
       for(let j = 0; j < this.nbTilesPerLine; j++) {
         lvlMap[i][j] = {
-          backPart: new Tile(i, j, this.imgTileset),
+          backPart: new Tile(i, j, this.imgTileset, this.random(0, 2), 1, true),
           frontPart: null
         };
       }
