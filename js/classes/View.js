@@ -102,8 +102,41 @@ export default class View {
 
     this.animateTextBottomToTop(credits, fontSize);
   }
-  drawGame(dungeon) {
+  drawGame(dungeon, tilesize = 32) {
+    this.clearCanvases();
+console.log(dungeon);
+    dungeon.map(lines => {
+      lines.map(tile => {
+        console.log(tile.backPart.img);
+        this.canMap.get('back')[1].drawImage(
+          tile.backPart.img,
+          tile.backPart.imgX, tile.backPart.imgY,
+          tilesize, tilesize,
+          tile.backPart.x, tile.backPart.y,
+          tilesize, tilesize
+        );
 
+        if(tile.frontPart) {
+          this.canMap.get('front')[1].drawImage(
+            tile.frontPart.img,
+            tile.frontPart.imgX, tile.frontPart.imgY,
+            tilesize, tilesize,
+            tile.frontPart.x, tile.frontPart.y,
+            tilesize, tilesize
+          );
+
+          if(tile.frontPart instanceof Hero) {
+            let middle = this.canMap.get('ui')[0].getAttribute('width')/2;
+
+            this.canMap.get('ui')[1].fillStyle = '#000000';
+            this.canMap.get('ui')[1].fillRect(0, 0, this.canMap.get('ui')[0].getAttribute('width'), this.canMap.get('ui')[0].getAttribute('height'));
+
+            this.canMap.get('ui')[1].fillStyle = '#FFFFFF';
+            this.canMap.get('ui')[1].fillText(tile.frontPart.live, middle, tilesize);
+          }
+        }
+      });
+    });
   }
   drawInterfaceBox() {
     this.canMap.get('back')[1].clearRect(0, 0, this.canMap.get('back')[0].getAttribute('width'), this.canMap.get('back')[0].getAttribute('height'));

@@ -46,7 +46,7 @@ can.canvases.get('ui')[0].onclick = e => {
     can.state = 'game';
     e.target.setAttribute('height', TILESIZE * can.ratio);
     currentDungeon = game.generateLevel(level);
-    view.drawGame(currentDungeon);
+    view.drawGame(currentDungeon, TILESIZE);
   }
   else if (can.state === 'game') {
     let size = (e.target.getAttribute('height') < can.size)? can.size : TILESIZE * can.ratio;
