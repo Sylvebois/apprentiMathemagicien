@@ -4,14 +4,15 @@ import View from './classes/View.js';
 import * as Keyboard from './classes/SimpleKeyboard.js';
 
 const TILESIZE = 32;
+const NBTILESPERLINE = 20;
 
 let touchscreen = false;
 let playerName = '';
 let level = 0;
 
-let can = new CanvasManager();
+let can = new CanvasManager(TILESIZE, NBTILESPERLINE);
 let view = new View(can.canvases, can.ratio);
-let game = new GameManager();
+let game = new GameManager(NBTILESPERLINE);
 let currentDungeon;
 
 can.canvases.get('ui')[0].onclick = e => {
