@@ -1,8 +1,7 @@
 //Loads and manage canvases
 export default  class CanvasManager {
-  constructor() {
+  constructor(tilesize = 32, tilesPerLine = 20) {
     this.state = 'start';
-    this.ratio = 1;
     this.canvases = new Map();
 
     let canList = document.getElementsByTagName('canvas');
@@ -12,10 +11,10 @@ export default  class CanvasManager {
     }
 
     this.setSize();
+    this.setRatio();
   }
   setSize() {
     this.size = Math.min(window.innerWidth, window.innerHeight);
-    this.ratio = this.size/720; //720 = default canvas size
 
     let container = document.getElementById('container');
 
@@ -25,6 +24,9 @@ export default  class CanvasManager {
       data[0].setAttribute('width',this.size);
       data[0].setAttribute('height',this.size);
     });
+  }
+  setRatio(tilesize = 32, tilesPerLine = 20) {
+    this.ratio = this.size / (tilesize * tilesPerLine);
   }
   checkClickTriangle(p, a, b, c) {
     let vect0 = [c[0]-a[0], c[1]-a[1]];
