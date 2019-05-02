@@ -122,7 +122,7 @@ export default class View {
     this.canMap.get('ui')[1].fillStyle = '#000000';
     this.canMap.get('ui')[1].fillRect(0, 0, this.canMap.get('ui')[0].getAttribute('width'), this.canMap.get('ui')[0].getAttribute('height'));
 
-    let tileDrawSize = parseInt(tilesize * this.ratio);
+    let tileDrawSize = Math.ceil(tilesize * this.ratio);
 
     dungeon.map(lines => {
       lines.map(tile => {
@@ -147,8 +147,8 @@ export default class View {
             let middle = this.canMap.get('ui')[0].getAttribute('width')/2;
             this.canMap.get('ui')[1].fillStyle = '#FFFFFF';
             this.canMap.get('ui')[1].font = `${tileDrawSize}px Arial`;
-            this.canMap.get('ui')[1].fillText(tile.frontPart.name, 0, tileDrawSize);
-            this.canMap.get('ui')[1].fillText(tile.frontPart.live, middle, tileDrawSize);
+            this.canMap.get('ui')[1].fillText(tile.frontPart.name, 0, tileDrawSize-3);
+            this.canMap.get('ui')[1].fillText(tile.frontPart.live, middle, tileDrawSize-3);
 
             let liveSize = this.canMap.get('ui')[1].measureText(tile.frontPart.live).width;
             this.canMap.get('ui')[1].drawImage(this.images['heart'], middle + liveSize, 0, tileDrawSize, tileDrawSize);

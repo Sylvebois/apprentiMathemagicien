@@ -2,7 +2,7 @@ export default class GameManager {
   constructor(tilesPerLine) {
     this.nbTilesPerLine = tilesPerLine;
     this.lvl = 0;
-    this.nbEnemies = 10;
+    this.nbEnemies = 15;
     this.hero = new Hero();
   }
   random(min = 0, max = 1, int = true) {
@@ -79,6 +79,19 @@ export default class GameManager {
     lvlMap[0][middle].frontPart = new Tile(0, middle, 'mathemagician', 0, 0, false);
     lvlMap[1][middle].frontPart = this.hero;
 
+    let enemiesPlaced = this.nbEnemies;
+
+    while(enemiesPlaced > 0) {
+      let randX = this.random(1, this.nbTilesPerLine - 1);
+      let randY = this.random(1, this.nbTilesPerLine - 1);
+      let randMonster = this.random(0, this.enemySet.length - 2);
+
+      if(!lvlMap[randX][randY].frontPart) {
+        lvlMap[randX][randY].frontPart = new Monster(randX, randY, this.imgTileset, this.enemySet[randMonster].imgX, 1, false, this.enemySet[randMonster].name);
+        enemiesPlaced--;
+      }
+    }
+
     return lvlMap;
   }
   debug() {
@@ -111,7 +124,7 @@ class Hero extends Tile {
 
 class Monster extends Hero {
   constructor(x = 0, y = 0, img = '', imgX = 0, imgY = 1, canWalkOnIt = false, name = 'Ennemi', isBoss = false) {
-    super(x, y, img, imgX = 0, imgY = 0, canWalkOnIt, name);
+    super(x, y, img, imgX, imgY, canWalkOnIt, name);
     this.isBoss = isBoss;
     this.nbOperation = (this.isBoss)? 2 : 1;
     this.live = (this.isBoss)? 5 : 1;
