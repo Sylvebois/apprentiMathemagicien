@@ -31,8 +31,8 @@ export default class View {
     let menus = (localStorage.getItem('hero'))? ['Commencer', 'Continuer', 'Crédits'] : ['Commencer', 'Crédits'];
 
     //Size and position
-    let titleFontSize = 50 * this.ratio;
-    let fontSize = 40 * this.ratio;
+    let titleFontSize = 45 * this.ratio;
+    let fontSize = 35 * this.ratio;
     let fontPosY = titleFontSize * 1.5;
     let middle = this.canMap.get('ui')[0].getAttribute('width')/2;
     this.menuTextPos = new Map();
@@ -73,7 +73,7 @@ export default class View {
     let text = 'Quel est ton nom jeune apprenti ?';
 
     //Size and position
-    let fontSize = 40 * this.ratio;
+    let fontSize = 35 * this.ratio;
     let fontPosY = fontSize * 3;
     let middle = this.canMap.get('ui')[0].getAttribute('width')/2;
 
@@ -112,7 +112,7 @@ export default class View {
       'Francisco Hodge (virtual keyboard)',
       'https://franciscohodge.com'
     ];
-    let fontSize = 40 * this.ratio;
+    let fontSize = 30 * this.ratio;
 
     this.animateTextBottomToTop(credits, fontSize);
   }
@@ -143,10 +143,15 @@ export default class View {
             tileDrawSize, tileDrawSize
           );
 
-          if(tile.frontPart instanceof Hero) {
+          if(tile.frontPart.isHero) {
             let middle = this.canMap.get('ui')[0].getAttribute('width')/2;
             this.canMap.get('ui')[1].fillStyle = '#FFFFFF';
+            this.canMap.get('ui')[1].font = `${tileDrawSize}px Arial`;
+            this.canMap.get('ui')[1].fillText(tile.frontPart.name, 0, tileDrawSize);
             this.canMap.get('ui')[1].fillText(tile.frontPart.live, middle, tileDrawSize);
+
+            let liveSize = this.canMap.get('ui')[1].measureText(tile.frontPart.live).width;
+            this.canMap.get('ui')[1].drawImage(this.images['heart'], middle + liveSize, 0, tileDrawSize, tileDrawSize);
           }
         }
       });
@@ -173,7 +178,6 @@ export default class View {
     ui[1].fillStyle = '#FFFFFF';
 
     function draw() {
-      console.log(this);
       ui[1].clearRect(0, 0, ui[0].getAttribute('width'), ui[0].getAttribute('height'));
 
       let fontPosX = (align === 'center')? ui[0].getAttribute('width')/2 : 10;
@@ -208,7 +212,7 @@ export default class View {
         let tmpTextLength = this.canMap.get('ui')[1].measureText(tmpText).width;
         text = text.substring(1);
 
-        if(tmpTextLength > 2 * canWidth || text.length === 0) {
+        if(tmpTextLength > 1.5*canWidth || text.length === 0) {
           //If we are in the middle of a word, go back to the beginning of it
           if(text.length !== 0 && !tmpText.endsWith(' ') && !text.startsWith(' ')) {
             while (!tmpText.endsWith(' ')) {

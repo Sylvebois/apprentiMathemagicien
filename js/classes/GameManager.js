@@ -50,6 +50,9 @@ export default class GameManager {
   }
   generateFirstLevel() {
     let lvlMap = [];
+    let middle = Math.ceil(this.nbTilesPerLine/2);
+    this.hero.x = 1;
+    this.hero.y = middle;
 
     for(let i = 0 ; i < this.nbTilesPerLine; i++) {
       lvlMap[i] = [];
@@ -61,6 +64,21 @@ export default class GameManager {
         };
       }
     }
+
+    for(let i = 0 ; i < this.nbTilesPerLine; i++) {
+      lvlMap[i][middle].backPart.imgX = 0;
+      lvlMap[i][middle].backPart.imgY = 0;
+
+      lvlMap[i][middle - 1].backPart.imgX = 1;
+      lvlMap[i][middle - 1].backPart.imgY = 0;
+
+      lvlMap[i][middle + 1].backPart.imgX = 2;
+      lvlMap[i][middle + 1].backPart.imgY = 0;
+    }
+
+    lvlMap[0][middle].frontPart = new Tile(0, middle, 'mathemagician', 0, 0, false);
+    lvlMap[1][middle].frontPart = this.hero;
+
     return lvlMap;
   }
   debug() {
@@ -84,6 +102,7 @@ class Hero extends Tile {
     super(x, y, img, imgX, imgY, canWalkOnIt);
     this.live = 3;
     this.name = name;
+    this.isHero = true;
   }
   fight(enemy) {
 
