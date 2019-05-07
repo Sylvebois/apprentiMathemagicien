@@ -110,11 +110,17 @@ class Tile {
   }
 }
 
-class Hero extends Tile {
-  constructor(x = 0, y = 0, img = 'hero', imgX = 0, imgY = 0, canWalkOnIt = false, name = 'John Doe') {
+class NPC extends Tile {
+  constructor(x = 0, y = 0, img = 'mathemagician', imgX = 0, imgY = 0, canWalkOnIt = false, name = 'John Doe') {
     super(x, y, img, imgX, imgY, canWalkOnIt);
     this.live = 3;
     this.name = name;
+  }
+}
+
+class Hero extends NPC {
+  constructor(x = 0, y = 0, img = 'hero', imgX = 0, imgY = 0, canWalkOnIt = false, name = 'John Doe') {
+    super(x, y, img, imgX, imgY, canWalkOnIt);
     this.isHero = true;
   }
   fight(enemy) {
@@ -122,7 +128,7 @@ class Hero extends Tile {
   }
 }
 
-class Monster extends Hero {
+class Monster extends NPC {
   constructor(x = 0, y = 0, img = '', imgX = 0, imgY = 1, canWalkOnIt = false, name = 'Ennemi', isBoss = false) {
     super(x, y, img, imgX, imgY, canWalkOnIt, name);
     this.isBoss = isBoss;
