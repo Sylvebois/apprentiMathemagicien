@@ -58,14 +58,26 @@ export default class GameManager {
       lvlMap[i] = [];
 
       for(let j = 0; j < this.nbTilesPerLine; j++) {
-        lvlMap[i][j] = {
-          backPart: new Tile(i, j, this.imgTileset, this.random(0, 2), 1, true),
-          frontPart: null
-        };
+        //map border
+        if(
+          ((i === 0 || i === this.nbTilesPerLine -1) && (j < middle - 1 || j > middle + 1)) ||
+          (j === 0 || j === this.nbTilesPerLine -1)
+          ) {
+          lvlMap[i][j] = {
+            backPart: new Tile(i, j, this.imgTileset, this.random(3, 5), 1, false),
+            frontPart: null
+          };
+        }
+        //basic map
+        else {
+          lvlMap[i][j] = {
+            backPart: new Tile(i, j, this.imgTileset, this.random(0, 2), 1, true),
+            frontPart: null
+          };
+        }
       }
-    }
 
-    for(let i = 0 ; i < this.nbTilesPerLine; i++) {
+      //main way
       lvlMap[i][middle].backPart.imgX = 0;
       lvlMap[i][middle].backPart.imgY = 0;
 
@@ -76,9 +88,11 @@ export default class GameManager {
       lvlMap[i][middle + 1].backPart.imgY = 0;
     }
 
-    lvlMap[0][middle].frontPart = new Tile(0, middle, 'mathemagician', 0, 0, false);
+    //NPC and hero
+    lvlMap[0][middle].frontPart = new NPC(0, middle, 'mathemagician', 0, 0, false);
     lvlMap[1][middle].frontPart = this.hero;
 
+    //enemies
     let enemiesPlaced = this.nbEnemies;
 
     while(enemiesPlaced > 0) {
@@ -86,7 +100,7 @@ export default class GameManager {
       let randY = this.random(1, this.nbTilesPerLine - 1);
       let randMonster = this.random(0, this.enemySet.length - 2);
 
-      if(!lvlMap[randX][randY].frontPart) {
+      if(!lvlMap[randX][randY].frontPart && lvlMap[randX][randY].backPart.canWalkOnIt) {
         lvlMap[randX][randY].frontPart = new Monster(randX, randY, this.imgTileset, this.enemySet[randMonster].imgX, 1, false, this.enemySet[randMonster].name);
         enemiesPlaced--;
       }
