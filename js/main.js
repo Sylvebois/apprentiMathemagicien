@@ -2,6 +2,7 @@ import CanvasManager from './classes/CanvasManager.js';
 import GameManager from './classes/GameManager.js';
 import View from './classes/View.js';
 import * as Keyboard from './classes/SimpleKeyboard.js';
+import * as GameText from './text.js';
 
 const TILESIZE = 32;
 const NBTILESPERLINE = 20;
@@ -31,17 +32,16 @@ can.canvases.get('ui')[0].onclick = e => {
     }
     else if (e.clientX >= creditMenuPos[0] && e.clientX <= creditMenuPos[1] && e.clientY >= creditMenuPos[2] && e.clientY <= creditMenuPos[3]) {
       can.state = 'credits';
-      view.drawCreditsScreen();
+      view.drawCreditsScreen(GameText.credits).then(finished => {
+        can.state = 'start';
+        view.drawHomeScreen();
+      });
     }
-  }
-  else if (can.state === 'credits') {
-    can.state = 'start';
-    view.drawHomeScreen();
   }
   else if(can.state === 'name') {
     can.state = 'story';
     game.hero.name = playerName;
-    view.drawStoryScreen().then(finished => {
+    view.drawStoryScreen(GameText.story.chapter1).then(finished => {
       can.state = 'game';
       e.target.setAttribute('height', TILESIZE * can.ratio);
       currentDungeon = game.generateLevel(level);
@@ -71,7 +71,7 @@ document.onkeydown = e => {
     else if (e.keyCode === 13) { //return
       can.state = 'story';
       game.hero.name = playerName;
-      view.drawStoryScreen().then(finished => {
+      view.drawStoryScreen(GameText.story.chapter1).then(finished => {
         can.state = 'game';
         e.target.setAttribute('height', TILESIZE * can.ratio);
         currentDungeon = game.generateLevel(level);

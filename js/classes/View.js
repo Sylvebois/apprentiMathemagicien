@@ -89,32 +89,20 @@ export default class View {
     this.clearCanvases();
     this.drawInterfaceBox();
 
-    let story = 'Il était une fois dans une contrée lointaine, très lointaine, un royaume gouverné par un bon roi qui savait calculer. Mais un jour, un méchant sorcier entrepris de semer le chaos dans le royaume. Après de si nombreuses années de paix, le roi fit appel à son vieux mathémagicien. Trop vieux pour régler ce genre de chose, l\'homme se choisit un apprenti pour l\'aider ...';
     let fontSize = 20 * this.ratio;
-    let storyList = this.splitText(story, fontSize, 10);
+    let storyList = this.splitText(text, fontSize, 10);
     let align = 'left';
 
     return this.animateTextBottomToTop(storyList, fontSize, align)
   }
-  drawCreditsScreen() {
+  drawCreditsScreen(credits = '') {
     this.clearCanvases();
     this.drawInterfaceBox();
 
-    let credits = [
-      'Auteur :',
-      'Sylvebois',
-      ' ',
-      'Remerciements :',
-      'Open Game Art',
-      'http://opengameart.org',
-      'Dungeon Crawl Stone Soup',
-      'http://crawl.develz.org',
-      'Francisco Hodge (virtual keyboard)',
-      'https://franciscohodge.com'
-    ];
     let fontSize = 30 * this.ratio;
+    let creditsList = this.splitText(credits, fontSize, 10);
 
-    this.animateTextBottomToTop(credits, fontSize);
+    return this.animateTextBottomToTop(creditsList, fontSize);
   }
   drawGame(dungeon, tilesize = 32) {
     this.clearCanvases();
@@ -189,7 +177,7 @@ export default class View {
         //Draw text
         textList.forEach(text => {
           ui[1].fillText(text, fontPosX, fontPosY);
-          fontPosY += fontSize * (text.startsWith('http') ? 2 : 1.5);
+          fontPosY += fontSize * (text.startsWith('http') ? 2.5 : 1.5);
         });
 
         bottom -= 0.75;
@@ -205,7 +193,7 @@ export default class View {
 
     return new Promise(resolve => requestAnimationFrame(drawingStep(bottom, resolve)));
   }
-  splitText(text, border) {
+  splitText(text, fontsize, border) {
     let result = [];
 
     let textLength = this.canMap.get('ui')[1].measureText(text).width;
@@ -215,11 +203,18 @@ export default class View {
       let tmpText = '';
 
       while (text.length > 0) {
-        tmpText += text.substring(0, 1);
-        let tmpTextLength = this.canMap.get('ui')[1].measureText(tmpText).width;
+        let char = text.substring(0, 1);
+
+        tmpText += char;
         text = text.substring(1);
 
-        if(tmpTextLength > 1.5*canWidth || text.length === 0) {
+        let tmpTextLength = this.canMap.get('ui')[1].measureText(tmpText).width;
+
+        if(char === '\n') {
+          result.push(tmpText);
+          tmpText = '';
+        }
+        else if(tmpTextLength > 1.5 * canWidth || text.length === 0) {
           //If we are in the middle of a word, go back to the beginning of it
           if(text.length !== 0 && !tmpText.endsWith(' ') && !text.startsWith(' ')) {
             while (!tmpText.endsWith(' ')) {
