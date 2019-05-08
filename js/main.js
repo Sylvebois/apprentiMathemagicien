@@ -41,13 +41,12 @@ can.canvases.get('ui')[0].onclick = e => {
   else if(can.state === 'name') {
     can.state = 'story';
     game.hero.name = playerName;
-    view.drawStoryScreen();
-  }
-  else if (can.state === 'story') {
-    can.state = 'game';
-    e.target.setAttribute('height', TILESIZE * can.ratio);
-    currentDungeon = game.generateLevel(level);
-    view.drawGame(currentDungeon, TILESIZE);
+    view.drawStoryScreen().then(finished => {
+      can.state = 'game';
+      e.target.setAttribute('height', TILESIZE * can.ratio);
+      currentDungeon = game.generateLevel(level);
+      view.drawGame(currentDungeon, TILESIZE);
+    });
   }
   else if (can.state === 'game') {
     let size = (e.target.getAttribute('height') < can.size)? can.size : TILESIZE * can.ratio;
@@ -72,7 +71,12 @@ document.onkeydown = e => {
     else if (e.keyCode === 13) { //return
       can.state = 'story';
       game.hero.name = playerName;
-      view.drawStoryScreen();
+      view.drawStoryScreen().then(finished => {
+        can.state = 'game';
+        e.target.setAttribute('height', TILESIZE * can.ratio);
+        currentDungeon = game.generateLevel(level);
+        view.drawGame(currentDungeon, TILESIZE);
+      });
     }
   }
   else if (can.state === 'game') {

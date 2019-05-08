@@ -85,7 +85,7 @@ export default class View {
     this.canMap.get('ui')[1].fillText(text, middle, fontPosY);
     this.canMap.get('ui')[1].fillText(name, middle, fontPosY + fontSize * 3);
   }
-  drawStoryScreen() {
+  drawStoryScreen(text = '') {
     this.clearCanvases();
     this.drawInterfaceBox();
 
@@ -94,7 +94,7 @@ export default class View {
     let storyList = this.splitText(story, fontSize, 10);
     let align = 'left';
 
-    this.animateTextBottomToTop(storyList, fontSize, align);
+    return this.animateTextBottomToTop(storyList, fontSize, align)
   }
   drawCreditsScreen() {
     this.clearCanvases();
@@ -171,32 +171,39 @@ export default class View {
   }
   animateTextBottomToTop(textList, fontSize, align = 'center') {
     let ui = this.canMap.get('ui');
-    let bottom = ui[0].getAttribute('height');
+    let bottom = parseInt(ui[0].getAttribute('height'));
+    let canHeight = bottom;
+    let canWidth = parseInt(ui[0].getAttribute('width'));
 
     ui[1].font = `${fontSize}px Arial`;
     ui[1].textAlign = align;
     ui[1].fillStyle = '#FFFFFF';
 
-    function draw() {
-      ui[1].clearRect(0, 0, ui[0].getAttribute('width'), ui[0].getAttribute('height'));
+    function drawingStep(posY, resolve) {
+      return function() {
+        ui[1].clearRect(0, 0, canWidth, canHeight);
 
-      let fontPosX = (align === 'center')? ui[0].getAttribute('width')/2 : 10;
-      let fontPosY = bottom;
+        let fontPosX = (align === 'center')? canWidth/2 : 10;
+        let fontPosY = bottom;
 
-      //Draw text
-      textList.forEach(text => {
-        ui[1].fillText(text, fontPosX, fontPosY);
-        fontPosY += fontSize * (text.startsWith('http') ? 2 : 1.5);
-      });
+        //Draw text
+        textList.forEach(text => {
+          ui[1].fillText(text, fontPosX, fontPosY);
+          fontPosY += fontSize * (text.startsWith('http') ? 2 : 1.5);
+        });
 
-      bottom -= 0.75;
+        bottom -= 0.75;
 
-      if(parseInt(fontPosY) > 0) {
-        requestAnimationFrame(draw);
+        if(parseInt(fontPosY) > 0) {
+          requestAnimationFrame(drawingStep(posY, resolve));
+        }
+        else {
+          resolve();
+        }
       }
     }
 
-    requestAnimationFrame(draw);
+    return new Promise(resolve => requestAnimationFrame(drawingStep(bottom, resolve)));
   }
   splitText(text, border) {
     let result = [];
