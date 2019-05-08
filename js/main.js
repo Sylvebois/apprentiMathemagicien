@@ -39,14 +39,7 @@ can.canvases.get('ui')[0].onclick = e => {
     }
   }
   else if(can.state === 'name') {
-    can.state = 'story';
-    game.hero.name = playerName;
-    view.drawStoryScreen(GameText.story.chapter1).then(finished => {
-      can.state = 'game';
-      e.target.setAttribute('height', TILESIZE * can.ratio);
-      currentDungeon = game.generateLevel(level);
-      view.drawGame(currentDungeon, TILESIZE);
-    });
+    startingGame(e);
   }
   else if (can.state === 'game') {
     let size = (e.target.getAttribute('height') < can.size)? can.size : TILESIZE * can.ratio;
@@ -69,19 +62,13 @@ document.onkeydown = e => {
       view.drawNewGameScreen(playerName, touchscreen);
     }
     else if (e.keyCode === 13) { //return
-      can.state = 'story';
-      game.hero.name = playerName;
-      view.drawStoryScreen(GameText.story.chapter1).then(finished => {
-        can.state = 'game';
-        e.target.setAttribute('height', TILESIZE * can.ratio);
-        currentDungeon = game.generateLevel(level);
-        view.drawGame(currentDungeon, TILESIZE);
-      });
+      startingGame(e);
     }
   }
   else if (can.state === 'game') {
 
   }
+
   return false;
 }
 
@@ -107,3 +94,14 @@ window.onresize = e => {
     can.canvases.get('ui')[0].setAttribute('height', uiSize);
   }
 };
+
+function startingGame(event) {
+  can.state = 'story';
+  game.hero.name = playerName;
+  view.drawStoryScreen(GameText.story.chapter1).then(finished => {
+    can.state = 'game';
+    can.canvases.get('ui')[0].setAttribute('height', TILESIZE * can.ratio);
+    currentDungeon = game.generateLevel(level);
+    view.drawGame(currentDungeon, TILESIZE);
+  });
+}
