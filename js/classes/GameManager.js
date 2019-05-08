@@ -108,6 +108,29 @@ export default class GameManager {
 
     return lvlMap;
   }
+  checkAccess(x, y, dungeon) {
+    return new Promise((resolve, reject) => {
+      if(x < 0 || x >= dungeon.length ||
+        y < 0 || y >= dungeon[x].length ||
+        !dungeon[x][y].backPart.canWalkOnIt) {
+        reject();
+      }
+      else if(dungeon[x][y].frontPart && !dungeon[x][y].frontPart.canWalkOnIt) {
+        reject(dungeon[x][y].frontPart.constructor.name);
+      }
+      else {
+        resolve();
+      }
+    });
+  }
+  moveHero(x, y, dungeon) {
+    this.hero = dungeon[this.hero.x][this.hero.y].frontPart;
+    dungeon[this.hero.x][this.hero.y].frontPart = null;
+
+    this.hero.x = x;
+    this.hero.y = y;
+    dungeon[x][y].frontPart = this.hero;
+  }
   debug() {
     console.log(this);
   }

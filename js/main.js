@@ -66,7 +66,86 @@ document.onkeydown = e => {
     }
   }
   else if (can.state === 'game') {
+    let answer = null;
 
+    switch(e.which) {
+      case 37: //left
+        answer = [game.hero.x - 1, game.hero.y];
+        break;
+      case 38: //up
+        answer = [game.hero.x, game.hero.y - 1];
+        break;
+      case 39: //right
+        answer = [game.hero.x + 1, game.hero.y];
+        break;
+      case 40: //down
+        answer = [game.hero.x, game.hero.y + 1];
+        break;
+    }
+
+    if(answer) {
+      game.checkAccess(answer[0], answer[1], currentDungeon)
+      .then(() => {
+        game.moveHero(answer[0], answer[1], currentDungeon);
+        view.drawGame(currentDungeon, TILESIZE);
+      })
+      .catch(reason => {
+        if(reason === 'Monster') {
+          can.state = 'fight';
+          view.drawFight(currentDungeon);
+        }
+      });
+    }
+  }
+  else if (can.state === 'fight') {
+    let answer = null;
+
+    switch(e.which) {
+      case 48:
+      case 96:
+        answer = 0;
+        break;
+      case 49:
+      case 97:
+        answer = 1;
+        break;
+      case 50:
+      case 98:
+        answer = 2;
+        break;
+      case 51:
+      case 99:
+        answer = 3;
+        break;
+      case 52:
+      case 100:
+        answer = 4;
+        break;
+      case 53:
+      case 101:
+        answer = 5;
+        break;
+      case 54:
+      case 102:
+        answer = 6;
+        break;
+      case 55:
+      case 103:
+        answer = 7;
+        break;
+      case 56:
+      case 104:
+        answer = 8;
+        break;
+      case 57:
+      case 105:
+        answer = 9;
+        break;
+    }
+
+    if(typeof(answer) === 'number') {
+
+    }
   }
 
   return false;
