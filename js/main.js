@@ -8,13 +8,16 @@ const TILESIZE = 32;
 const NBTILESPERLINE = 20;
 
 let touchscreen = false;
-let playerName = '';
-let level = 0;
 
 let can = new CanvasManager(TILESIZE, NBTILESPERLINE);
 let view = new View(can.canvases, can.ratio);
 let game = new GameManager(NBTILESPERLINE);
+
+let playerName = '';
+let level = 0;
 let currentDungeon;
+let equation = null;
+let fightAnswer = null;
 
 can.canvases.get('ui')[0].onclick = e => {
   if (can.state === 'start') {
@@ -92,7 +95,8 @@ document.onkeydown = e => {
       .catch(reason => {
         if(reason === 'Monster') {
           can.state = 'fight';
-          view.drawFight(currentDungeon);
+          equation = game.generateEquation(currentDungeon[answer[0]][answer[1]].frontPart);
+          view.drawFight(fightAnswer, equation, currentDungeon);
         }
       });
     }
@@ -144,7 +148,39 @@ document.onkeydown = e => {
     }
 
     if(typeof(answer) === 'number') {
+      fightAnswer = (fightAnswer === null)? answer : fightAnswer + '' + answer;
+      view.drawFight(fightAnswer, equation, currentDungeon);
+    }
+    else if(e.which === 8 && fightAnswer !== null) {
 
+    }
+    else if(e.which === 13) {
+      game.hero.fight(fightAnswer, equation.solution)
+      .then(ok => {
+        console.log(currentDungeon[equation.fightX][equation.fightY].frontPart);
+        if (currentDungeon[equation.fightX][equation.fightY].frontPart.live - 1 === 0) {
+          can.state = 'game';
+          currentDungeon[equation.fightX][equation.fightY].frontPart = null;
+          equation = null;
+          fightAnswer = null;
+          view.drawGame(currentDungeon, TILESIZE);
+        }
+        else {
+          currentDungeon[equation.fightX][equation.fightY].frontPart.live--;
+          equation = game.generateEquation(currentDungeon[equation.fightX][equation.fightY].frontPart);
+          fightAnswer = null;
+          view.drawFight(fightAnswer, equation, currentDungeon);
+        }
+      })
+      .catch(nok => {
+        fightAnswer = null;
+
+        if(game.hero.live === 0) {
+          can.state = 'game over';
+          view.drawLoosing();
+          resetValues();
+        }
+      });
     }
   }
 
@@ -183,4 +219,12 @@ function startingGame(event) {
     currentDungeon = game.generateLevel(level);
     view.drawGame(currentDungeon, TILESIZE);
   });
+}
+
+function resetValues() {
+  playerName = '';
+  level = 0;
+  currentDungeon = null;
+  equation = null;
+  fightAnswer = null;
 }

@@ -108,6 +108,57 @@ export default class GameManager {
 
     return lvlMap;
   }
+  generateEquation(enemy) {
+    let dungeonLvl = this.lvl % 10;
+
+    let question = '';
+    let a = this.random(0, dungeonLvl + 1);
+    let b = this.random(0, dungeonLvl + 1);
+    let c = this.random(0, dungeonLvl + 1);
+    let answer = 0;
+
+    if (this.lvl >= 0 && this.lvl < 10) {
+      if(encodeURI.isBoss) {
+        question = `${a} + ${b} + ${c}`;
+        answer = a + b + c;
+      }
+      else {
+        question = `${a} + ${b}`;
+        answer = a + b;
+      }
+    }
+    else if (this.lvl >= 10 && this.lvl < 20) {
+      if(encodeURI.isBoss) {
+        a = (a < b + c)? this.random(b + c, 20) : a;
+        question = `${a} - ${b} - ${c}`;
+        answer = a - b - c;
+      }
+      else {
+        a = (a < b)? this.random(b, 20) : a;
+        question = `${a} - ${b}`;
+        answer = a - b;
+      }
+    }
+    else if (this.lvl >= 20 && this.lvl < 30) {
+
+    }
+    else if (this.lvl >= 30 && this.lvl < 40) {
+
+    }
+    else if (this.lvl >= 40 && this.lvl < 50) {
+
+    }
+    else if (this.lvl >= 50 && this.lvl < 60) {
+
+    }
+
+    return {
+      problem: question,
+      solution: answer,
+      fightX: enemy.x,
+      fightY: enemy.y
+     };
+  }
   checkAccess(x, y, dungeon) {
     return new Promise((resolve, reject) => {
       if(x < 0 || x >= dungeon.length ||
@@ -160,8 +211,17 @@ class Hero extends NPC {
     super(x, y, img, imgX, imgY, canWalkOnIt);
     this.isHero = true;
   }
-  fight(enemy) {
-
+  fight(userAnswer, goodAnswer) {
+    return new Promise((resolve, reject) => {
+      console.log(userAnswer + ' - ' + goodAnswer)
+      if(userAnswer === goodAnswer) {
+        resolve();
+      }
+      else {
+        this.live--;
+        reject();
+      }
+    });
   }
 }
 
