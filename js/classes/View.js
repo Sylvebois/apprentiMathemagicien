@@ -104,6 +104,9 @@ export default class View {
 
     return this.animateTextBottomToTop(creditsList, fontSize);
   }
+  drawLoosing() {
+
+  }
   drawGame(dungeon, tilesize = 32) {
     this.clearCanvases();
 
@@ -144,6 +147,25 @@ export default class View {
         }
       });
     });
+  }
+  drawFight(userAnswer, equation, dungeon) {
+    this.clearCanvases();
+    this.drawInterfaceBox();
+
+    let middle = this.canMap.get('front')[0].getAttribute('width') / 2;
+
+    this.canMap.get('front')[1].fillStyle = '#FFFFFF';
+    this.canMap.get('front')[1].font = `32px Arial`;
+
+    let middleEq = middle - this.canMap.get('front')[1].measureText(equation.problem).width / 2;
+
+    this.canMap.get('front')[1].fillText(equation.problem, middleEq, 32*2);
+
+    let middleAn = middle - this.canMap.get('front')[1].measureText(userAnswer).width / 2;
+
+    this.canMap.get('front')[1].fillText(userAnswer, middleAn, 32*6);
+
+
   }
   drawInterfaceBox() {
     this.canMap.get('back')[1].clearRect(0, 0, this.canMap.get('back')[0].getAttribute('width'), this.canMap.get('back')[0].getAttribute('height'));
