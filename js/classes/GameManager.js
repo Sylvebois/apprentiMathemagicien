@@ -213,7 +213,8 @@ class Hero extends NPC {
   }
   fight(userAnswer, goodAnswer) {
     return new Promise((resolve, reject) => {
-      console.log(userAnswer + ' - ' + goodAnswer)
+      userAnswer = parseInt(userAnswer);
+
       if(userAnswer === goodAnswer) {
         resolve();
       }
