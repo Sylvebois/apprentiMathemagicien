@@ -10,7 +10,7 @@ const NBTILESPERLINE = 20;
 let touchscreen = false;
 
 let can = new CanvasManager(TILESIZE, NBTILESPERLINE);
-let view = new View(can.canvases, can.ratio);
+let view = new View(can.canvases, can.ratio, TILESIZE);
 let game = new GameManager(NBTILESPERLINE);
 
 let playerName = '';
@@ -90,13 +90,13 @@ document.onkeydown = e => {
       game.checkAccess(answer[0], answer[1], currentDungeon)
       .then(() => {
         game.moveHero(answer[0], answer[1], currentDungeon);
-        view.drawGame(currentDungeon, TILESIZE);
+        view.drawGame(currentDungeon);
       })
       .catch(reason => {
         if(reason === 'Monster') {
           can.state = 'fight';
           equation = game.generateEquation(currentDungeon[answer[0]][answer[1]].frontPart);
-          view.drawFight(fightAnswer, equation, currentDungeon);
+          view.drawFight(fightAnswer, equation, game.hero, currentDungeon[equation.fightX][equation.fightY].frontPart);
         }
       });
     }
@@ -149,33 +149,36 @@ document.onkeydown = e => {
 
     if(typeof(answer) === 'number') {
       fightAnswer = (fightAnswer === null)? answer : fightAnswer + '' + answer;
-      view.drawFight(fightAnswer, equation, currentDungeon);
+      view.drawFight(fightAnswer, equation, game.hero, currentDungeon[equation.fightX][equation.fightY].frontPart);
     }
     else if(e.which === 8 && fightAnswer !== null) {
-
+      fightAnswer = fightAnswer.slice(0,-1);
+      view.drawFight(fightAnswer, equation, game.hero, currentDungeon[equation.fightX][equation.fightY].frontPart);
     }
     else if(e.which === 13) {
       game.hero.fight(fightAnswer, equation.solution)
       .then(ok => {
-        console.log(currentDungeon[equation.fightX][equation.fightY].frontPart);
         if (currentDungeon[equation.fightX][equation.fightY].frontPart.live - 1 === 0) {
           can.state = 'game';
           currentDungeon[equation.fightX][equation.fightY].frontPart = null;
           equation = null;
           fightAnswer = null;
-          view.drawGame(currentDungeon, TILESIZE);
+          view.drawGame(currentDungeon);
         }
         else {
           currentDungeon[equation.fightX][equation.fightY].frontPart.live--;
           equation = game.generateEquation(currentDungeon[equation.fightX][equation.fightY].frontPart);
           fightAnswer = null;
-          view.drawFight(fightAnswer, equation, currentDungeon);
+          view.drawFight(fightAnswer, equation, game.hero, currentDungeon[equation.fightX][equation.fightY].frontPart);
         }
       })
       .catch(nok => {
         fightAnswer = null;
 
-        if(game.hero.live === 0) {
+        if(game.hero.live !== 0) {
+          view.drawFight(fightAnswer, equation, game.hero, currentDungeon[equation.fightX][equation.fightY].frontPart);
+        }
+        else {
           can.state = 'game over';
           view.drawLoosing();
           resetValues();
@@ -194,7 +197,7 @@ document.ontouchstart = e => {
 window.onresize = e => {
   let uiSize = can.canvases.get('ui')[0].getAttribute('height');
   can.setSize();
-  view.ratio = can.ratio;
+  view.updateValues(can.ratio);
 
   if (can.state === 'start') {
     view.drawHomeScreen();
@@ -217,7 +220,7 @@ function startingGame(event) {
     can.state = 'game';
     can.canvases.get('ui')[0].setAttribute('height', TILESIZE * can.ratio);
     currentDungeon = game.generateLevel(level);
-    view.drawGame(currentDungeon, TILESIZE);
+    view.drawGame(currentDungeon);
   });
 }
 

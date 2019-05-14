@@ -1,6 +1,8 @@
 export default class View {
-  constructor(canvasesMap, ratio) {
+  constructor(canvasesMap, ratio, tilesize = 32) {
+    this.tilesize = tilesize;
     this.ratio = ratio;
+    this.tileDrawSize = Math.ceil(this.tilesize * this.ratio);
     this.canMap = canvasesMap;
     this.keyboard = document.getElementsByClassName('simple-keyboard')[0];
     this.images = {};
@@ -107,65 +109,82 @@ export default class View {
   drawLoosing() {
 
   }
-  drawGame(dungeon, tilesize = 32) {
+  drawGame(dungeon) {
     this.clearCanvases();
 
     this.canMap.get('ui')[1].fillStyle = '#000000';
     this.canMap.get('ui')[1].fillRect(0, 0, this.canMap.get('ui')[0].getAttribute('width'), this.canMap.get('ui')[0].getAttribute('height'));
 
-    let tileDrawSize = Math.ceil(tilesize * this.ratio);
-
     dungeon.map(lines => {
       lines.map(tile => {
         this.canMap.get('back')[1].drawImage(
           this.images[tile.backPart.img],
-          tile.backPart.imgX * tilesize, tile.backPart.imgY * tilesize,
-          tilesize, tilesize,
-          tile.backPart.x * tileDrawSize, tile.backPart.y * tileDrawSize,
-          tileDrawSize, tileDrawSize
+          tile.backPart.imgX * this.tilesize, tile.backPart.imgY * this.tilesize,
+          this.tilesize, this.tilesize,
+          tile.backPart.x * this.tileDrawSize, tile.backPart.y * this.tileDrawSize,
+          this.tileDrawSize, this.tileDrawSize
         );
 
         if(tile.frontPart) {
           this.canMap.get('front')[1].drawImage(
             this.images[tile.frontPart.img],
-            tile.frontPart.imgX * tilesize, tile.frontPart.imgY * tilesize,
-            tilesize, tilesize,
-            tile.frontPart.x * tileDrawSize, tile.frontPart.y * tileDrawSize,
-            tileDrawSize, tileDrawSize
+            tile.frontPart.imgX * this.tilesize, tile.frontPart.imgY * this.tilesize,
+            this.tilesize, this.tilesize,
+            tile.frontPart.x * this.tileDrawSize, tile.frontPart.y * this.tileDrawSize,
+            this.tileDrawSize, this.tileDrawSize
           );
 
           if(tile.frontPart.isHero) {
             let middle = this.canMap.get('ui')[0].getAttribute('width')/2;
             this.canMap.get('ui')[1].fillStyle = '#FFFFFF';
-            this.canMap.get('ui')[1].font = `${tileDrawSize}px Arial`;
-            this.canMap.get('ui')[1].fillText(tile.frontPart.name, 0, tileDrawSize-3);
-            this.canMap.get('ui')[1].fillText(tile.frontPart.live, middle, tileDrawSize-3);
+            this.canMap.get('ui')[1].font = `${this.tileDrawSize}px Arial`;
+            this.canMap.get('ui')[1].fillText(tile.frontPart.name, 0, this.tileDrawSize - 3);
+            this.canMap.get('ui')[1].fillText(tile.frontPart.live, middle, this.tileDrawSize - 3);
 
             let liveSize = this.canMap.get('ui')[1].measureText(tile.frontPart.live).width;
-            this.canMap.get('ui')[1].drawImage(this.images['heart'], middle + liveSize, 0, tileDrawSize, tileDrawSize);
+            this.canMap.get('ui')[1].drawImage(this.images['heart'], middle + liveSize, 0, this.tileDrawSize, this.tileDrawSize);
           }
         }
       });
     });
   }
-  drawFight(userAnswer, equation, dungeon) {
+  drawFight(userAnswer, equation, hero, enemy) {
     this.clearCanvases();
     this.drawInterfaceBox();
 
-    let middle = this.canMap.get('front')[0].getAttribute('width') / 2;
+    let width = this.canMap.get('front')[0].getAttribute('width');
+    let height = this.canMap.get('front')[0].getAttribute('height');
+    let middle = width / 2;
 
     this.canMap.get('front')[1].fillStyle = '#FFFFFF';
-    this.canMap.get('front')[1].font = `32px Arial`;
+    this.canMap.get('front')[1].font = `${this.tileDrawSize}px Arial`;
 
     let middleEq = middle - this.canMap.get('front')[1].measureText(equation.problem).width / 2;
+    this.canMap.get('front')[1].fillText(equation.problem, middleEq, this.tileDrawSize * 2);
 
-    this.canMap.get('front')[1].fillText(equation.problem, middleEq, 32*2);
+    if(userAnswer !== null) {
+      this.canMap.get('front')[1].fillStyle = '#FF0000';
+      this.canMap.get('front')[1].font = `${this.tileDrawSize * 2}px Arial`;
 
-    let middleAn = middle - this.canMap.get('front')[1].measureText(userAnswer).width / 2;
+      let middleAn = middle - this.canMap.get('front')[1].measureText(userAnswer).width / 2;
+      this.canMap.get('front')[1].fillText(userAnswer, middleAn, this.tileDrawSize * 8);
+    }
 
-    this.canMap.get('front')[1].fillText(userAnswer, middleAn, 32*6);
+    this.canMap.get('front')[1].drawImage(
+      this.images[hero.img],
+      hero.imgX * this.tilesize, hero.imgY * this.tilesize,
+      this.tilesize, this.tilesize,
+      this.tileDrawSize, height - (this.tileDrawSize * 3),
+      this.tileDrawSize * 2, this.tileDrawSize * 2
+    );
 
-
+    this.canMap.get('front')[1].drawImage(
+      this.images[enemy.img],
+      enemy.imgX * this.tilesize, enemy.imgY * this.tilesize,
+      this.tilesize, this.tilesize,
+      width - (this.tileDrawSize * 3), height - (this.tileDrawSize * 3),
+      this.tileDrawSize * 2, this.tileDrawSize * 2
+    );
   }
   drawInterfaceBox() {
     this.canMap.get('back')[1].clearRect(0, 0, this.canMap.get('back')[0].getAttribute('width'), this.canMap.get('back')[0].getAttribute('height'));
@@ -255,5 +274,9 @@ export default class View {
     }
 
     return result;
+  }
+  updateValues(ratio) {
+    this.ratio = ratio;
+    this.tileDrawSize = this.tilesize * this.ratio;
   }
 }
