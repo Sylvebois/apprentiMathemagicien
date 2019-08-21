@@ -1,7 +1,20 @@
+import * as PHASER from './phaser.min.js';
+import config from './Config/config.js';
+import BootScene from './Scenes/BootScene.js';
+import PreloaderScene from './Scenes/PreloaderScene.js';
+import TitleScene from './Scenes/TitleScene.js';
+import OptionsScene from './Scenes/OptionsScene.js';
+import CreditsScene from './Scenes/CreditsScene.js';
+import GameScene from './Scenes/GameScene.js';
+import Model from './Model.js';
+
+/* template from : https://phasertutorials.com/creating-a-phaser-3-template-part-1/ */
+
+
+/*
 import CanvasManager from './classes/CanvasManager.js';
 import GameManager from './classes/GameManager.js';
 import View from './classes/View.js';
-import * as Keyboard from './classes/SimpleKeyboard.js';
 import * as GameText from './text.js';
 
 const TILESIZE = 32;
@@ -231,3 +244,4 @@ function resetValues() {
   equation = null;
   fightAnswer = null;
 }
+*/
