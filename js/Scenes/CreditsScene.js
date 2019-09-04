@@ -13,7 +13,7 @@ export default class CreditsScene extends Phaser.Scene {
     //Credits
     this.creditsText = this.add.text(0, 0, 'Credits', { fontSize: '32px', fill: '#fff' });
     this.madeByText = this.add.text(0, 0, 'Created By: Sylvebois', { fontSize: '26px', fill: '#fff' });
-    this.otherThanksText = this.add.text(0, 0, 'Graphics and Sounds: Open Game Art\r\nEngine: Phaser 3', { fontSize: '26px', fill: '#fff' });
+    this.otherThanksText = this.add.text(0, 0, 'Graphics and Sounds: Open Game Art\r\nFramework: Phaser 3', { fontSize: '26px', fill: '#fff' });
 
     this.madeByText.alpha = 0;
     this.otherThanksText.alpha = 0;
