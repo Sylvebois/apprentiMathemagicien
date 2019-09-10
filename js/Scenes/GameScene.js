@@ -19,34 +19,23 @@ export default class GameScene extends Phaser.Scene {
 
     this.groundLayer = this.dungeon.createBlankDynamicLayer('Ground Layer', tiles);
     this.playerLayer = this.dungeon.createBlankDynamicLayer('Player Layer', tiles);
-    this.playerLayer.setCollisionByExclusion([-1]);
 
-    // Border of the scene
-    this.groundLayer.fill(15, 0, 0, this.dungeon.width, 1);
-    this.groundLayer.fill(15, 0, this.dungeon.height - 1, this.dungeon.width, 1);
-    this.groundLayer.fill(15, 0, 0, 1, this.dungeon.height);
-    this.groundLayer.fill(15, this.dungeon.width - 1, 0, 1, this.dungeon.height);
+    // Layers initialization
+    this.createDungeonMap();
 
-    this.randomizeMap(); // Initial randomization
-
-    // First level always get a path in the middle
-    if (this.game.globals.level % 10 === 0) {
-      let middle = Math.floor(this.dungeon.height / 2);
-
-      this.groundLayer.fill(1, 0, middle - 1, this.dungeon.width, 1);
-      this.groundLayer.fill(0, 0, middle, this.dungeon.width, 1);
-      this.groundLayer.fill(2, 0, middle + 1, this.dungeon.width, 1);
-
-      this.playerLayer.fill(-1, 0, middle - 1, this.dungeon.width, 3);
-    }
-
-    this.player = this.physics.add.sprite(32, 400, 'player');
-    this.physics.world.bounds.width = this.dungeon.widthInPixels;
-    this.physics.world.bounds.height = this.dungeon.heightInPixels;
+    // Player initialization
+    this.player = this.physics.add.sprite(32, Math.floor(this.dungeon.heightInPixels / 2), 'player');
     this.player.setCollideWorldBounds(true);
-    this.physics.add.collider(this.player, this.playerLayer);
 
-    //Checking for input (keyboard and mouse)
+    // Enemies initialization
+    this.enemies = this.physics.add.staticGroup({ classType: Phaser.GameObjects.Zone });
+    this.randomizeEnemies();
+
+    // Checking collision with obstacles (non -1 index on the layer) and ennemies
+    this.physics.add.collider(this.player, this.playerLayer);
+    this.physics.add.overlap(this.player, this.enemies, this.onMeetEnemy, false, this);
+
+    // Checking for input (keyboard and mouse)
     this.input.on('pointerdown', this.action, this);
     this.cursors = this.keysToWatch();
   }
@@ -56,28 +45,27 @@ export default class GameScene extends Phaser.Scene {
 
     // Horizontal movement
     if (this.cursors.left.isDown) {
-      this.player.body.setVelocityX(-80);
+      this.player.body.setVelocityX(-160);
     }
     else if (this.cursors.right.isDown) {
-      this.player.body.setVelocityX(80);
+      this.player.body.setVelocityX(160);
     }
 
     // Vertical movement
     if (this.cursors.up.isDown) {
-      this.player.body.setVelocityY(-80);
+      this.player.body.setVelocityY(-160);
     }
     else if (this.cursors.down.isDown) {
-      this.player.body.setVelocityY(80);
+      this.player.body.setVelocityY(160);
     }
   }
 
   action() {
-    if (this.state === 'fight') {
 
-    }
-    else {
+  }
 
-    }
+  onMeetEnemy() {
+    this.cameras.main.shake();
   }
 
   keysToWatch() {
@@ -110,7 +98,13 @@ export default class GameScene extends Phaser.Scene {
     return Object.assign(otherKeys, arrowKeys);
   }
 
-  randomizeMap() {
+  createDungeonMap() {
+    // Border of the scene
+    this.playerLayer.fill(15, 0, 0, this.dungeon.width, 1);
+    this.playerLayer.fill(15, 0, this.dungeon.height - 1, this.dungeon.width, 1);
+    this.playerLayer.fill(15, 0, 0, 1, this.dungeon.height);
+    this.playerLayer.fill(15, this.dungeon.width - 1, 0, 1, this.dungeon.height);
+
     // Fill the floor with random ground tiles
     this.groundLayer.weightedRandomize(1, 1, this.dungeon.width - 2, this.dungeon.height - 2, [
       { index: 9, weight: 1 },
@@ -126,5 +120,32 @@ export default class GameScene extends Phaser.Scene {
       { index: 14, weight: 2 },
       { index: 15, weight: 2 },
     ]);
+
+    // First level always get a path in the middle
+    if (this.game.globals.level % 10 === 0) {
+      let middle = Math.floor(this.dungeon.height / 2);
+
+      this.groundLayer.fill(1, 0, middle - 1, this.dungeon.width, 1);
+      this.groundLayer.fill(0, 0, middle, this.dungeon.width, 1);
+      this.groundLayer.fill(2, 0, middle + 1, this.dungeon.width, 1);
+
+      this.playerLayer.fill(-1, 0, middle - 1, this.dungeon.width, 3);
+    }
+
+    // Every tiles with an index of -1 won't use the collision system
+    this.playerLayer.setCollisionByExclusion([-1]);
+  }
+
+  randomizeEnemies() {
+    while (this.enemies.getLength() < 10) {
+      var x = Phaser.Math.Between(1, this.dungeon.width - 1);
+      var y = Phaser.Math.Between(1, this.dungeon.height - 1);
+
+      if(this.playerLayer.layer.data[x][y].index === -1) {
+        // parameters are x, y, width, height
+        console.log(x + ' ' + y);
+        this.enemies.create(x * this.dungeon.tileWidth, y * this.dungeon.tileHeight, this.dungeon.tileWidth, this.dungeon.tileHeight);
+      }
+    }
   }
 };
