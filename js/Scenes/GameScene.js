@@ -24,7 +24,7 @@ export default class GameScene extends Phaser.Scene {
     this.createDungeonMap();
 
     // Player initialization
-    this.player = this.physics.add.sprite(32, Math.floor(this.dungeon.heightInPixels / 2), 'player');
+    this.player = this.physics.add.sprite(0, Math.floor(this.dungeon.heightInPixels / 2), 'player');
     this.player.setCollideWorldBounds(true);
 
     // Enemies initialization
@@ -138,13 +138,15 @@ export default class GameScene extends Phaser.Scene {
 
   randomizeEnemies() {
     while (this.enemies.getLength() < 10) {
-      var x = Phaser.Math.Between(1, this.dungeon.width - 1);
-      var y = Phaser.Math.Between(1, this.dungeon.height - 1);
+      let x = Phaser.Math.Between(1, this.dungeon.width - 1);
+      let y = Phaser.Math.Between(1, this.dungeon.height - 1);
 
-      if(this.playerLayer.layer.data[x][y].index === -1) {
-        // parameters are x, y, width, height
-        console.log(x + ' ' + y);
-        this.enemies.create(x * this.dungeon.tileWidth, y * this.dungeon.tileHeight, this.dungeon.tileWidth, this.dungeon.tileHeight);
+      if (!this.playerLayer.getTileAt(x, y)) {
+        let worldX = this.dungeon.tileToWorldX(x) + this.dungeon.tileWidth / 2;
+        let worldY = this.dungeon.tileToWorldY(y) + this.dungeon.tileHeight / 2;
+
+        this.playerLayer.fill(Phaser.Math.Between(16, 18), x, y, 1, 1);
+        this.enemies.create(worldX, worldY, this.dungeon.tileWidth, this.dungeon.tileHeight);
       }
     }
   }
