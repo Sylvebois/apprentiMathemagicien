@@ -36,7 +36,7 @@ export default class GameScene extends Phaser.Scene {
     this.physics.add.overlap(this.player, this.enemies, this.onMeetEnemy, false, this);
 
     // Checking for input (keyboard and mouse)
-    this.input.on('pointerdown', this.action, this);
+    this.input.on('pointerdown', this.mouseAction, this);
     this.cursors = this.keysToWatch();
   }
 
@@ -44,43 +44,35 @@ export default class GameScene extends Phaser.Scene {
     this.player.body.setVelocity(0);
 
     // Horizontal movement
-    if (this.cursors.left.isDown) {
+    if (this.cursors.left.isDown || this.cursors.numFour.isDown) {
       this.player.body.setVelocityX(-160);
     }
-    else if (this.cursors.right.isDown) {
+    else if (this.cursors.right.isDown || this.cursors.numSix.isDown) {
       this.player.body.setVelocityX(160);
     }
 
     // Vertical movement
-    if (this.cursors.up.isDown) {
+    if (this.cursors.up.isDown || this.cursors.numEight.isDown) {
       this.player.body.setVelocityY(-160);
     }
-    else if (this.cursors.down.isDown) {
+    else if (this.cursors.down.isDown || this.cursors.numTwo.isDown) {
       this.player.body.setVelocityY(160);
     }
   }
 
-  action() {
-
-  }
-
   onMeetEnemy() {
     this.cameras.main.shake();
+    this.scene.pause('Game');
+    this.scene.launch('Battle');
+  }
+
+  mouseAction() {
+
   }
 
   keysToWatch() {
     let arrowKeys = this.input.keyboard.createCursorKeys();
     let otherKeys = this.input.keyboard.addKeys({
-      'zero': Phaser.Input.Keyboard.KeyCodes.ZERO,
-      'one': Phaser.Input.Keyboard.KeyCodes.ONE,
-      'two': Phaser.Input.Keyboard.KeyCodes.TWO,
-      'three': Phaser.Input.Keyboard.KeyCodes.THREE,
-      'four': Phaser.Input.Keyboard.KeyCodes.FOUR,
-      'five': Phaser.Input.Keyboard.KeyCodes.FIVE,
-      'six': Phaser.Input.Keyboard.KeyCodes.SIX,
-      'seven': Phaser.Input.Keyboard.KeyCodes.SEVEN,
-      'eight': Phaser.Input.Keyboard.KeyCodes.EIGHT,
-      'nine': Phaser.Input.Keyboard.KeyCodes.NINE,
       'numZero': Phaser.Input.Keyboard.KeyCodes.NUMPAD_ZERO,
       'numOne': Phaser.Input.Keyboard.KeyCodes.NUMPAD_ONE,
       'numTwo': Phaser.Input.Keyboard.KeyCodes.NUMPAD_TWO,
@@ -91,8 +83,6 @@ export default class GameScene extends Phaser.Scene {
       'numSeven': Phaser.Input.Keyboard.KeyCodes.NUMPAD_SEVEN,
       'numEight': Phaser.Input.Keyboard.KeyCodes.NUMPAD_EIGHT,
       'numNine': Phaser.Input.Keyboard.KeyCodes.NUMPAD_NINE,
-      'backspace': Phaser.Input.Keyboard.KeyCodes.BACKSPACE,
-      'enter': Phaser.Input.Keyboard.KeyCodes.ENTER
     });
 
     return Object.assign(otherKeys, arrowKeys);
