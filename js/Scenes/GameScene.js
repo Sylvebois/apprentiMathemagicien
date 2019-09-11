@@ -61,9 +61,11 @@ export default class GameScene extends Phaser.Scene {
   }
 
   onMeetEnemy() {
-    this.cameras.main.shake();
-    this.scene.pause('Game');
-    this.scene.launch('Battle');
+    this.cameras.main.shake(1000, 0.05, false, (cam, evo) => {
+      if(evo === 1) {
+        this.scene.pause('Game').launch('Battle');
+      }
+    });
   }
 
   mouseAction() {
