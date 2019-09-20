@@ -60,10 +60,13 @@ export default class GameScene extends Phaser.Scene {
     }
   }
 
-  onMeetEnemy() {
+  onMeetEnemy(player, enemy) {
+    let worldX = enemy.x - this.dungeon.tileWidth / 2;
+    let worldY = enemy.y - this.dungeon.tileHeight / 2;
+
     this.cameras.main.shake(1000, 0.05, false, (cam, evo) => {
       if(evo === 1) {
-        this.scene.pause('Game').launch('Battle');
+        this.scene.pause('Game').launch('Battle', this.playerLayer.getTileAtWorldXY(worldX, worldY));
       }
     });
   }

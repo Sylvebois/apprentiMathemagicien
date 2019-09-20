@@ -7,6 +7,7 @@ import OptionsScene from './Scenes/OptionsScene.js';
 import CreditsScene from './Scenes/CreditsScene.js';
 import StoryScene from './Scenes/StoryScene.js';
 import GameScene from './Scenes/GameScene.js';
+import BattleScene from './Scenes/BattleScene.js';
 import Model from './Model.js';
 
 /* template from : https://phasertutorials.com/creating-a-phaser-3-template-part-1/ */
@@ -27,6 +28,7 @@ class Game extends Phaser.Game {
     this.scene.add('Credits', CreditsScene);
     this.scene.add('Story', StoryScene);
     this.scene.add('Game', GameScene);
+    this.scene.add('Battle', BattleScene);
     this.scene.start('Boot');
   }
 }
