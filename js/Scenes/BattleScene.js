@@ -32,15 +32,50 @@ export default class BattleScene extends Phaser.Scene {
 
     // Checking for input (keyboard and mouse)
     this.cursors = this.keysToWatch();
-    this.input.on('pointerdown', this.mouseAction, this);
+    this.input.on('gameobjectdown',this.mouseAction);
+
+    this.userAnswer = '';
   }
 
   update() {
+    for (let elem in this.cursors) {
+      if (Phaser.Input.Keyboard.JustDown(this.cursors[elem])) {
+        if (this.cursors[elem].keyCode === 13) {
 
+        }
+        else {
+          this.updateAnswer(this.cursors[elem].keyCode);
+        }
+      }
+    }
+
+    for(let elem in this.virtualkb) {
+    }
   }
 
-  mouseAction() {
+  updateAnswer(keyCode) {
+    if (keyCode >= 48 && keyCode <= 57) {
+      this.userAnswer += String.fromCharCode(keyCode);
+    }
+    else if (keyCode >= 96 && keyCode <= 105) {
+      this.userAnswer += String.fromCharCode(keyCode - 48);
+    }
+    else if (keyCode === 8) {
+      this.userAnswer = this.userAnswer.substring(0, this.userAnswer.length - 1);
+    }
+  }
 
+  mouseAction(pointer, virtualKey) {
+    //this.scene.resume('Game').stop('Battle');
+    if(virtualKey.textValue === 'V') {
+
+    }
+    else if(virtualKey.textValue === 'X') {
+      this.userAnswer = '';
+    }
+    else {
+      this.userAnswer += virtualKey.textValue.toString();
+    }
   }
 
   keysToWatch() {
@@ -76,7 +111,7 @@ export default class BattleScene extends Phaser.Scene {
     this.graphics.lineStyle(3, 0x00aa00);
     this.graphics.fillStyle(0x000000, 1);
 
-    for(let i = 0 ; i < 12; i++) {
+    for (let i = 0; i < 12; i++) {
       let x = 1.5 * this.tilesize + i * 2 * this.tilesize;
       let y = config.height - 2 * this.tilesize;
 
@@ -97,18 +132,22 @@ export default class BattleScene extends Phaser.Scene {
       this.graphics.strokePath();
 
       let button = this.virtualkb.create(x, y, 2 * this.tilesize, 4 * this.tilesize);
-      let text;
+      button.setInteractive();
 
-      if(i === 0) {
-        text = this.add.text(0, 0, 'V', { fontSize: '64px' , fontFamily: 'sans-serif', color: 'green'});
+      if (i === 0) {
+        button.textValue = 'V';
+        button.textColor = 'green';
       }
       else if (i === 11) {
-        text = this.add.text(0, 0, 'X', { fontSize: '64px', fontFamily: 'sans-serif', color: 'red'});
+        button.textValue = 'X';
+        button.textColor = 'red';
       }
       else {
-        text = this.add.text(0, 0, i - 1, { fontSize: '64px', fontFamily: 'sans-serif', color: 'white'});
+        button.textValue = i - 1;
+        button.textColor = 'white';
       }
 
+      let text = this.add.text(0, 0, button.textValue, { fontSize: '64px', fontFamily: 'sans-serif', color: button.textColor });
       Phaser.Display.Align.In.Center(text, button);
     }
   }
