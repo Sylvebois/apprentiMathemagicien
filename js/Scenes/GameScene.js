@@ -38,6 +38,8 @@ export default class GameScene extends Phaser.Scene {
     // Checking for input (keyboard and mouse)
     this.input.on('pointerdown', this.mouseAction, this);
     this.cursors = this.keysToWatch();
+
+    this.events.on('resume', this.resumeAfterFight, this);
   }
 
   update() {
@@ -64,11 +66,23 @@ export default class GameScene extends Phaser.Scene {
     let worldX = enemy.x - this.dungeon.tileWidth / 2;
     let worldY = enemy.y - this.dungeon.tileHeight / 2;
 
+    this.lastEnemyPos = { x: worldX, y: worldY };
+
+    enemy.destroy();
+
     this.cameras.main.shake(1000, 0.05, false, (cam, evo) => {
-      if(evo === 1) {
-        this.scene.pause('Game').launch('Battle', this.playerLayer.getTileAtWorldXY(worldX, worldY));
+      if (evo === 1) {
+        let enemyTile = this.playerLayer.getTileAtWorldXY(worldX, worldY);
+        this.scene.pause('Game').launch('Battle', enemyTile);
       }
     });
+  }
+
+  resumeAfterFight() {
+    if (this.lastEnemyPos) {
+      this.playerLayer.getTileAtWorldXY(this.lastEnemyPos.x, this.lastEnemyPos.y).index = -1;
+      this.lastEnemyPos = null;
+    }
   }
 
   mouseAction() {
@@ -78,16 +92,10 @@ export default class GameScene extends Phaser.Scene {
   keysToWatch() {
     let arrowKeys = this.input.keyboard.createCursorKeys();
     let otherKeys = this.input.keyboard.addKeys({
-      'numZero': Phaser.Input.Keyboard.KeyCodes.NUMPAD_ZERO,
-      'numOne': Phaser.Input.Keyboard.KeyCodes.NUMPAD_ONE,
       'numTwo': Phaser.Input.Keyboard.KeyCodes.NUMPAD_TWO,
-      'numThree': Phaser.Input.Keyboard.KeyCodes.NUMPAD_THREE,
       'numFour': Phaser.Input.Keyboard.KeyCodes.NUMPAD_FOUR,
-      'numFive': Phaser.Input.Keyboard.KeyCodes.NUMPAD_FIVE,
       'numSix': Phaser.Input.Keyboard.KeyCodes.NUMPAD_SIX,
-      'numSeven': Phaser.Input.Keyboard.KeyCodes.NUMPAD_SEVEN,
       'numEight': Phaser.Input.Keyboard.KeyCodes.NUMPAD_EIGHT,
-      'numNine': Phaser.Input.Keyboard.KeyCodes.NUMPAD_NINE,
     });
 
     return Object.assign(otherKeys, arrowKeys);
