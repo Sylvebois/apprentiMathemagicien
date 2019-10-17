@@ -13,14 +13,15 @@ import Model from './Model.js';
 /* template from : https://phasertutorials.com/creating-a-phaser-3-template-part-1/ */
 
 class Game extends Phaser.Game {
-  constructor () {
+  constructor() {
     super(config);
     const model = new Model();
     this.globals = {
       model,
       bgMusic: null,
       tilesize: 32,
-      level: localStorage.getItem('level') | 0 };
+      level: localStorage.getItem('level') | 0
+    };
     this.scene.add('Boot', BootScene);
     this.scene.add('Preloader', PreloaderScene);
     this.scene.add('Title', TitleScene);
@@ -46,12 +47,12 @@ function resize() {
   let windowRatio = windowWidth / windowHeight;
   let gameRatio = config.width / config.height;
   if (windowRatio < gameRatio) {
-      canvas.style.width = windowWidth + "px";
-      canvas.style.height = (windowWidth / gameRatio) + "px";
+    canvas.style.width = windowWidth + "px";
+    canvas.style.height = (windowWidth / gameRatio) + "px";
   }
   else {
-      canvas.style.width = (windowHeight * gameRatio) + "px";
-      canvas.style.height = windowHeight + "px";
+    canvas.style.width = (windowHeight * gameRatio) + "px";
+    canvas.style.height = windowHeight + "px";
   }
 }
 

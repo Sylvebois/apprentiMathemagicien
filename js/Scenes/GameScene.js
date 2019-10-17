@@ -36,7 +36,7 @@ export default class GameScene extends Phaser.Scene {
     this.physics.add.overlap(this.player, this.enemies, this.onMeetEnemy, false, this);
 
     // Checking for input (keyboard and mouse)
-    this.input.on('pointerdown', this.mouseAction, this);
+    this.input.on('pointerdown', this.mouseAction);
     this.cursors = this.keysToWatch();
 
     this.events.on('resume', this.resumeAfterFight, this);
@@ -45,24 +45,35 @@ export default class GameScene extends Phaser.Scene {
   update() {
     this.player.body.setVelocity(0);
 
-    // Horizontal movement
-    if (this.cursors.left.isDown || this.cursors.numFour.isDown) {
-      this.player.body.setVelocityX(-160);
-    }
-    else if (this.cursors.right.isDown || this.cursors.numSix.isDown) {
-      this.player.body.setVelocityX(160);
-    }
+    if (this.input.keyboard.enabled) {
+      // Horizontal movement
+      if (this.cursors.left.isDown || this.cursors.numFour.isDown) {
+        this.player.body.setVelocityX(-160);
+      }
+      else if (this.cursors.right.isDown || this.cursors.numSix.isDown) {
+        this.player.body.setVelocityX(160);
+      }
 
-    // Vertical movement
-    if (this.cursors.up.isDown || this.cursors.numEight.isDown) {
-      this.player.body.setVelocityY(-160);
+      // Vertical movement
+      if (this.cursors.up.isDown || this.cursors.numEight.isDown) {
+        this.player.body.setVelocityY(-160);
+      }
+      else if (this.cursors.down.isDown || this.cursors.numTwo.isDown) {
+        this.player.body.setVelocityY(160);
+      }
     }
-    else if (this.cursors.down.isDown || this.cursors.numTwo.isDown) {
-      this.player.body.setVelocityY(160);
+    else {
+      this.player.body.setVelocity(0, 0);
     }
   }
 
   onMeetEnemy(player, enemy) {
+    this.input.keyboard.enabled = false;
+
+    for(let elem in this.cursors) {
+      this.cursors[elem].isDown = false;
+    }
+
     let worldX = enemy.x - this.dungeon.tileWidth / 2;
     let worldY = enemy.y - this.dungeon.tileHeight / 2;
 
@@ -79,6 +90,8 @@ export default class GameScene extends Phaser.Scene {
   }
 
   resumeAfterFight() {
+    this.input.keyboard.enabled = true;
+
     if (this.lastEnemyPos) {
       this.playerLayer.getTileAtWorldXY(this.lastEnemyPos.x, this.lastEnemyPos.y).index = -1;
       this.lastEnemyPos = null;
