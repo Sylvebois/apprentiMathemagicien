@@ -8,7 +8,9 @@ export default class BattleScene extends Phaser.Scene {
 
   init(data) {
     this.enemyInfo = data;
+    this.answer = this.generateEquation();
   }
+
   create() {
     this.tilesize = this.game.globals.tilesize;
 
@@ -27,30 +29,55 @@ export default class BattleScene extends Phaser.Scene {
     this.enemy.setPosition(config.width - 3 * this.tilesize, config.height / 2 + this.player.height);
     this.enemy.setScale(3);
 
+    let answerText = this.add.text(0, 0, this.answer.text, { fontSize: '60px' });
+    answerText.setPosition(config.width / 2 - answerText.width / 2, 120);
+
     this.virtualkb = this.physics.add.staticGroup({ classType: Phaser.GameObjects.Zone });
     this.createVKB();
 
     // Checking for input (keyboard and mouse)
     this.cursors = this.keysToWatch();
-    this.input.on('gameobjectdown',this.mouseAction);
+    this.input.on('gameobjectdown', this.mouseAction);
 
     this.userAnswer = '';
+    this.userAnswerText = this.add.text(0, 0, this.userAnswer, { fontSize: '80px', fill: '#f00' });
   }
 
   update() {
     for (let elem in this.cursors) {
       if (Phaser.Input.Keyboard.JustDown(this.cursors[elem])) {
         if (this.cursors[elem].keyCode === 13) {
-
+          this.validateAnswer();
         }
         else {
           this.updateAnswer(this.cursors[elem].keyCode);
         }
       }
     }
+    this.userAnswerText.setText(this.userAnswer);
+    this.userAnswerText.setPosition(config.width / 2 - this.userAnswerText.width / 2, 240);
+  }
 
-    for(let elem in this.virtualkb) {
+  generateEquation() {
+    let level = this.game.globals.level
+    let a = 0;
+    let b = 0;
+    let c = null;
+    let result = 0;
+    let text = '';
+
+    if (level < 3) {
+      a = Phaser.Math.Between(0, 5);
+      b = Phaser.Math.Between(0, 5);
+      c = (level === 9) ? Phaser.Math.Between(0, 10) : null;
+
+      result = a + b + ((level === 9) ? c : 0);
+      text = `${a} + ${b} ${(level === 9) ? '+ ' + c : ''}`;
     }
+
+    result = result.toString();
+
+    return { result, text };
   }
 
   updateAnswer(keyCode) {
@@ -65,16 +92,26 @@ export default class BattleScene extends Phaser.Scene {
     }
   }
 
-  mouseAction(pointer, virtualKey) {
-    //this.scene.resume('Game').stop('Battle');
-    if(virtualKey.textValue === 'V') {
-
-    }
-    else if(virtualKey.textValue === 'X') {
-      this.userAnswer = '';
+  validateAnswer() {
+    if (this.userAnswer === this.answer.result) {
+      this.scene.resume('Game').stop('Battle');
     }
     else {
-      this.userAnswer += virtualKey.textValue.toString();
+
+    }
+  }
+
+  mouseAction(pointer, virtualKey) {
+    let thisScene = pointer.manager.game.scene.keys.Battle;
+
+    if (virtualKey.textValue === 'V') {
+      thisScene.validateAnswer();
+    }
+    else if (virtualKey.textValue === 'X') {
+      thisScene.userAnswer = '';
+    }
+    else {
+      thisScene.userAnswer += virtualKey.textValue.toString();
     }
   }
 
