@@ -9,6 +9,7 @@ export default class BattleScene extends Phaser.Scene {
   init(data) {
     this.enemyInfo = data;
     this.answer = this.generateEquation();
+    this.try = 3;
   }
 
   create() {
@@ -37,13 +38,18 @@ export default class BattleScene extends Phaser.Scene {
     this.enemyShot.setScale(3);
     this.enemyShot.alpha = 0;
 
-    this.createAnims();
+    this.gameOverText = this.add.text(0, 0, 'GAME OVER', { fontSize: '100px', fontFamily: 'sans-serif' });
+    this.gameOverText.alpha = 0;
+    this.gameOverText.setScale(0);
+    this.gameOverText.setPosition(config.width / 2 - this.gameOverText.width / 2, config.height / 2);
 
     let answerText = this.add.text(0, 0, this.answer.text, { fontSize: '60px' });
     answerText.setPosition(config.width / 2 - answerText.width / 2, 120);
 
     this.virtualkb = this.physics.add.staticGroup({ classType: Phaser.GameObjects.Zone });
+
     this.createVKB();
+    this.createAnims();
 
     // Checking for input (keyboard and mouse)
     this.cursors = this.keysToWatch();
@@ -55,13 +61,18 @@ export default class BattleScene extends Phaser.Scene {
 
   update() {
     for (let elem in this.cursors) {
-      if (Phaser.Input.Keyboard.JustDown(this.cursors[elem])) {
-        if (this.cursors[elem].keyCode === 13) {
-          this.validateAnswer();
+      if (this.try) {
+        if (Phaser.Input.Keyboard.JustDown(this.cursors[elem])) {
+          if (this.cursors[elem].keyCode === 13) {
+            this.validateAnswer();
+          }
+          else {
+            this.updateAnswer(this.cursors[elem].keyCode);
+          }
         }
-        else {
-          this.updateAnswer(this.cursors[elem].keyCode);
-        }
+      }
+      else {
+        this.game.globals.level = 0;
       }
     }
     this.userAnswerText.setText(this.userAnswer);
@@ -106,24 +117,29 @@ export default class BattleScene extends Phaser.Scene {
     if (this.userAnswer === this.answer.result) {
       this.playerAttacksTween.play();
     }
-    else if(this.userAnswer !== '')
-    {
+    else if (this.userAnswer !== '') {
       this.enemyAttacksTween.play();
       this.userAnswer = '';
+      this.try--;
     }
   }
 
   mouseAction(pointer, virtualKey) {
     let thisScene = pointer.manager.game.scene.keys.Battle;
 
-    if (virtualKey.textValue === 'V') {
-      thisScene.validateAnswer();
-    }
-    else if (virtualKey.textValue === 'X') {
-      thisScene.userAnswer = '';
+    if (this.try) {
+      if (virtualKey.textValue === 'V') {
+        thisScene.validateAnswer();
+      }
+      else if (virtualKey.textValue === 'X') {
+        thisScene.userAnswer = '';
+      }
+      else {
+        thisScene.userAnswer += virtualKey.textValue.toString();
+      }
     }
     else {
-      thisScene.userAnswer += virtualKey.textValue.toString();
+      this.game.globals.level = 0;
     }
   }
 
@@ -223,15 +239,15 @@ export default class BattleScene extends Phaser.Scene {
       onComplete: function () {
         this.playerShot.alpha = 0;
         this.enemyGetsHitTween.play();
-       }.bind(this),
+      }.bind(this),
       paused: true
     });
 
     this.enemyGetsHitTween = this.tweens.add({
       targets: this.enemy,
       duration: 500,
-      rotation: 5,
-      alpha: 0,
+      rotation: 10,
+      scale: 0,
       ease: 'Power1',
       onComplete: function () { this.scene.resume('Game').stop('Battle') }.bind(this),
       paused: true
@@ -257,7 +273,7 @@ export default class BattleScene extends Phaser.Scene {
       onStart: function () { this.enemyShot.alpha = 1 }.bind(this),
       onComplete: function () {
         this.enemyShot.alpha = 0;
-        this.playerGetsHitTween.play();
+        (this.try) ? this.playerGetsHitTween.play() : this.playerDiesTween.play();
       }.bind(this),
       paused: true
     });
@@ -268,6 +284,25 @@ export default class BattleScene extends Phaser.Scene {
       rotation: 6.3,
       ease: 'Power1',
       paused: true
+    });
+
+    this.playerDiesTween = this.tweens.add({
+      targets: this.player,
+      duration: 500,
+      rotation: 10,
+      scale: 0,
+      ease: 'Power1',
+      onComplete: function () { this.gameOverTween.play() }.bind(this),
+      paused: true,
+    });
+
+    this.gameOverTween = this.tweens.add({
+      targets: this.gameOverText,
+      duration: 1000,
+      alpha: 1,
+      scale: 1,
+      ease: 'Sine.easeInOut',
+      paused: true,
     });
   }
 }
