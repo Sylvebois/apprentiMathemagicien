@@ -25,9 +25,19 @@ export default class BattleScene extends Phaser.Scene {
     this.player.setPosition(3 * this.tilesize, config.height / 2 + this.player.height);
     this.player.setScale(3);
 
+    this.playerShot = this.add.sprite(this.player.x, this.player.y, 'playerShot');
+    this.playerShot.setScale(3);
+    this.playerShot.alpha = 0;
+
     this.enemy = this.physics.add.sprite(0, 0, 'crossRoad', this.enemyInfo.index);
     this.enemy.setPosition(config.width - 3 * this.tilesize, config.height / 2 + this.player.height);
     this.enemy.setScale(3);
+
+    this.enemyShot = this.add.sprite(this.enemy.x, this.enemy.y, 'playerShot');
+    this.enemyShot.setScale(3);
+    this.enemyShot.alpha = 0;
+
+    this.createAnims();
 
     let answerText = this.add.text(0, 0, this.answer.text, { fontSize: '60px' });
     answerText.setPosition(config.width / 2 - answerText.width / 2, 120);
@@ -94,10 +104,12 @@ export default class BattleScene extends Phaser.Scene {
 
   validateAnswer() {
     if (this.userAnswer === this.answer.result) {
-      this.scene.resume('Game').stop('Battle');
+      this.playerAttacksTween.play();
     }
-    else {
-
+    else if(this.userAnswer !== '')
+    {
+      this.enemyAttacksTween.play();
+      this.userAnswer = '';
     }
   }
 
@@ -187,5 +199,75 @@ export default class BattleScene extends Phaser.Scene {
       let text = this.add.text(0, 0, button.textValue, { fontSize: '64px', fontFamily: 'sans-serif', color: button.textColor });
       Phaser.Display.Align.In.Center(text, button);
     }
+  }
+
+  createAnims() {
+    this.playerAttacksTween = this.tweens.add({
+      targets: this.player,
+      duration: 500,
+      repeat: 1,
+      rotation: 0.5,
+      ease: 'Sine.easeInOut',
+      yoyo: true,
+      onStart: function () { this.playerShot.alpha = 1 }.bind(this),
+      onComplete: function () { this.playerShotTween.play() }.bind(this),
+      paused: true
+    });
+
+    this.playerShotTween = this.tweens.add({
+      targets: this.playerShot,
+      duration: 500,
+      rotation: 10,
+      x: this.enemy.x,
+      ease: 'Sine.easeInOut',
+      onComplete: function () {
+        this.playerShot.alpha = 0;
+        this.enemyGetsHitTween.play();
+       }.bind(this),
+      paused: true
+    });
+
+    this.enemyGetsHitTween = this.tweens.add({
+      targets: this.enemy,
+      duration: 500,
+      rotation: 5,
+      alpha: 0,
+      ease: 'Power1',
+      onComplete: function () { this.scene.resume('Game').stop('Battle') }.bind(this),
+      paused: true
+    });
+
+    this.enemyAttacksTween = this.tweens.add({
+      targets: this.enemy,
+      duration: 500,
+      repeat: 1,
+      rotation: -0.5,
+      ease: 'Sine.easeInOut',
+      yoyo: true,
+      onComplete: function () { this.enemyShotTween.play() }.bind(this),
+      paused: true
+    });
+
+    this.enemyShotTween = this.tweens.add({
+      targets: this.enemyShot,
+      duration: 500,
+      rotation: 10,
+      x: this.player.x,
+      ease: 'Sine.easeInOut',
+      onStart: function () { this.enemyShot.alpha = 1 }.bind(this),
+      onComplete: function () {
+        this.enemyShot.alpha = 0;
+        this.playerGetsHitTween.play();
+      }.bind(this),
+      paused: true
+    });
+
+    this.playerGetsHitTween = this.tweens.add({
+      targets: this.player,
+      duration: 500,
+      rotation: 6.3,
+      ease: 'Power1',
+      paused: true
+    });
   }
 }
