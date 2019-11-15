@@ -88,6 +88,7 @@ export default class PreloaderScene extends Phaser.Scene {
      this.load.image('bgScroll', 'assets/ui/scroll.png');
      this.load.image('player', 'assets/game/hero.png');
      this.load.image('playerShot', 'assets/game/playerShot.png');
+     this.load.image('heart', 'assets/game/heart.png');
      this.load.spritesheet('crossRoad', 'assets/game/crossRoad.png', {
       frameWidth: 32,
       frameHeight: 32

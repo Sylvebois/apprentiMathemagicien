@@ -9,7 +9,7 @@ export default class BattleScene extends Phaser.Scene {
   init(data) {
     this.enemyInfo = data;
     this.answer = this.generateEquation();
-    this.try = 3;
+    this.remainingTries = 3;
   }
 
   create() {
@@ -30,6 +30,11 @@ export default class BattleScene extends Phaser.Scene {
     this.playerShot.setScale(3);
     this.playerShot.alpha = 0;
 
+    this.playerLifeImg = this.add.image(0, 0, 'heart');
+    this.playerLifeImg.setPosition(this.player.x, this.player.y + this.player.height + this.playerLifeImg.height + 5);
+    this.playerLifeText = this.add.text(0, 0, this.remainingTries, { fontSize: '32px' });
+    this.playerLifeText.setPosition(this.playerLifeImg.x + this.playerLifeImg.width/2 + 5, this.playerLifeImg.y - this.playerLifeText.height / 2);
+
     this.enemy = this.physics.add.sprite(0, 0, 'crossRoad', this.enemyInfo.index);
     this.enemy.setPosition(config.width - 3 * this.tilesize, config.height / 2 + this.player.height);
     this.enemy.setScale(3);
@@ -46,6 +51,7 @@ export default class BattleScene extends Phaser.Scene {
     let answerText = this.add.text(0, 0, this.answer.text, { fontSize: '60px' });
     answerText.setPosition(config.width / 2 - answerText.width / 2, 120);
 
+    // Virtual Keyboard
     this.virtualkb = this.physics.add.staticGroup({ classType: Phaser.GameObjects.Zone });
 
     this.createVKB();
@@ -61,7 +67,7 @@ export default class BattleScene extends Phaser.Scene {
 
   update() {
     for (let elem in this.cursors) {
-      if (this.try) {
+      if (this.remainingTries) {
         if (Phaser.Input.Keyboard.JustDown(this.cursors[elem])) {
           if (this.cursors[elem].keyCode === 13) {
             this.validateAnswer();
@@ -120,14 +126,15 @@ export default class BattleScene extends Phaser.Scene {
     else if (this.userAnswer !== '') {
       this.enemyAttacksTween.play();
       this.userAnswer = '';
-      this.try--;
+      this.remainingTries--;
+      this.playerLifeText.setText(this.remainingTries);
     }
   }
 
   mouseAction(pointer, virtualKey) {
     let thisScene = pointer.manager.game.scene.keys.Battle;
 
-    if (this.try) {
+    if (this.remainingTries) {
       if (virtualKey.textValue === 'V') {
         thisScene.validateAnswer();
       }
@@ -273,7 +280,7 @@ export default class BattleScene extends Phaser.Scene {
       onStart: function () { this.enemyShot.alpha = 1 }.bind(this),
       onComplete: function () {
         this.enemyShot.alpha = 0;
-        (this.try) ? this.playerGetsHitTween.play() : this.playerDiesTween.play();
+        (this.remainingTries) ? this.playerGetsHitTween.play() : this.playerDiesTween.play();
       }.bind(this),
       paused: true
     });

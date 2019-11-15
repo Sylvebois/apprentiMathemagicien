@@ -42,7 +42,7 @@ export default class GameScene extends Phaser.Scene {
       'bottom': new Phaser.Geom.Triangle(0, config.height, config.width, config.height, config.width / 2, config.height / 2),
       'right': new Phaser.Geom.Triangle(config.width, 0, config.width, config.height, config.width / 2, config.height / 2),
     };
-    console.log(this.input.activePointer);
+
     this.pointer = this.input.activePointer;
     this.cursors = this.keysToWatch();
 
