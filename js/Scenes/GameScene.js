@@ -36,7 +36,14 @@ export default class GameScene extends Phaser.Scene {
     this.physics.add.overlap(this.player, this.enemies, this.onMeetEnemy, false, this);
 
     // Checking for input (keyboard and mouse)
-    this.input.on('pointerdown', this.mouseAction);
+    this.touchTriangles = {
+      'top': new Phaser.Geom.Triangle(0, 0, config.width, 0, config.width / 2, config.height / 2),
+      'left': new Phaser.Geom.Triangle(0, 0, 0, config.height, config.width / 2, config.height / 2),
+      'bottom': new Phaser.Geom.Triangle(0, config.height, config.width, config.height, config.width / 2, config.height / 2),
+      'right': new Phaser.Geom.Triangle(config.width, 0, config.width, config.height, config.width / 2, config.height / 2),
+    };
+    console.log(this.input.activePointer);
+    this.pointer = this.input.activePointer;
     this.cursors = this.keysToWatch();
 
     this.events.on('resume', this.resumeAfterFight, this);
@@ -47,18 +54,22 @@ export default class GameScene extends Phaser.Scene {
 
     if (this.input.keyboard.enabled) {
       // Horizontal movement
-      if (this.cursors.left.isDown || this.cursors.numFour.isDown) {
+      if (this.cursors.left.isDown || this.cursors.numFour.isDown ||
+        (this.pointer.isDown && this.touchTriangles.left.contains(this.pointer.x, this.pointer.y))) {
         this.player.body.setVelocityX(-160);
       }
-      else if (this.cursors.right.isDown || this.cursors.numSix.isDown) {
+      else if (this.cursors.right.isDown || this.cursors.numSix.isDown ||
+        (this.pointer.isDown && this.touchTriangles.right.contains(this.pointer.x, this.pointer.y))) {
         this.player.body.setVelocityX(160);
       }
 
       // Vertical movement
-      if (this.cursors.up.isDown || this.cursors.numEight.isDown) {
+      if (this.cursors.up.isDown || this.cursors.numEight.isDown ||
+        (this.pointer.isDown && this.touchTriangles.top.contains(this.pointer.x, this.pointer.y))) {
         this.player.body.setVelocityY(-160);
       }
-      else if (this.cursors.down.isDown || this.cursors.numTwo.isDown) {
+      else if (this.cursors.down.isDown || this.cursors.numTwo.isDown ||
+        (this.pointer.isDown && this.touchTriangles.bottom.contains(this.pointer.x, this.pointer.y))) {
         this.player.body.setVelocityY(160);
       }
     }
@@ -70,7 +81,7 @@ export default class GameScene extends Phaser.Scene {
   onMeetEnemy(player, enemy) {
     this.input.keyboard.enabled = false;
 
-    for(let elem in this.cursors) {
+    for (let elem in this.cursors) {
       this.cursors[elem].isDown = false;
     }
 
@@ -96,10 +107,6 @@ export default class GameScene extends Phaser.Scene {
       this.playerLayer.getTileAtWorldXY(this.lastEnemyPos.x, this.lastEnemyPos.y).index = -1;
       this.lastEnemyPos = null;
     }
-  }
-
-  mouseAction() {
-
   }
 
   keysToWatch() {
