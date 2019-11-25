@@ -134,7 +134,7 @@ export default class BattleScene extends Phaser.Scene {
   mouseAction(pointer, virtualKey) {
     let thisScene = pointer.manager.game.scene.keys.Battle;
 
-    if (this.remainingTries) {
+    if (thisScene.remainingTries) {
       if (virtualKey.textValue === 'V') {
         thisScene.validateAnswer();
       }
@@ -146,7 +146,7 @@ export default class BattleScene extends Phaser.Scene {
       }
     }
     else {
-      this.game.globals.level = 0;
+      thisScene.game.globals.level = 0;
     }
   }
 
