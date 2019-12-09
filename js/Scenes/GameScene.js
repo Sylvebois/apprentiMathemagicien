@@ -107,6 +107,11 @@ export default class GameScene extends Phaser.Scene {
       this.playerLayer.getTileAtWorldXY(this.lastEnemyPos.x, this.lastEnemyPos.y).index = -1;
       this.lastEnemyPos = null;
     }
+
+    if(!this.enemies.children.entries.length) {
+      this.game.globals.level++;
+      this.scene.restart();
+    }
   }
 
   keysToWatch() {
