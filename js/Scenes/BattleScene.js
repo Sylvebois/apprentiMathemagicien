@@ -22,24 +22,24 @@ export default class BattleScene extends Phaser.Scene {
     this.graphics.fillRect(0, 0, config.width, config.height);
     this.graphics.strokeRect(3, 3, config.width - 6, config.height - 6);
 
-    this.player = this.physics.add.sprite(0, 0, 'player');
+    this.player = this.physics.add.sprite(0, 0, 'tileset', 51);
     this.player.setPosition(3 * this.tilesize, config.height / 2 + this.player.height);
     this.player.setScale(3);
 
-    this.playerShot = this.add.sprite(this.player.x, this.player.y, 'playerShot');
+    this.playerShot = this.add.sprite(this.player.x, this.player.y, 'tileset', 54);
     this.playerShot.setScale(3);
     this.playerShot.alpha = 0;
 
-    this.playerLifeImg = this.add.image(0, 0, 'heart');
+    this.playerLifeImg = this.add.image(0, 0, 'tileset', 53);
     this.playerLifeImg.setPosition(this.player.x, this.player.y + this.player.height + this.playerLifeImg.height + 5);
     this.playerLifeText = this.add.text(0, 0, this.remainingTries, { fontSize: '32px' });
-    this.playerLifeText.setPosition(this.playerLifeImg.x + this.playerLifeImg.width/2 + 5, this.playerLifeImg.y - this.playerLifeText.height / 2);
+    this.playerLifeText.setPosition(this.playerLifeImg.x + this.playerLifeImg.width / 2 + 5, this.playerLifeImg.y - this.playerLifeText.height / 2);
 
-    this.enemy = this.physics.add.sprite(0, 0, 'crossRoad', this.enemyInfo.index);
+    this.enemy = this.physics.add.sprite(0, 0, 'tileset', this.enemyInfo.index);
     this.enemy.setPosition(config.width - 3 * this.tilesize, config.height / 2 + this.player.height);
     this.enemy.setScale(3);
 
-    this.enemyShot = this.add.sprite(this.enemy.x, this.enemy.y, 'playerShot');
+    this.enemyShot = this.add.sprite(this.enemy.x, this.enemy.y, 'tileset', this.enemyInfo.index + 4);
     this.enemyShot.setScale(3);
     this.enemyShot.alpha = 0;
 
@@ -93,13 +93,21 @@ export default class BattleScene extends Phaser.Scene {
     let result = 0;
     let text = '';
 
-    if (level < 3) {
-      a = Phaser.Math.Between(0, 5);
-      b = Phaser.Math.Between(0, 5);
+    if (level < 10) {
+      a = Phaser.Math.Between(0, 5 + level);
+      b = Phaser.Math.Between(0, 5 + level);
       c = (level === 9) ? Phaser.Math.Between(0, 10) : null;
 
       result = a + b + ((level === 9) ? c : 0);
       text = `${a} + ${b} ${(level === 9) ? '+ ' + c : ''}`;
+    }
+    else if (level >= 10 && level < 20) {
+      a = Phaser.Math.Between(0, 10 + (level % 10));
+      b = Phaser.Math.Between(0, a);
+      c = (level === 19) ? Phaser.Math.Between(0, a - b) : null;
+
+      result = a - b - ((level === 19) ? c : 0);
+      text = `${a} - ${b} ${(level === 19) ? '- ' + c : ''}`;
     }
 
     result = result.toString();

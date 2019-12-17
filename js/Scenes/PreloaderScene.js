@@ -86,10 +86,7 @@ export default class PreloaderScene extends Phaser.Scene {
      this.load.image('box', 'assets/ui/grey_box.png');
      this.load.image('checkedBox', 'assets/ui/blue_boxCheckmark.png');
      this.load.image('bgScroll', 'assets/ui/scroll.png');
-     this.load.image('player', 'assets/game/hero.png');
-     this.load.image('playerShot', 'assets/game/playerShot.png');
-     this.load.image('heart', 'assets/game/heart.png');
-     this.load.spritesheet('crossRoad', 'assets/game/crossRoad.png', {
+     this.load.spritesheet('tileset', 'assets/game/tileset.png', {
       frameWidth: 32,
       frameHeight: 32
      });
