@@ -1,4 +1,5 @@
 import * as PHASER from '../phaser.min.js';
+import { interfaceText } from '../text.js';
 import config from '../Config/config.js';
 import Button from '../Objects/Button.js';
 
@@ -20,18 +21,18 @@ export default class TitleScene extends Phaser.Scene {
     titleUnderline.setPosition(config.width / 2, title.y + title.height + 5);
 
     // Game
-    if(localStorage.getItem('player')) {
-      this.gameButton = new Button(this, config.width / 2, config.height / 2 - 100, 'titleButton',  'Continuer', 'Game');
+    if (localStorage.getItem('player')) {
+      this.gameButton = new Button(this, config.width / 2, config.height / 2 - 100, 'titleButton', interfaceText.buttons.fr[1], 'Game');
     }
     else {
-      this.gameButton = new Button(this, config.width / 2, config.height / 2 - 100, 'titleButton',  'Commencer', 'Story');
+      this.gameButton = new Button(this, config.width / 2, config.height / 2 - 100, 'titleButton', interfaceText.buttons.fr[0], 'Story');
     }
 
     // Options
-    this.optionsButton = new Button(this, config.width / 2, config.height / 2, 'titleButton', 'Options', 'Options');
+    this.optionsButton = new Button(this, config.width / 2, config.height / 2, 'titleButton', interfaceText.buttons.fr[2], 'Options');
 
     // Credits
-    this.creditsButton = new Button(this, config.width / 2, config.height / 2 + 100, 'titleButton', 'Crédits', 'Credits');
+    this.creditsButton = new Button(this, config.width / 2, config.height / 2 + 100, 'titleButton', interfaceText.buttons.fr[3], 'Credits');
 
     /*
       this.model = this.sys.game.globals.model;
