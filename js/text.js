@@ -2,6 +2,41 @@ let interfaceText = {};
 interfaceText.buttons = {};
 interfaceText.buttons.fr = ['Commencer', 'Continuer', 'Options', 'Crédits'];
 
+let dialogs = {};
+dialogs.chapter1 = {};
+dialogs.chapter1.fr = [`
+Bonjour jeune apprenti !
+
+Le roi nous a demandé de sécuriser cette route. Il va
+donc falloir que quelqu'un élimine tous ces bandits
+et animaux sauvages ...
+
+déplace toi en utilisant les flèches ou en touchant
+un bord des côtés de l'écran.
+Lors d'un combat, il faut résoudre l'équation en
+tapant le résultat (et en validant avec ENTER) ou en
+touchant les chiffres correspondants.
+
+Bon, au travail, montre moi ce que tu sais faire,
+jeune apprenti ...`,
+`
+Tu te débrouilles bien on dirait. Continue comme ça
+et on trouvera certainement le chef de ces bandits.
+En attendant, je dois absolument cueillir ces
+Taraxacum officinale pour ma prochaine potion ...
+
+Bonne continuation jeune apprenti !`,
+`
+Ahahah, l'homme en noir avait raison, cette route
+est pleine de gens aux poches bien remplies !
+Je vais devenir riche !
+
+Quoi ? Des intrus ? Vous n'aurez pas mon or !
+
+A L'ATTAQUE !!!
+`
+];
+
 let story = {};
 story.intro = {};
 story.chapter1 = {};
@@ -61,4 +96,4 @@ http://crawl.develz.org
 Francisco Hodge (virtual keyboard)
 https://franciscohodge.com`;
 
-export {interfaceText, story, credits};
+export {interfaceText, story, dialogs, credits};

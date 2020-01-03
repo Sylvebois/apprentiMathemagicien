@@ -1,4 +1,5 @@
 import * as PHASER from '../phaser.min.js';
+import { dialogs } from '../text.js';
 import config from '../Config/config.js';
 
 export default class GameScene extends Phaser.Scene {
@@ -6,15 +7,21 @@ export default class GameScene extends Phaser.Scene {
     super('Game');
   }
 
+  init() {
+    this.chapterProgress = this.game.globals.level % 10;
+    this.chapter = Math.floor(this.game.globals.level / 10);
+
+    this.showTextBox = ( this.chapterProgress === 0 || this.chapterProgress === 4 || this.chapterProgress === 9) ? true : false;
+  }
+
   create() {
     this.dungeon = this.make.tilemap({
       tileWidth: this.game.globals.tilesize,
       tileHeight: this.game.globals.tilesize,
       width: Math.floor(config.width / this.game.globals.tilesize),
-      height: Math.floor(config.height / this.game.globals.tilesize)
+      height: Math.floor(config.height / this.game.globals.tilesize),
     });
 
-    // A FAIRE : grouper toutes les images sur un seul tileset
     let tiles = this.dungeon.addTilesetImage('tileset');
 
     this.groundLayer = this.dungeon.createBlankDynamicLayer('Ground Layer', tiles);
@@ -47,10 +54,37 @@ export default class GameScene extends Phaser.Scene {
     this.cursors = this.keysToWatch();
 
     this.events.on('resume', this.resumeAfterFight, this);
+
+    // Show a textbox on some levels
+    if (this.showTextBox) {
+      this.graphics = this.add.graphics();
+      this.graphics.lineStyle(3, 0xffffff);
+      this.graphics.fillStyle(0x031f4c, 1);
+
+      this.graphics.fillRect(0, 0, config.width, config.height / 2);
+      this.graphics.strokeRect(3, 3, config.width - 6, config.height / 2 - 6);
+      this.graphics.strokeRect(3, 3, this.game.globals.tilesize * 4 + 3, this.game.globals.tilesize * 4 + 6);
+
+      this.pnj = this.add.image(6, 6, 'tileset', (this.chapterProgress === 9)? 17 * this.chapter + 13 : 52);
+      this.pnj.setOrigin(0, 0);
+      this.pnj.setScale(4);
+
+      let textPosX = this.pnj.width * this.pnj._scaleX + this.pnj.x + 6;
+      let textNum = (this.chapterProgress === 0)? 0 : (this.chapterProgress === 4)? 1 : 2;
+
+      this.dialogText = this.add.text(textPosX, 0, dialogs[`chapter${this.chapter + 1}`]['fr'][textNum], { fontSize: '20px', fill: '#fff' });
+    }
   }
 
   update() {
     this.player.body.setVelocity(0);
+
+    if (this.showTextBox && this.input.keyboard.keys.some(elem => elem.isDown)) {
+      this.showTextBox = false;
+      this.graphics.alpha = 0;
+      this.pnj.destroy();
+      this.dialogText.destroy();
+    }
 
     if (this.input.keyboard.enabled) {
       // Horizontal movement
@@ -108,9 +142,15 @@ export default class GameScene extends Phaser.Scene {
       this.lastEnemyPos = null;
     }
 
-    if(!this.enemies.children.entries.length) {
+    if (!this.enemies.children.entries.length) {
       this.game.globals.level++;
-      this.scene.restart();
+
+      if (this.chapterProgress === 0) {
+        this.scene.start('Story').stop('Game');
+      }
+      else {
+        this.scene.restart();
+      }
     }
   }
 
@@ -127,7 +167,7 @@ export default class GameScene extends Phaser.Scene {
   }
 
   createDungeonMap() {
-    let lvlTileLine = 17 * Math.floor(this.game.globals.level/10);
+    let lvlTileLine = 17 * this.chapter;
 
     // Border of the scene
     this.playerLayer.fill(9 + lvlTileLine, 0, 0, this.dungeon.width, 1);
@@ -154,7 +194,7 @@ export default class GameScene extends Phaser.Scene {
     // First level always get a path in the middle
     let middle = Math.floor(this.dungeon.height / 2);
 
-    if (this.game.globals.level % 10 === 0) {
+    if (this.chapterProgress === 0) {
       this.groundLayer.fill(1 + lvlTileLine, 0, middle - 1, this.dungeon.width, 1);
       this.groundLayer.fill(0 + lvlTileLine, 0, middle, this.dungeon.width, 1);
       this.groundLayer.fill(2 + lvlTileLine, 0, middle + 1, this.dungeon.width, 1);
@@ -171,7 +211,7 @@ export default class GameScene extends Phaser.Scene {
   }
 
   randomizeEnemies() {
-    let lvlTileLine = 17 * Math.floor(this.game.globals.level/10);
+    let lvlTileLine = 17 * this.chapter;
 
     while (this.enemies.getLength() < 10) {
       let x = Phaser.Math.Between(1, this.dungeon.width - 1);
