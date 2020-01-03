@@ -11,8 +11,8 @@ Le roi nous a demandé de sécuriser cette route. Il va
 donc falloir que quelqu'un élimine tous ces bandits
 et animaux sauvages ...
 
-déplace toi en utilisant les flèches ou en touchant
-un bord des côtés de l'écran.
+Déplace toi en utilisant les flèches ou en touchant
+un des bords de l'écran.
 Lors d'un combat, il faut résoudre l'équation en
 tapant le résultat (et en validant avec ENTER) ou en
 touchant les chiffres correspondants.
@@ -22,6 +22,7 @@ jeune apprenti ...`,
 `
 Tu te débrouilles bien on dirait. Continue comme ça
 et on trouvera certainement le chef de ces bandits.
+
 En attendant, je dois absolument cueillir ces
 Taraxacum officinale pour ma prochaine potion ...
 
