@@ -94,6 +94,7 @@ export default class BattleScene extends Phaser.Scene {
     let text = '';
 
     if (level < 10) {
+      // Add
       a = Phaser.Math.Between(0, 5 + level);
       b = Phaser.Math.Between(0, 5 + level);
       c = (level === 9) ? Phaser.Math.Between(0, 10) : null;
@@ -102,6 +103,7 @@ export default class BattleScene extends Phaser.Scene {
       text = `${a} + ${b} ${(level === 9) ? '+ ' + c : ''}`;
     }
     else if (level >= 10 && level < 20) {
+      // Substract
       a = Phaser.Math.Between(0, 10 + (level % 10));
       b = Phaser.Math.Between(0, a);
       c = (level === 19) ? Phaser.Math.Between(0, a - b) : null;
@@ -109,10 +111,54 @@ export default class BattleScene extends Phaser.Scene {
       result = a - b - ((level === 19) ? c : 0);
       text = `${a} - ${b} ${(level === 19) ? '- ' + c : ''}`;
     }
+    else if (level >= 20 && level < 30) {
+      // Multiply
+      a = Phaser.Math.Between(0, 10 + (level % 10));
+      b = Phaser.Math.Between(1, 10 + (level % 10));
+      c = (level === 9) ? Phaser.Math.Between(1, 10) : null;
+
+      result = a * b * ((level === 9) ? c : 1);
+      text = `${a} x ${b} ${(level === 9) ? 'x ' + c : ''}`;
+    }
+    else if (level >= 30 && level < 40) {
+      // Divide
+      a = Phaser.Math.Between(2, 100 * (1 + level % 10));
+      b = Array.from(this.decomposeNumber(a));
+      let indexB = Phaser.Math.Between(0, b.length - 1);
+      c = (level === 9) ? Array.from(this.decomposeNumber(a / b[indexB])) : [];
+      let indexC = Phaser.Math.Between(0, c.length - 1);
+
+
+      result = a / b[indexB] / ((level === 9) ? c[indexC] : 1);
+      text = `${a} / ${b[indexB]} ${(level === 9) ? '/ ' + c[indexC] : ''}`;
+    }
+    else if (level >= 40 && level < 50) {
+      // Exponant
+    }
+    else if (level >= 50 && level < 60) {
+      // Square root
+    }
 
     result = result.toString();
 
     return { result, text };
+  }
+
+  decomposeNumber(n) {
+    if (n < 2) {
+      return [n];
+    }
+    else {
+      let f = new Set();
+
+      for (let i = 2; i <= n; i++) {
+        while (n % i === 0) {
+          f.add(i);
+          n /= i;
+        }
+      }
+      return f.values();
+    }
   }
 
   updateAnswer(keyCode) {
