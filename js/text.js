@@ -4,6 +4,12 @@ interfaceText.buttons.fr = ['Commencer', 'Continuer', 'Options', 'Crédits'];
 
 let dialogs = {};
 dialogs.chapter1 = {};
+dialogs.chapter2 = {};
+dialogs.chapter3 = {};
+dialogs.chapter4 = {};
+dialogs.chapter5 = {};
+dialogs.chapter6 = {};
+
 dialogs.chapter1.fr = [`
 Bonjour jeune apprenti !
 
@@ -38,11 +44,21 @@ A L'ATTAQUE !!!
 `
 ];
 
+dialogs.chapter2.fr = [``, ``, ``];
+dialogs.chapter3.fr = [``, ``, ``];
+dialogs.chapter4.fr = [``, ``, ``];
+dialogs.chapter5.fr = [``, ``, ``];
+dialogs.chapter6.fr = [``, ``, ``];
+
+
 let story = {};
 story.intro = {};
 story.chapter1 = {};
 story.chapter2 = {};
 story.chapter3 = {};
+story.chapter4 = {};
+story.chapter5 = {};
+story.chapter6 = {};
 
 story.intro.fr = `
 Il était une fois dans une contrée lointaine,
@@ -84,6 +100,11 @@ de roche et emmené dans le désert.
 
 Le roi vous demande d'enquêter et de découvrir
 ce qu'il se passe ...`;
+
+story.chapter3.fr =``;
+story.chapter4.fr =``;
+story.chapter5.fr =``;
+story.chapter6.fr =``;
 
 let credits =
 `Auteur :
