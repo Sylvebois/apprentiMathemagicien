@@ -38,23 +38,6 @@ export default class GameScene extends Phaser.Scene {
     this.enemies = this.physics.add.staticGroup({ classType: Phaser.GameObjects.Zone });
     this.randomizeEnemies();
 
-    // Checking collision with obstacles (non -1 index on the layer) and ennemies
-    this.physics.add.collider(this.player, this.playerLayer);
-    this.physics.add.overlap(this.player, this.enemies, this.onMeetEnemy, false, this);
-
-    // Checking for input (keyboard and mouse)
-    this.touchTriangles = {
-      'top': new Phaser.Geom.Triangle(0, 0, config.width, 0, config.width / 2, config.height / 2),
-      'left': new Phaser.Geom.Triangle(0, 0, 0, config.height, config.width / 2, config.height / 2),
-      'bottom': new Phaser.Geom.Triangle(0, config.height, config.width, config.height, config.width / 2, config.height / 2),
-      'right': new Phaser.Geom.Triangle(config.width, 0, config.width, config.height, config.width / 2, config.height / 2),
-    };
-
-    this.pointer = this.input.activePointer;
-    this.cursors = this.keysToWatch();
-
-    this.events.on('resume', this.resumeAfterFight, this);
-
     // Show a textbox on some levels
     if (this.showTextBox) {
       this.graphics = this.add.graphics();
@@ -74,12 +57,33 @@ export default class GameScene extends Phaser.Scene {
 
       this.dialogText = this.add.text(textPosX, 0, dialogs[`chapter${this.chapter + 1}`]['fr'][textNum], { fontSize: '20px', fill: '#fff' });
     }
+
+    // Checking collision with obstacles (non -1 index on the layer) and ennemies
+    this.physics.add.collider(this.player, this.playerLayer);
+    this.physics.add.overlap(this.player, this.enemies, this.onMeetEnemy, false, this);
+
+    // Checking for input (keyboard and mouse)
+    this.touchTriangles = {
+      'top': new Phaser.Geom.Triangle(0, 0, config.width, 0, config.width / 2, config.height / 2),
+      'left': new Phaser.Geom.Triangle(0, 0, 0, config.height, config.width / 2, config.height / 2),
+      'bottom': new Phaser.Geom.Triangle(0, config.height, config.width, config.height, config.width / 2, config.height / 2),
+      'right': new Phaser.Geom.Triangle(config.width, 0, config.width, config.height, config.width / 2, config.height / 2),
+    };
+
+    this.pointer = new Object();
+
+    // Delaying the pointer event listener so the dialog window stay on screen
+    let delay = new Promise((res, rej) => setTimeout(res, 500)).then(() => this.pointer = this.input.activePointer);
+
+    this.cursors = this.keysToWatch();
+
+    this.events.on('resume', this.resumeAfterFight, this);
   }
 
   update() {
     this.player.body.setVelocity(0);
 
-    if (this.showTextBox && this.input.keyboard.keys.some(elem => elem.isDown)) {
+    if (this.showTextBox && (this.input.keyboard.keys.some(elem => elem.isDown) || this.pointer.isDown)) {
       this.showTextBox = false;
       this.graphics.alpha = 0;
       this.pnj.destroy();
