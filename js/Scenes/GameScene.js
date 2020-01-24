@@ -138,15 +138,15 @@ export default class GameScene extends Phaser.Scene {
   }
 
   createDungeonMap() {
-    if(this.loadLevel) {
+    if (this.loadLevel) {
       let groundLayerArray = JSON.parse(localStorage.getItem('groundLayer'));
       let playerLayerArray = JSON.parse(localStorage.getItem('playerLayer'));
 
-      for(let groundLayerTile of groundLayerArray) {
+      for (let groundLayerTile of groundLayerArray) {
         this.groundLayer.fill(groundLayerTile.index, groundLayerTile.x, groundLayerTile.y);
       }
 
-      for(let playerLayerTile of playerLayerArray) {
+      for (let playerLayerTile of playerLayerArray) {
         this.playerLayer.fill(playerLayerTile.index, playerLayerTile.x, playerLayerTile.y);
       }
     }
@@ -254,7 +254,7 @@ export default class GameScene extends Phaser.Scene {
     if (!this.enemies.children.entries.length) {
       this.game.globals.level++;
 
-      if (this.chapterProgress === 0) {
+      if (this.game.globals.level > 9 && this.chapterProgress === 0) {
         this.scene.start('Story').stop('Game');
       }
       else {
