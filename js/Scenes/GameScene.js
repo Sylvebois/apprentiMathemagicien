@@ -11,7 +11,7 @@ export default class GameScene extends Phaser.Scene {
     this.chapterProgress = this.game.globals.level % 10;
     this.chapter = Math.floor(this.game.globals.level / 10);
 
-    this.showTextBox = ( this.chapterProgress === 0 || this.chapterProgress === 4 || this.chapterProgress === 9) ? true : false;
+    this.showTextBox = (this.chapterProgress === 0 || this.chapterProgress === 4 || this.chapterProgress === 9) ? true : false;
   }
 
   create() {
@@ -24,10 +24,9 @@ export default class GameScene extends Phaser.Scene {
 
     let tiles = this.dungeon.addTilesetImage('tileset');
 
+    // Layers initialization
     this.groundLayer = this.dungeon.createBlankDynamicLayer('Ground Layer', tiles);
     this.playerLayer = this.dungeon.createBlankDynamicLayer('Player Layer', tiles);
-
-    // Layers initialization
     this.createDungeonMap();
 
     // Player initialization
@@ -36,48 +35,25 @@ export default class GameScene extends Phaser.Scene {
 
     // Enemies initialization
     this.enemies = this.physics.add.staticGroup({ classType: Phaser.GameObjects.Zone });
-    this.randomizeEnemies();
+    this.createEnemies();
 
     // Show a textbox on some levels
     if (this.showTextBox) {
-      this.graphics = this.add.graphics();
-      this.graphics.lineStyle(3, 0xffffff);
-      this.graphics.fillStyle(0x031f4c, 1);
-
-      this.graphics.fillRect(0, 0, config.width, config.height / 2);
-      this.graphics.strokeRect(3, 3, config.width - 6, config.height / 2 - 6);
-      this.graphics.strokeRect(3, 3, this.game.globals.tilesize * 4 + 3, this.game.globals.tilesize * 4 + 6);
-
-      this.pnj = this.add.image(6, 6, 'tileset', (this.chapterProgress === 9)? 17 * this.chapter + 13 : 52);
-      this.pnj.setOrigin(0, 0);
-      this.pnj.setScale(4);
-
-      let textPosX = this.pnj.width * this.pnj._scaleX + this.pnj.x + 6;
-      let textNum = (this.chapterProgress === 0)? 0 : (this.chapterProgress === 4)? 1 : 2;
-
-      this.dialogText = this.add.text(textPosX, 0, dialogs[`chapter${this.chapter + 1}`]['fr'][textNum], { fontSize: '20px', fill: '#fff' });
+      this.createTextBox();
     }
 
     // Checking collision with obstacles (non -1 index on the layer) and ennemies
     this.physics.add.collider(this.player, this.playerLayer);
     this.physics.add.overlap(this.player, this.enemies, this.onMeetEnemy, false, this);
 
-    // Checking for input (keyboard and mouse)
-    this.touchTriangles = {
-      'top': new Phaser.Geom.Triangle(0, 0, config.width, 0, config.width / 2, config.height / 2),
-      'left': new Phaser.Geom.Triangle(0, 0, 0, config.height, config.width / 2, config.height / 2),
-      'bottom': new Phaser.Geom.Triangle(0, config.height, config.width, config.height, config.width / 2, config.height / 2),
-      'right': new Phaser.Geom.Triangle(config.width, 0, config.width, config.height, config.width / 2, config.height / 2),
-    };
-
+    // Checking for input
     this.pointer = new Object();
-
-    // Delaying the pointer event listener so the dialog window stay on screen
-    let delay = new Promise((res, rej) => setTimeout(res, 500)).then(() => this.pointer = this.input.activePointer);
-
-    this.cursors = this.keysToWatch();
+    this.createMouseController();
+    this.cursors = this.createKeyboardController();
 
     this.events.on('resume', this.resumeAfterFight, this);
+
+    this.autosave();
   }
 
   update() {
@@ -116,49 +92,19 @@ export default class GameScene extends Phaser.Scene {
     }
   }
 
-  onMeetEnemy(player, enemy) {
-    this.input.keyboard.enabled = false;
+  createMouseController() {
+    this.touchTriangles = {
+      'top': new Phaser.Geom.Triangle(0, 0, config.width, 0, config.width / 2, config.height / 2),
+      'left': new Phaser.Geom.Triangle(0, 0, 0, config.height, config.width / 2, config.height / 2),
+      'bottom': new Phaser.Geom.Triangle(0, config.height, config.width, config.height, config.width / 2, config.height / 2),
+      'right': new Phaser.Geom.Triangle(config.width, 0, config.width, config.height, config.width / 2, config.height / 2),
+    };
 
-    for (let elem in this.cursors) {
-      this.cursors[elem].isDown = false;
-    }
-
-    let worldX = enemy.x - this.dungeon.tileWidth / 2;
-    let worldY = enemy.y - this.dungeon.tileHeight / 2;
-
-    this.lastEnemyPos = { x: worldX, y: worldY };
-
-    enemy.destroy();
-
-    this.cameras.main.shake(1000, 0.05, false, (cam, evo) => {
-      if (evo === 1) {
-        let enemyTile = this.playerLayer.getTileAtWorldXY(worldX, worldY);
-        this.scene.pause('Game').launch('Battle', enemyTile);
-      }
-    });
+    // Delaying the pointer event listener so the dialog window stay on screen
+    let delay = new Promise((res, rej) => setTimeout(res, 500)).then(() => this.pointer = this.input.activePointer);
   }
 
-  resumeAfterFight() {
-    this.input.keyboard.enabled = true;
-
-    if (this.lastEnemyPos) {
-      this.playerLayer.getTileAtWorldXY(this.lastEnemyPos.x, this.lastEnemyPos.y).index = -1;
-      this.lastEnemyPos = null;
-    }
-
-    if (!this.enemies.children.entries.length) {
-      this.game.globals.level++;
-
-      if (this.chapterProgress === 0) {
-        this.scene.start('Story').stop('Game');
-      }
-      else {
-        this.scene.restart();
-      }
-    }
-  }
-
-  keysToWatch() {
+  createKeyboardController() {
     let arrowKeys = this.input.keyboard.createCursorKeys();
     let otherKeys = this.input.keyboard.addKeys({
       'numTwo': Phaser.Input.Keyboard.KeyCodes.NUMPAD_TWO,
@@ -168,6 +114,25 @@ export default class GameScene extends Phaser.Scene {
     });
 
     return Object.assign(otherKeys, arrowKeys);
+  }
+
+  createTextBox() {
+    this.graphics = this.add.graphics();
+    this.graphics.lineStyle(3, 0xffffff);
+    this.graphics.fillStyle(0x031f4c, 1);
+
+    this.graphics.fillRect(0, 0, config.width, config.height / 2);
+    this.graphics.strokeRect(3, 3, config.width - 6, config.height / 2 - 6);
+    this.graphics.strokeRect(3, 3, this.game.globals.tilesize * 4 + 3, this.game.globals.tilesize * 4 + 6);
+
+    this.pnj = this.add.image(6, 6, 'tileset', (this.chapterProgress === 9) ? 17 * this.chapter + 13 : 52);
+    this.pnj.setOrigin(0, 0);
+    this.pnj.setScale(4);
+
+    let textPosX = this.pnj.width * this.pnj._scaleX + this.pnj.x + 6;
+    let textNum = (this.chapterProgress === 0) ? 0 : (this.chapterProgress === 4) ? 1 : 2;
+
+    this.dialogText = this.add.text(textPosX, 0, dialogs[`chapter${this.chapter + 1}`]['fr'][textNum], { fontSize: '20px', fill: '#fff' });
   }
 
   createDungeonMap() {
@@ -214,7 +179,7 @@ export default class GameScene extends Phaser.Scene {
     this.playerLayer.setCollisionByExclusion([-1]);
   }
 
-  randomizeEnemies() {
+  createEnemies() {
     let lvlTileLine = 17 * this.chapter;
 
     while (this.enemies.getLength() < 10) {
@@ -229,5 +194,51 @@ export default class GameScene extends Phaser.Scene {
         this.enemies.create(worldX, worldY, this.dungeon.tileWidth, this.dungeon.tileHeight);
       }
     }
+  }
+
+  onMeetEnemy(player, enemy) {
+    this.input.keyboard.enabled = false;
+
+    for (let elem in this.cursors) {
+      this.cursors[elem].isDown = false;
+    }
+
+    let worldX = enemy.x - this.dungeon.tileWidth / 2;
+    let worldY = enemy.y - this.dungeon.tileHeight / 2;
+
+    this.lastEnemyPos = { x: worldX, y: worldY };
+
+    enemy.destroy();
+
+    this.cameras.main.shake(1000, 0.05, false, (camera, animationCompletion) => {
+      if (animationCompletion === 1) {
+        let enemyTile = this.playerLayer.getTileAtWorldXY(worldX, worldY);
+        this.scene.pause('Game').launch('Battle', enemyTile);
+      }
+    });
+  }
+
+  resumeAfterFight() {
+    this.input.keyboard.enabled = true;
+
+    if (this.lastEnemyPos) {
+      this.playerLayer.getTileAtWorldXY(this.lastEnemyPos.x, this.lastEnemyPos.y).index = -1;
+      this.lastEnemyPos = null;
+    }
+
+    if (!this.enemies.children.entries.length) {
+      this.game.globals.level++;
+
+      if (this.chapterProgress === 0) {
+        this.scene.start('Story').stop('Game');
+      }
+      else {
+        this.scene.restart();
+      }
+    }
+  }
+
+  autosave() {
+
   }
 };
