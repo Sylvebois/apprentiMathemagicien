@@ -214,7 +214,13 @@ export default class GameScene extends Phaser.Scene {
           let worldX = this.dungeon.tileToWorldX(x) + this.dungeon.tileWidth / 2;
           let worldY = this.dungeon.tileToWorldY(y) + this.dungeon.tileHeight / 2;
 
-          this.playerLayer.fill(Phaser.Math.Between(10, 12) + lvlTileLine, x, y, 1, 1);
+          // Add a boss at the end of the chapter
+          if(this.chapterProgress === 9 && this.enemies.getLength() === 9) {
+            this.playerLayer.fill(13 + lvlTileLine, x, y, 1, 1);
+          }
+          else {
+            this.playerLayer.fill(Phaser.Math.Between(10, 12) + lvlTileLine, x, y, 1, 1);
+          }
           this.enemies.create(worldX, worldY, this.dungeon.tileWidth, this.dungeon.tileHeight);
         }
       }
