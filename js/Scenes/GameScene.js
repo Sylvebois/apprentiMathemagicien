@@ -8,6 +8,8 @@ export default class GameScene extends Phaser.Scene {
   }
 
   init() {
+    this.loadLevel = (this.game.globals.level == localStorage.getItem('level')) ? true : false;
+
     this.chapterProgress = this.game.globals.level % 10;
     this.chapter = Math.floor(this.game.globals.level / 10);
 
@@ -136,43 +138,57 @@ export default class GameScene extends Phaser.Scene {
   }
 
   createDungeonMap() {
-    let lvlTileLine = 17 * this.chapter;
+    if(this.loadLevel) {
+      let groundLayerArray = JSON.parse(localStorage.getItem('groundLayer'));
+      let playerLayerArray = JSON.parse(localStorage.getItem('playerLayer'));
 
-    // Border of the scene
-    this.playerLayer.fill(9 + lvlTileLine, 0, 0, this.dungeon.width, 1);
-    this.playerLayer.fill(9 + lvlTileLine, 0, this.dungeon.height - 1, this.dungeon.width, 1);
-    this.playerLayer.fill(9 + lvlTileLine, 0, 0, 1, this.dungeon.height);
-    this.playerLayer.fill(9 + lvlTileLine, this.dungeon.width - 1, 0, 1, this.dungeon.height);
+      for(let groundLayerTile of groundLayerArray) {
+        this.groundLayer.fill(groundLayerTile.index, groundLayerTile.x, groundLayerTile.y);
+      }
 
-    // Fill the floor with random ground tiles
-    this.groundLayer.weightedRandomize(1, 1, this.dungeon.width - 2, this.dungeon.height - 2, [
-      { index: 3 + lvlTileLine, weight: 1 },
-      { index: 4 + lvlTileLine, weight: 1 },
-      { index: 5 + lvlTileLine, weight: 1 },
-      { index: 6 + lvlTileLine, weight: 1 }
-    ]);
-
-    // Fill the floor of the map with random, weighted obstacles
-    this.playerLayer.weightedRandomize(1, 1, this.dungeon.width - 2, this.dungeon.height - 2, [
-      { index: -1, weight: 50 }, // Place an empty tile most of the tile
-      { index: 7 + lvlTileLine, weight: 3 },
-      { index: 8 + lvlTileLine, weight: 2 },
-      { index: 9 + lvlTileLine, weight: 2 },
-    ]);
-
-    // First level always get a path in the middle
-    let middle = Math.floor(this.dungeon.height / 2);
-
-    if (this.chapterProgress === 0) {
-      this.groundLayer.fill(1 + lvlTileLine, 0, middle - 1, this.dungeon.width, 1);
-      this.groundLayer.fill(0 + lvlTileLine, 0, middle, this.dungeon.width, 1);
-      this.groundLayer.fill(2 + lvlTileLine, 0, middle + 1, this.dungeon.width, 1);
-
-      this.playerLayer.fill(-1, 0, middle - 1, this.dungeon.width, 3);
+      for(let playerLayerTile of playerLayerArray) {
+        this.playerLayer.fill(playerLayerTile.index, playerLayerTile.x, playerLayerTile.y);
+      }
     }
     else {
-      this.groundLayer.fill(3 + lvlTileLine, 0, middle - 1, 1, 3);
-      this.playerLayer.fill(-1, 0, middle - 1, 1, 3);
+      let lvlTileLine = 17 * this.chapter;
+
+      // Border of the scene
+      this.playerLayer.fill(9 + lvlTileLine, 0, 0, this.dungeon.width, 1);
+      this.playerLayer.fill(9 + lvlTileLine, 0, this.dungeon.height - 1, this.dungeon.width, 1);
+      this.playerLayer.fill(9 + lvlTileLine, 0, 0, 1, this.dungeon.height);
+      this.playerLayer.fill(9 + lvlTileLine, this.dungeon.width - 1, 0, 1, this.dungeon.height);
+
+      // Fill the floor with random ground tiles
+      this.groundLayer.weightedRandomize(1, 1, this.dungeon.width - 2, this.dungeon.height - 2, [
+        { index: 3 + lvlTileLine, weight: 1 },
+        { index: 4 + lvlTileLine, weight: 1 },
+        { index: 5 + lvlTileLine, weight: 1 },
+        { index: 6 + lvlTileLine, weight: 1 }
+      ]);
+
+      // Fill the floor of the map with random, weighted obstacles
+      this.playerLayer.weightedRandomize(1, 1, this.dungeon.width - 2, this.dungeon.height - 2, [
+        { index: -1, weight: 50 }, // Place an empty tile most of the tile
+        { index: 7 + lvlTileLine, weight: 3 },
+        { index: 8 + lvlTileLine, weight: 2 },
+        { index: 9 + lvlTileLine, weight: 2 },
+      ]);
+
+      // First level always get a path in the middle
+      let middle = Math.floor(this.dungeon.height / 2);
+
+      if (this.chapterProgress === 0) {
+        this.groundLayer.fill(1 + lvlTileLine, 0, middle - 1, this.dungeon.width, 1);
+        this.groundLayer.fill(0 + lvlTileLine, 0, middle, this.dungeon.width, 1);
+        this.groundLayer.fill(2 + lvlTileLine, 0, middle + 1, this.dungeon.width, 1);
+
+        this.playerLayer.fill(-1, 0, middle - 1, this.dungeon.width, 3);
+      }
+      else {
+        this.groundLayer.fill(3 + lvlTileLine, 0, middle - 1, 1, 3);
+        this.playerLayer.fill(-1, 0, middle - 1, 1, 3);
+      }
     }
 
     // Every tiles with an index of -1 won't use the collision system
@@ -180,18 +196,27 @@ export default class GameScene extends Phaser.Scene {
   }
 
   createEnemies() {
-    let lvlTileLine = 17 * this.chapter;
+    if (this.loadLevel) {
+      let enemiesArray = JSON.parse(localStorage.getItem('enemies'));
 
-    while (this.enemies.getLength() < 10) {
-      let x = Phaser.Math.Between(1, this.dungeon.width - 1);
-      let y = Phaser.Math.Between(1, this.dungeon.height - 1);
+      for (let enemy of enemiesArray) {
+        this.enemies.create(enemy.x, enemy.y, enemy.width, enemy.height);
+      }
+    }
+    else {
+      let lvlTileLine = 17 * this.chapter;
 
-      if (!this.playerLayer.getTileAt(x, y)) {
-        let worldX = this.dungeon.tileToWorldX(x) + this.dungeon.tileWidth / 2;
-        let worldY = this.dungeon.tileToWorldY(y) + this.dungeon.tileHeight / 2;
+      while (this.enemies.getLength() < 10) {
+        let x = Phaser.Math.Between(1, this.dungeon.width - 1);
+        let y = Phaser.Math.Between(1, this.dungeon.height - 1);
 
-        this.playerLayer.fill(Phaser.Math.Between(10, 12) + lvlTileLine, x, y, 1, 1);
-        this.enemies.create(worldX, worldY, this.dungeon.tileWidth, this.dungeon.tileHeight);
+        if (!this.playerLayer.getTileAt(x, y)) {
+          let worldX = this.dungeon.tileToWorldX(x) + this.dungeon.tileWidth / 2;
+          let worldY = this.dungeon.tileToWorldY(y) + this.dungeon.tileHeight / 2;
+
+          this.playerLayer.fill(Phaser.Math.Between(10, 12) + lvlTileLine, x, y, 1, 1);
+          this.enemies.create(worldX, worldY, this.dungeon.tileWidth, this.dungeon.tileHeight);
+        }
       }
     }
   }
@@ -239,6 +264,34 @@ export default class GameScene extends Phaser.Scene {
   }
 
   autosave() {
+    let groundLayerArray = [];
+    let playerLayerArray = [];
+    let enemiesArray = [];
 
+    this.groundLayer.forEachTile(tile => groundLayerArray.push({
+      x: tile.x,
+      y: tile.y,
+      index: tile.index
+    }));
+
+    this.playerLayer.forEachTile(tile => playerLayerArray.push({
+      x: tile.x,
+      y: tile.y,
+      index: tile.index
+    }));
+
+    for (let enemy of this.enemies.children.entries) {
+      enemiesArray.push({
+        x: enemy.x,
+        y: enemy.y,
+        width: enemy.width,
+        height: enemy.height,
+      });
+    }
+
+    localStorage.setItem('level', this.game.globals.level);
+    localStorage.setItem('groundLayer', JSON.stringify(groundLayerArray));
+    localStorage.setItem('playerLayer', JSON.stringify(playerLayerArray));
+    localStorage.setItem('enemies', JSON.stringify(enemiesArray));
   }
 };

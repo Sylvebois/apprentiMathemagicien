@@ -21,7 +21,7 @@ export default class TitleScene extends Phaser.Scene {
     titleUnderline.setPosition(config.width / 2, title.y + title.height + 5);
 
     // Game
-    if (localStorage.getItem('player')) {
+    if (localStorage.getItem('level')) {
       this.gameButton = new Button(this, config.width / 2, config.height / 2 - 100, 'titleButton', interfaceText.buttons.fr[1], 'Game');
     }
     else {
