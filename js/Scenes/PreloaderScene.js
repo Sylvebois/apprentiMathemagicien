@@ -90,7 +90,8 @@ export default class PreloaderScene extends Phaser.Scene {
       frameWidth: 32,
       frameHeight: 32
      });
-     //this.load.audio('bgMusic', ['assets/TownTheme.mp3']);
+
+     this.load.audio('bgMusic', ['assets/tkucza-lullibulero.mp3']);
   }
 
   ready() {
