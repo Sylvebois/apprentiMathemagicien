@@ -17,6 +17,8 @@ export default class GameScene extends Phaser.Scene {
   }
 
   create() {
+    this.language = this.game.globals.language;
+
     this.dungeon = this.make.tilemap({
       tileWidth: this.game.globals.tilesize,
       tileHeight: this.game.globals.tilesize,
@@ -134,7 +136,7 @@ export default class GameScene extends Phaser.Scene {
     let textPosX = this.pnj.width * this.pnj._scaleX + this.pnj.x + 6;
     let textNum = (this.chapterProgress === 0) ? 0 : (this.chapterProgress === 4) ? 1 : 2;
 
-    this.dialogText = this.add.text(textPosX, 0, dialogs[`chapter${this.chapter + 1}`]['fr'][textNum], { fontSize: '20px', fill: '#fff' });
+    this.dialogText = this.add.text(textPosX, 0, dialogs[`chapter${this.chapter + 1}`][this.language][textNum], { fontSize: '20px', fill: '#fff' });
   }
 
   createDungeonMap() {
@@ -215,7 +217,7 @@ export default class GameScene extends Phaser.Scene {
           let worldY = this.dungeon.tileToWorldY(y) + this.dungeon.tileHeight / 2;
 
           // Add a boss at the end of the chapter
-          if(this.chapterProgress === 9 && this.enemies.getLength() === 9) {
+          if (this.chapterProgress === 9 && this.enemies.getLength() === 9) {
             this.playerLayer.fill(13 + lvlTileLine, x, y, 1, 1);
           }
           else {

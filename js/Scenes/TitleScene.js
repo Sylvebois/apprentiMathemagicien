@@ -9,6 +9,8 @@ export default class TitleScene extends Phaser.Scene {
   }
 
   create() {
+    this.language = this.game.globals.language;
+
     // Background
     this.add.image(config.width / 2, config.height / 2, 'bgScroll');
 
@@ -22,26 +24,26 @@ export default class TitleScene extends Phaser.Scene {
 
     // Game
     if (localStorage.getItem('level')) {
-      this.gameButton = new Button(this, config.width / 2, config.height / 2 - 100, 'titleButton', interfaceText.buttons.fr[1], 'Game');
+      this.gameButton = new Button(this, config.width / 2, config.height / 2 - 100, 'titleButton', interfaceText.buttons[this.language][1], 'Game');
     }
     else {
-      this.gameButton = new Button(this, config.width / 2, config.height / 2 - 100, 'titleButton', interfaceText.buttons.fr[0], 'Story');
+      this.gameButton = new Button(this, config.width / 2, config.height / 2 - 100, 'titleButton', interfaceText.buttons[this.language][0], 'Story');
     }
 
     // Options
-    this.optionsButton = new Button(this, config.width / 2, config.height / 2, 'titleButton', interfaceText.buttons.fr[2], 'Options');
+    this.optionsButton = new Button(this, config.width / 2, config.height / 2, 'titleButton', interfaceText.buttons[this.language][2], 'Options');
 
     // Credits
-    this.creditsButton = new Button(this, config.width / 2, config.height / 2 + 100, 'titleButton', interfaceText.buttons.fr[3], 'Credits');
+    this.creditsButton = new Button(this, config.width / 2, config.height / 2 + 100, 'titleButton', interfaceText.buttons[this.language][3], 'Credits');
 
-    /*
-      this.model = this.sys.game.globals.model;
-      if (this.model.musicOn === true && this.model.bgMusicPlaying === false) {
-        this.bgMusic = this.sound.add('bgMusic', { volume: 0.5, loop: true });
-        this.bgMusic.play();
-        this.model.bgMusicPlaying = true;
-        this.sys.game.globals.bgMusic = this.bgMusic;
-      }
-    */
+
+    this.model = this.sys.game.globals.model;
+    if (this.model.musicOn === true && this.model.bgMusicPlaying === false) {
+      this.bgMusic = this.sound.add('bgMusic', { volume: 0.5, loop: true });
+      this.bgMusic.play();
+      this.model.bgMusicPlaying = true;
+      this.sys.game.globals.bgMusic = this.bgMusic;
+    }
+
   }
 };

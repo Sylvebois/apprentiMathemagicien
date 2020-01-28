@@ -19,6 +19,7 @@ class Game extends Phaser.Game {
     this.globals = {
       model,
       bgMusic: null,
+      language: 'fr',
       tilesize: 32,
       level: localStorage.getItem('level') | 0
     };
