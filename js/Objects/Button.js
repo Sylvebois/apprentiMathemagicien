@@ -15,17 +15,9 @@ export default class Button extends Phaser.GameObjects.Container {
     this.add(this.button);
     this.add(this.text);
 
-    this.button.on('pointerdown', function () {
-      this.scene.scene.start(targetScene);
-    }.bind(this));
-
-    this.button.on('pointerover', function () {
-      this.button.alpha = 1;
-    }.bind(this));
-
-    this.button.on('pointerout', function () {
-      this.button.alpha = 0.5;
-    }.bind(this));
+    this.button.on('pointerdown', () => { this.scene.scene.start(targetScene) });
+    this.button.on('pointerover', () => { this.button.alpha = 1 });
+    this.button.on('pointerout', () => { this.button.alpha = 0.5 });
 
     this.scene.add.existing(this);
   }

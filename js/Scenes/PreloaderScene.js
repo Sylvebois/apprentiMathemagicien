@@ -57,7 +57,7 @@ export default class PreloaderScene extends Phaser.Scene {
     logo.setPosition(width / 2, loadingText.y - logo.height);
 
     // update progress bar
-    this.load.on('progress', function (value) {
+    this.load.on('progress', (value) => {
       percentText.setText(parseInt(value * 100) + '%');
       progressBar.clear();
       progressBar.fillStyle(0xffffff, 1);
@@ -65,19 +65,19 @@ export default class PreloaderScene extends Phaser.Scene {
     });
 
     // update file progress text
-    this.load.on('fileprogress', function (file) {
+    this.load.on('fileprogress', (file) => {
       assetText.setText('Loading asset: ' + file.key);
     });
 
     // remove progress bar when complete
-    this.load.on('complete', function () {
+    this.load.on('complete', () => {
       progressBar.destroy();
       progressBox.destroy();
       loadingText.destroy();
       percentText.destroy();
       assetText.destroy();
       this.ready();
-    }.bind(this));
+    });
 
     this.timedEvent = this.time.delayedCall(3000, this.ready, [], this);
 

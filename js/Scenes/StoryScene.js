@@ -24,10 +24,10 @@ export default class TitleScene extends Phaser.Scene {
         ease: 'Power1',
         duration: 750,
         paused: true,
-        onComplete: function () {
+        onComplete: () => {
           this.destroy;
           this.chapterTween.play();
-        }.bind(this)
+        }
       });
     }
 
@@ -40,18 +40,16 @@ export default class TitleScene extends Phaser.Scene {
       ease: 'Power1',
       duration: 750,
       paused: (this.level === 0) ? true : false,
-      onComplete: function () {
-        this.destroy;
-      }.bind(this)
+      onComplete: () => { this.destroy }
     });
 
-    this.input.on('pointerdown', function () {
+    this.input.on('pointerdown', () => {
       if (this.level === 0 && this.introText.alpha === 1) {
         this.introTween.play();
       }
       else {
         this.scene.start('Game');
       }
-    }.bind(this));
+    });
   }
 }

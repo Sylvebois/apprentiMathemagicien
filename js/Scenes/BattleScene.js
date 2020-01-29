@@ -321,7 +321,7 @@ export default class BattleScene extends Phaser.Scene {
       rotation: -0.5,
       ease: 'Sine.easeInOut',
       yoyo: true,
-      onComplete: () => { this.enemyShotTween.play() },
+      onComplete: () => this.enemyShotTween.play(),
       paused: true
     });
 
@@ -331,7 +331,7 @@ export default class BattleScene extends Phaser.Scene {
       rotation: 10,
       x: this.player.x,
       ease: 'Sine.easeInOut',
-      onStart: function () { this.enemyShot.alpha = 1 }.bind(this),
+      onStart: () => this.enemyShot.alpha = 1,
       onComplete: () => {
         this.enemyShot.alpha = 0;
         (this.remainingTries) ? this.playerGetsHitTween.play() : this.playerDiesTween.play();
@@ -364,14 +364,12 @@ export default class BattleScene extends Phaser.Scene {
       scale: 1,
       ease: 'Sine.easeInOut',
       paused: true,
-      onComplete: function () {
+      onComplete: () => {
         let delay = new Promise((res, rej) => setTimeout(res, 2000));
         delay.then(() => {
           localStorage.clear();
-
-          let gameScene = this.parent.scene;
-          gameScene.game.globals.level = 0;
-          gameScene.scene.stop('Game').stop('Battle').start('Title');
+          this.game.globals.level = 0;
+          this.scene.stop('Game').stop('Battle').start('Title');
         });
       }
     });

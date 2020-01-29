@@ -31,11 +31,11 @@ export default class CreditsScene extends Phaser.Scene {
       ease: 'Power1',
       duration: 3000,
       delay: 1000,
-      onComplete: function () {
+      onComplete: () => {
         this.destroy;
         this.madeByText.alpha = 1;
         this.madeByTween.play();
-      }.bind(this)
+      }
     });
 
     this.madeByTween = this.tweens.add({
@@ -45,11 +45,11 @@ export default class CreditsScene extends Phaser.Scene {
       duration: 3000,
       delay: 500,
       paused: true,
-      onComplete: function () {
+      onComplete: () => {
         this.destroy;
         this.otherThanksText.alpha = 1;
         this.otherThanksTween.play();
-      }.bind(this)
+      }
     });
 
     this.otherThanksTween = this.tweens.add({
@@ -59,10 +59,10 @@ export default class CreditsScene extends Phaser.Scene {
       duration: 3000,
       delay: 500,
       paused: true,
-      onComplete: function () {
+      onComplete: () => {
         this.otherThanksTween.destroy;
         this.scene.start('Title');
-      }.bind(this)
+      }
     });
   }
 };
