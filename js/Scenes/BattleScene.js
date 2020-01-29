@@ -78,7 +78,7 @@ export default class BattleScene extends Phaser.Scene {
         }
       }
       else {
-        this.game.globals.level = 0;
+
       }
     }
     this.userAnswerText.setText(this.userAnswer);
@@ -286,8 +286,8 @@ export default class BattleScene extends Phaser.Scene {
       rotation: 0.5,
       ease: 'Sine.easeInOut',
       yoyo: true,
-      onStart: function () { this.playerShot.alpha = 1 }.bind(this),
-      onComplete: function () { this.playerShotTween.play() }.bind(this),
+      onStart: () => { this.playerShot.alpha = 1 },
+      onComplete: () => { this.playerShotTween.play() },
       paused: true
     });
 
@@ -297,10 +297,10 @@ export default class BattleScene extends Phaser.Scene {
       rotation: 10,
       x: this.enemy.x,
       ease: 'Sine.easeInOut',
-      onComplete: function () {
+      onComplete: () => {
         this.playerShot.alpha = 0;
         this.enemyGetsHitTween.play();
-      }.bind(this),
+      },
       paused: true
     });
 
@@ -310,7 +310,7 @@ export default class BattleScene extends Phaser.Scene {
       rotation: 10,
       scale: 0,
       ease: 'Power1',
-      onComplete: function () { this.scene.resume('Game').stop('Battle') }.bind(this),
+      onComplete: () => { this.scene.resume('Game').stop('Battle') },
       paused: true
     });
 
@@ -321,7 +321,7 @@ export default class BattleScene extends Phaser.Scene {
       rotation: -0.5,
       ease: 'Sine.easeInOut',
       yoyo: true,
-      onComplete: function () { this.enemyShotTween.play() }.bind(this),
+      onComplete: () => { this.enemyShotTween.play() },
       paused: true
     });
 
@@ -332,10 +332,10 @@ export default class BattleScene extends Phaser.Scene {
       x: this.player.x,
       ease: 'Sine.easeInOut',
       onStart: function () { this.enemyShot.alpha = 1 }.bind(this),
-      onComplete: function () {
+      onComplete: () => {
         this.enemyShot.alpha = 0;
         (this.remainingTries) ? this.playerGetsHitTween.play() : this.playerDiesTween.play();
-      }.bind(this),
+      },
       paused: true
     });
 
@@ -353,7 +353,7 @@ export default class BattleScene extends Phaser.Scene {
       rotation: 10,
       scale: 0,
       ease: 'Power1',
-      onComplete: function () { this.gameOverTween.play() }.bind(this),
+      onComplete: () => this.gameOverTween.play(),
       paused: true,
     });
 
@@ -364,6 +364,16 @@ export default class BattleScene extends Phaser.Scene {
       scale: 1,
       ease: 'Sine.easeInOut',
       paused: true,
+      onComplete: function () {
+        let delay = new Promise((res, rej) => setTimeout(res, 2000));
+        delay.then(() => {
+          localStorage.clear();
+
+          let gameScene = this.parent.scene;
+          gameScene.game.globals.level = 0;
+          gameScene.scene.stop('Game').stop('Battle').start('Title');
+        });
+      }
     });
   }
 }
