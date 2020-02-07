@@ -246,6 +246,7 @@ export default class GameScene extends Phaser.Scene {
     this.cameras.main.shake(1000, 0.05, false, (camera, animationCompletion) => {
       if (animationCompletion === 1) {
         let enemyTile = this.playerLayer.getTileAtWorldXY(worldX, worldY);
+        this.input.keyboard.enabled = true;
         this.scene.pause('Game').launch('Battle', enemyTile);
       }
     });
