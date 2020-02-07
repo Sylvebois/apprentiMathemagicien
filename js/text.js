@@ -144,21 +144,43 @@ Malheureusement, depuis quelques temps,
 les voyageurs se font attaquer par des bandits.
 
 Il est donc temps pour vous de faire vos preuves
-et de croiser le fer avec ces brigands ...`;
-story.chapter1.en =``;
+et de croiser le fer avec ces brigands ...
+`;
+story.chapter1.en =`
+Chapter 1 : The Crossroads
+
+The king has recently opened a new road to link
+two great cities in his kingdom.
+Unfortunately, for some time now, the travelers
+are being attacked by bandits.
+
+So it's time for you to prove yourself and
+to cross swords with these brigands...
+`;
 
 story.chapter2.fr =`
 Chapitre 2 : Le désert retiré
 
 Près de la frontière du royaume, une ville s'est
-installée en brodure d'un désert. Cette ville
+installée en bordure d'un désert. Cette ville
 est prospère mais, depuis quelques temps,
 certains habitants sont enlevés par des monstres
 de roche et emmené dans le désert.
 
 Le roi vous demande d'enquêter et de découvrir
-ce qu'il se passe ...`;
-story.chapter2.fr =``;
+ce qu'il se passe ...
+`;
+story.chapter2.fr =`
+Chapter 2 : The Recluded Desert
+
+Near the border of the kingdom, a city has
+settled on the edge of a desert. This city is
+prosperous but, for some time, some inhabitants
+have been kidnapped by rock monsters and taken
+to the desert.
+
+The king asks you to investigate and find out what is going on...
+`;
 
 story.chapter3.fr =``;
 story.chapter3.en =``;
