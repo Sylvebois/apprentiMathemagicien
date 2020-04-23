@@ -95,9 +95,9 @@ export default class BattleScene extends Phaser.Scene {
 
     if (level < 10) {
       // Add
-      a = Phaser.Math.Between(0, 5 + level);
-      b = Phaser.Math.Between(0, 5 + level);
-      c = (level === 9) ? Phaser.Math.Between(0, 10) : null;
+      a = Phaser.Math.Between(0, 10 * ((level)? level : 1));
+      b = Phaser.Math.Between(0, 10 * ((level)? level : 1));
+      c = (level === 9) ? Phaser.Math.Between(0, 100) : null;
 
       result = a + b + ((level === 9) ? c : 0);
       text = `${a} + ${b} ${(level === 9) ? '+ ' + c : ''}`;
