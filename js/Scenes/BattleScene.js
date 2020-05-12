@@ -95,8 +95,8 @@ export default class BattleScene extends Phaser.Scene {
 
     if (level < 10) {
       // Add
-      a = Phaser.Math.Between(0, 10 * ((level)? level : 1));
-      b = Phaser.Math.Between(0, 10 * ((level)? level : 1));
+      a = Phaser.Math.Between(0, 10 * (1 + ((level)? level : 0)));
+      b = Phaser.Math.Between(0, 10 * (1 + ((level)? level : 0)));
       c = (level === 9) ? Phaser.Math.Between(0, 100) : null;
 
       result = a + b + ((level === 9) ? c : 0);
@@ -104,7 +104,7 @@ export default class BattleScene extends Phaser.Scene {
     }
     else if (level >= 10 && level < 20) {
       // Substract
-      a = Phaser.Math.Between(0, 10 + (level % 10));
+      a = Phaser.Math.Between(0, 10 * (1 + (level % 10)));
       b = Phaser.Math.Between(0, a);
       c = (level === 19) ? Phaser.Math.Between(0, a - b) : null;
 
@@ -115,22 +115,22 @@ export default class BattleScene extends Phaser.Scene {
       // Multiply
       a = Phaser.Math.Between(0, 10 + (level % 10));
       b = Phaser.Math.Between(1, 10 + (level % 10));
-      c = (level === 9) ? Phaser.Math.Between(1, 10) : null;
+      c = (level === 29) ? Phaser.Math.Between(1, 10) : null;
 
-      result = a * b * ((level === 9) ? c : 1);
-      text = `${a} x ${b} ${(level === 9) ? 'x ' + c : ''}`;
+      result = a * b * ((level === 29) ? c : 1);
+      text = `${a} x ${b} ${(level === 29) ? 'x ' + c : ''}`;
     }
     else if (level >= 30 && level < 40) {
       // Divide
-      a = Phaser.Math.Between(2, 100 * (1 + level % 10));
+      a = Phaser.Math.Between(2, 10 * (1 + level % 10));
       b = Array.from(this.decomposeNumber(a));
       let indexB = Phaser.Math.Between(0, b.length - 1);
-      c = (level === 9) ? Array.from(this.decomposeNumber(a / b[indexB])) : [];
+      c = (level === 39) ? Array.from(this.decomposeNumber(a / b[indexB])) : [];
       let indexC = Phaser.Math.Between(0, c.length - 1);
 
 
-      result = a / b[indexB] / ((level === 9) ? c[indexC] : 1);
-      text = `${a} / ${b[indexB]} ${(level === 9) ? '/ ' + c[indexC] : ''}`;
+      result = a / b[indexB] / ((level === 39) ? c[indexC] : 1);
+      text = `${a} / ${b[indexB]} ${(level === 39) ? '/ ' + c[indexC] : ''}`;
     }
     else if (level >= 40 && level < 50) {
       // Exponant
