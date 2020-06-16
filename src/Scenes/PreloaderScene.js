@@ -82,18 +82,18 @@ export default class PreloaderScene extends Phaser.Scene {
     this.timedEvent = this.time.delayedCall(3000, this.ready, [], this);
 
     // load assets needed in our game
-    this.load.image('titleButton', 'assets/ui/button_magic01.png');
-    this.load.image('box', 'assets/ui/grey_box.png');
-    this.load.image('checkedBox', 'assets/ui/blue_boxCheckmark.png');
-    this.load.image('bgScroll', 'assets/ui/scroll.png');
-    this.load.spritesheet('tileset', 'assets/game/tileset.png', {
+    this.load.image('titleButton', 'src/assets/ui/button_magic01.png');
+    this.load.image('box', 'src/assets/ui/grey_box.png');
+    this.load.image('checkedBox', 'src/assets/ui/blue_boxCheckmark.png');
+    this.load.image('bgScroll', 'src/assets/ui/scroll.png');
+    this.load.spritesheet('tileset', 'src/assets/game/tileset.png', {
       frameWidth: 32,
       frameHeight: 32
     });
 
-    this.load.audio('bgMusic', ['assets/tkucza-lullibulero.mp3']);
-    this.load.audio('forestMusic', ['assets/forest.mp3']);
-    this.load.audio('swampMusic', ['assets/swamp.mp3']);
+    this.load.audio('homeMusic', ['src/assets/tkucza-lullibulero.mp3']);
+    this.load.audio('forestMusic', ['src/assets/game/forest.mp3']);
+    this.load.audio('swampMusic', ['src/assets/game/swamp.mp3']);
   }
 
   ready() {
