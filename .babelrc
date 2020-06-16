@@ -5,10 +5,12 @@
         "browsers": [
           ">0.25%",
           "not ie 11",
-          "not op_mini all"
+          "not op_mini all",
+          "edge 18",
+          "edge 15"
         ]
       },
       "modules": false
     }]
-  ],
+  ]
 }

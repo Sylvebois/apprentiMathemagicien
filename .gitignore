@@ -5,6 +5,8 @@ Thumbs.db
 *.suo
 *.sublime-project
 *.sublime-workspace
+.vscode
+/src/assets/tmp
 
 # Vendors
 node_modules/
