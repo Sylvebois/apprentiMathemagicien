@@ -182,17 +182,33 @@ to the desert.
 The king asks you to investigate and find out what is going on...
 `;
 
-story.chapter3.fr =``;
-story.chapter3.en =``;
+story.chapter3.fr =`
+Chapitre 3 : Les troubles multipliés
+`;
+story.chapter3.en =`
+Chapter 3 : The multiplicated troubles
+`;
 
-story.chapter4.fr =``;
-story.chapter4.en =``;
+story.chapter4.fr =`
+Chapitre 4 : Le marais divisé
+`;
+story.chapter4.en =`
+Chapter 4 : The divided swamp
+`;
 
-story.chapter5.fr =``;
-story.chapter5.en =``;
+story.chapter5.fr =`
+Chapitre 5 : La forteresse de puissance
+`;
+story.chapter5.en =`
+Chapter 5 : The Fortress of power
+`;
 
-story.chapter6.fr =``;
-story.chapter6.en =``;
+story.chapter6.fr =`
+Chapitre 6 : Les racines du monde
+`;
+story.chapter6.en =`
+Chapter 6 : The roots of the world
+`;
 
 let credits =
 `Auteur :
