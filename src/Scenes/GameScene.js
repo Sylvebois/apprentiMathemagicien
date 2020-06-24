@@ -154,47 +154,150 @@ export default class GameScene extends Phaser.Scene {
     }
     else {
       let lvlTileLine = 17 * this.chapter;
-
-      // Border of the scene
-      this.playerLayer.fill(9 + lvlTileLine, 0, 0, this.dungeon.width, 1);
-      this.playerLayer.fill(9 + lvlTileLine, 0, this.dungeon.height - 1, this.dungeon.width, 1);
-      this.playerLayer.fill(9 + lvlTileLine, 0, 0, 1, this.dungeon.height);
-      this.playerLayer.fill(9 + lvlTileLine, this.dungeon.width - 1, 0, 1, this.dungeon.height);
+      let middle = Math.floor(this.dungeon.height / 2);
 
       // Fill the floor with random ground tiles
-      this.groundLayer.weightedRandomize(1, 1, this.dungeon.width - 2, this.dungeon.height - 2, [
+      this.groundLayer.weightedRandomize(0, 0, this.dungeon.width, this.dungeon.height, [
         { index: 3 + lvlTileLine, weight: 1 },
         { index: 4 + lvlTileLine, weight: 1 },
         { index: 5 + lvlTileLine, weight: 1 },
         { index: 6 + lvlTileLine, weight: 1 }
       ]);
 
-      // Fill the floor of the map with random, weighted obstacles
-      this.playerLayer.weightedRandomize(1, 1, this.dungeon.width - 2, this.dungeon.height - 2, [
-        { index: -1, weight: 50 }, // Place an empty tile most of the tile
-        { index: 7 + lvlTileLine, weight: 3 },
-        { index: 8 + lvlTileLine, weight: 2 },
-        { index: 9 + lvlTileLine, weight: 2 },
-      ]);
-
-      // First level always get a path in the middle
-      let middle = Math.floor(this.dungeon.height / 2);
-
       if (this.chapterProgress === 0) {
-        this.groundLayer.fill(1 + lvlTileLine, 0, middle - 1, this.dungeon.width, 1);
-        this.groundLayer.fill(0 + lvlTileLine, 0, middle, this.dungeon.width, 1);
-        this.groundLayer.fill(2 + lvlTileLine, 0, middle + 1, this.dungeon.width, 1);
+        this.generateFirstLevel(lvlTileLine);
+      }
+      else if (this.chapterProgress !== 9) {
+        let start = [0, middle];
+        let goal = [this.dungeon.width - 1, middle];
+        let mapSize = [this.dungeon.width, this.dungeon.height];
 
-        this.playerLayer.fill(-1, 0, middle - 1, this.dungeon.width, 3);
+        switch (this.chapter) {
+          case 0:
+            this.generateRandomPath(start, goal, mapSize, lvlTileLine);
+          case 1:
+            this.generateRandomDesert(start, goal, mapSize, lvlTileLine);
+            break;
+          case 2:
+            this.generateRandomCity(start, goal, mapSize, lvlTileLine);
+            break;
+          case 3:
+            this.generateRandomSwamp(start, goal, mapSize, lvlTileLine);
+            break;
+          case 4:
+            this.generateRandomFortress(start, goal, mapSize, lvlTileLine);
+            break;
+          case 5:
+            this.generateRandomRootWorld(start, goal, mapSize, lvlTileLine);
+            break;
+        }
       }
       else {
-        this.groundLayer.fill(3 + lvlTileLine, 0, middle - 1, 1, 3);
-        this.playerLayer.fill(-1, 0, middle - 1, 1, 3);
+        this.generateLastLevel(lvlTileLine)
       }
     }
 
     // Every tiles with an index of -1 won't use the collision system
     this.playerLayer.setCollisionByExclusion([-1]);
+  }
+
+  generateFirstLevel(lvlTileLine) {
+    let middle = Math.floor(this.dungeon.height / 2);
+
+    // Border of the scene
+    this.playerLayer.fill(9 + lvlTileLine, 0, 0, this.dungeon.width, 1);
+    this.playerLayer.fill(9 + lvlTileLine, 0, this.dungeon.height - 1, this.dungeon.width, 1);
+    this.playerLayer.fill(9 + lvlTileLine, 0, 0, 1, this.dungeon.height);
+    this.playerLayer.fill(9 + lvlTileLine, this.dungeon.width - 1, 0, 1, this.dungeon.height);
+
+    // Fill the floor of the map with random, weighted obstacles
+    this.playerLayer.weightedRandomize(1, 1, this.dungeon.width - 2, this.dungeon.height - 2, [
+      { index: -1, weight: 50 }, // Place an empty tile most of the tile
+      { index: 7 + lvlTileLine, weight: 3 },
+      { index: 8 + lvlTileLine, weight: 2 },
+      { index: 9 + lvlTileLine, weight: 2 },
+    ]);
+
+    // First level always get a path in the middle
+    this.groundLayer.fill(1 + lvlTileLine, 0, middle - 1, this.dungeon.width, 1);
+    this.groundLayer.fill(0 + lvlTileLine, 0, middle, this.dungeon.width, 1);
+    this.groundLayer.fill(2 + lvlTileLine, 0, middle + 1, this.dungeon.width, 1);
+
+    this.playerLayer.fill(-1, 0, middle - 1, this.dungeon.width, 3);
+  }
+
+  generateLastLevel(lvlTileLine) {
+
+  }
+
+  generateRandomPath(start, goal, mapSize, lvlTileLine) {
+    let middle = Math.floor(this.dungeon.height / 2);
+    let cmp = 0;
+    let currentPos = start;
+
+    // Fill the whole map with obstacles
+    this.playerLayer.weightedRandomize(0, 0, this.dungeon.width, this.dungeon.height, [
+      { index: 7 + lvlTileLine, weight: 3 },
+      { index: 8 + lvlTileLine, weight: 2 },
+      { index: 9 + lvlTileLine, weight: 2 },
+    ]);
+
+    // Entrance and exit
+    this.groundLayer.fill(0 + lvlTileLine, 0, middle - 1, 1, 3);
+    this.groundLayer.fill(0 + lvlTileLine, this.dungeon.width - 1, middle - 1, 1, 3);
+
+    this.playerLayer.fill(-1, 0, middle - 1, 1, 3);
+    this.playerLayer.fill(-1, this.dungeon.width - 1, middle - 1, 1, 3);
+
+    while (currentPos !== goal) {
+      let neighbors = [];
+
+      // Check possible directions
+      if (currentPos[0] + 1 < mapSize[0]) {
+        neighbors.push([currentPos[0] + 1, currentPos[1]]);
+      }
+      if (currentPos[1] - 1 > 0) {
+        neighbors.push([currentPos[0], currentPos[1] - 1]);
+      }
+      if (currentPos[1] + 1 < mapSize[1] - 1) {
+        neighbors.push([currentPos[0], currentPos[1] + 1]);
+      }
+
+      let nearGoal = neighbors.findIndex(pos => (pos[0] === goal[0] && pos[1] === goal[1]))
+      let direction = (nearGoal > -1) ? nearGoal : Phaser.Math.Between(0, neighbors.length - 1);
+
+      currentPos = neighbors[direction];
+
+      this.playerLayer.fill(-1, currentPos[0] - 1, currentPos[1], 1, 3);
+      this.groundLayer.fill(0, currentPos[0] - 1, currentPos[1], 1, 3);
+
+      cmp++;
+
+      if (cmp >= 1000) {
+        console.log("Took too long to find a path !!!");
+        break;
+      }
+    }
+  }
+
+  generateRandomDesert(start, goal, mapSize, lvlTileLine) {
+
+  }
+
+  generateRandomCity(start, goal, mapSize, lvlTileLine) {
+
+  }
+
+  generateRandomSwamp(start, goal, mapSize, lvlTileLine) {
+
+  }
+
+  generateRandomFortress(start, goal, mapSize, lvlTileLine) {
+
+  }
+
+  generateRandomRootWorld(start, goal, mapSize, lvlTileLine) {
+
   }
 
   createEnemies() {
@@ -253,6 +356,7 @@ export default class GameScene extends Phaser.Scene {
   }
 
   resumeAfterFight() {
+    this.cameras.main.fadeIn(500);
     this.input.keyboard.enabled = true;
 
     if (this.lastEnemyPos) {
@@ -302,5 +406,50 @@ export default class GameScene extends Phaser.Scene {
     localStorage.setItem('groundLayer', JSON.stringify(groundLayerArray));
     localStorage.setItem('playerLayer', JSON.stringify(playerLayerArray));
     localStorage.setItem('enemies', JSON.stringify(enemiesArray));
+  }
+
+  randomPath(start, goal, mapSize) {
+    let cmp = 0;
+    let currentPos = start;
+    let mapArray = new Array(mapSize[0]).fill(0)
+      .map(() => new Array(mapSize[1]).fill(0));
+
+    mapArray[start[0]][start[1]] = -1;
+    mapArray[goal[0]][goal[1]] = -1;
+
+    while (currentPos !== goal) {
+      let neighbors = [];
+
+      if (currentPos[0] + 1 < mapSize[0]) {
+        neighbors.push([currentPos[0] + 1, currentPos[1]]);
+      }
+      if (currentPos[1] - 1 > 0) {
+        neighbors.push([currentPos[0], currentPos[1] - 1]);
+      }
+      if (currentPos[1] + 1 < mapSize[1]) {
+        neighbors.push([currentPos[0], currentPos[1] + 1]);
+      }
+
+      let nearGoal = neighbors.filter(pos => (pos[0] === goal[0] && pos[1] === goal[1])).length;
+
+      if (nearGoal) {
+        break;
+      }
+      else {
+        let direction = Phaser.Math.Between(0, neighbors.length - 1);
+
+        currentPos = neighbors[direction];
+        mapArray[currentPos[0]][currentPos[1]] = -1;
+      }
+
+      cmp++;
+
+      if (cmp >= 1000) {
+        console.log("Took too long to find a path !!!");
+        break;
+      }
+    }
+
+    return mapArray;
   }
 };
