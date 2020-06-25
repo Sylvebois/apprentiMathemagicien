@@ -47,8 +47,8 @@ export default class GameScene extends Phaser.Scene {
     }
 
     // Checking collision with obstacles (non -1 index on the layer) and ennemies
-    this.physics.add.collider(this.player, this.playerLayer);
     this.physics.add.overlap(this.player, this.enemies, this.onMeetEnemy, false, this);
+    this.physics.add.collider(this.player, this.playerLayer);
 
     // Checking for input
     this.pointer = new Object();
