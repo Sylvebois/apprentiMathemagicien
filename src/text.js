@@ -179,7 +179,8 @@ prosperous but, for some time, some inhabitants
 have been kidnapped by rock monsters and taken
 to the desert.
 
-The king asks you to investigate and find out what is going on...
+The king asks you to investigate and find out
+what is going on...
 `;
 
 story.chapter3.fr =`
