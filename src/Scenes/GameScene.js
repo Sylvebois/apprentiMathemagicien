@@ -17,6 +17,38 @@ export default class GameScene extends Phaser.Scene {
   }
 
   create() {
+    // Music initialization
+    this.sys.game.globals.bgMusic.stop();
+    this.sys.game.globals.model.bgMusicPlaying = false;
+
+    if (this.sys.game.globals.model.musicOn) {
+      let musicToPlay = '';
+
+      switch (this.chapter) {
+        case 0:
+          musicToPlay = 'forestMusic';
+          break;
+        case 1:
+          musicToPlay = 'desertMusic';
+          break;
+        case 2:
+          musicToPlay = 'cityMusic';
+          break;
+        case 3:
+          musicToPlay = 'swampMusic';
+          break;
+        case 4:
+          musicToPlay = 'fortressMusic';
+          break;
+        case 5:
+          musicToPlay = 'rootMusic';
+          break;
+      }
+
+      this.music = this.sound.add(musicToPlay, { volume: 0.1, loop: true });
+      this.music.play();
+    }
+
     this.language = this.game.globals.language;
 
     this.dungeon = this.make.tilemap({
@@ -45,6 +77,11 @@ export default class GameScene extends Phaser.Scene {
     if (this.showTextBox) {
       this.createTextBox();
     }
+
+    // Setting camera view
+    //this.cameras.main.zoom = 2;
+    this.cameras.main.setBounds(0, 0, this.dungeon.widthInPixels, this.dungeon.heightInPixels)
+    this.cameras.main.startFollow(this.player, true);
 
     // Checking collision with obstacles (non -1 index on the layer) and ennemies
     this.physics.add.overlap(this.player, this.enemies, this.onMeetEnemy, false, this);
@@ -373,6 +410,8 @@ export default class GameScene extends Phaser.Scene {
     enemy.destroy();
 
     this.cameras.main.shake(1000, 0.05, false, (camera, animationCompletion) => {
+      this.music.pause();
+
       if (animationCompletion === 1) {
         let enemyTile = this.playerLayer.getTileAtWorldXY(worldX, worldY);
         this.input.keyboard.enabled = true;
@@ -399,6 +438,9 @@ export default class GameScene extends Phaser.Scene {
       else {
         this.scene.restart();
       }
+    }
+    else {
+      this.music.play();
     }
   }
 
