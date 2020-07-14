@@ -49,6 +49,9 @@ export default class GameScene extends Phaser.Scene {
       this.music.play();
     }
 
+    // Sounds initialization
+    this.enemyRoar = this.sound.add('roar');
+
     this.language = this.game.globals.language;
 
     this.dungeon = this.make.tilemap({
@@ -408,7 +411,8 @@ export default class GameScene extends Phaser.Scene {
     this.lastEnemyPos = { x: worldX, y: worldY };
 
     enemy.destroy();
-
+    this.enemyRoar.play();
+    
     this.cameras.main.shake(1000, 0.05, false, (camera, animationCompletion) => {
       this.music.pause();
 

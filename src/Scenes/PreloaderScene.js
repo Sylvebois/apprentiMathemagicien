@@ -105,6 +105,7 @@ export default class PreloaderScene extends Phaser.Scene {
     this.load.audio('homeMusic', require('../assets/tkucza-lullibulero.mp3'));
     this.load.audio('forestMusic', require('../assets/game/forest.mp3'));
     this.load.audio('swampMusic', require('../assets/game/swamp.mp3'));
+    this.load.audio('roar', require('../assets/game/creature_roar_02.ogg'));
   }
 
   ready() {
