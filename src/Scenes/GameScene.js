@@ -180,7 +180,6 @@ export default class GameScene extends Phaser.Scene {
   }
 
   createDungeonMap() {
-    console.log(this.chapter);
     if (this.loadLevel) {
       let groundLayerArray = JSON.parse(localStorage.getItem('groundLayer'));
       let playerLayerArray = JSON.parse(localStorage.getItem('playerLayer'));
@@ -209,14 +208,13 @@ export default class GameScene extends Phaser.Scene {
         this.generateFirstLevel(lvlTileLine);
       }
       else if (this.chapterProgress !== 9) {
-        console.log('not first level nor last');
         let start = [0, middle];
         let goal = [this.dungeon.width - 1, middle];
 
         switch (this.chapter) {
           case 0:
-            console.log('forest');
             this.generateRandomPath(start, goal, lvlTileLine);
+            break;
           case 1:
             this.generateRandomDesert(start, goal, lvlTileLine);
             break;
@@ -284,7 +282,7 @@ export default class GameScene extends Phaser.Scene {
     ]);
 
     // Carving the path
-    while (currentPos !== goal) {
+    while (currentPos[0] !== goal[0] || currentPos[1] !== goal[1]) {
       let neighbors = [];
 
       // Check possible directions
