@@ -180,6 +180,7 @@ export default class GameScene extends Phaser.Scene {
   }
 
   createDungeonMap() {
+    console.log(this.chapter);
     if (this.loadLevel) {
       let groundLayerArray = JSON.parse(localStorage.getItem('groundLayer'));
       let playerLayerArray = JSON.parse(localStorage.getItem('playerLayer'));
@@ -208,11 +209,13 @@ export default class GameScene extends Phaser.Scene {
         this.generateFirstLevel(lvlTileLine);
       }
       else if (this.chapterProgress !== 9) {
+        console.log('not first level nor last');
         let start = [0, middle];
         let goal = [this.dungeon.width - 1, middle];
 
         switch (this.chapter) {
           case 0:
+            console.log('forest');
             this.generateRandomPath(start, goal, lvlTileLine);
           case 1:
             this.generateRandomDesert(start, goal, lvlTileLine);
@@ -410,14 +413,16 @@ export default class GameScene extends Phaser.Scene {
 
     this.lastEnemyPos = { x: worldX, y: worldY };
 
+    let enemyTile = this.playerLayer.getTileAtWorldXY(worldX, worldY);
+    enemyTile.setCollision(false);
     enemy.destroy();
+
     this.enemyRoar.play();
     
     this.cameras.main.shake(1000, 0.05, false, (camera, animationCompletion) => {
       this.music.pause();
 
       if (animationCompletion === 1) {
-        let enemyTile = this.playerLayer.getTileAtWorldXY(worldX, worldY);
         this.input.keyboard.enabled = true;
         this.scene.pause('Game').launch('Battle', enemyTile);
       }
