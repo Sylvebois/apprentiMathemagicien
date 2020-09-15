@@ -122,15 +122,23 @@ export default class BattleScene extends Phaser.Scene {
     }
     else if (level >= 30 && level < 40) {
       // Divide
+      a = Phaser.Math.Between(0, 10 + (level % 10));
+      b = Phaser.Math.Between(1, 10 + (level % 10));
+      c = a * b;
+
+      result = a;
+      text = `${c} / ${b}`;
+
+      /*
       a = Phaser.Math.Between(2, 10 * (1 + level % 10));
       b = Array.from(this.decomposeNumber(a));
       let indexB = Phaser.Math.Between(0, b.length - 1);
       c = (level === 39) ? Array.from(this.decomposeNumber(a / b[indexB])) : [];
       let indexC = Phaser.Math.Between(0, c.length - 1);
 
-
       result = a / b[indexB] / ((level === 39) ? c[indexC] : 1);
       text = `${a} / ${b[indexB]} ${(level === 39) ? '/ ' + c[indexC] : ''}`;
+      */
     }
     else if (level >= 40 && level < 50) {
       // Exponant
