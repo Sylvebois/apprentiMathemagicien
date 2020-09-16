@@ -296,6 +296,8 @@ http://opengameart.org
 Dungeon Crawl Stone Soup
 http://crawl.develz.org
 Tomasz Kucza / magory.games
-http://magory.net`;
+http://magory.net
+The Cynic Project
+http://cynicmusic.com`;
 
 export {interfaceText, story, dialogs, credits};
