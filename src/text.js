@@ -77,8 +77,67 @@ ATTACK !!!
 `
 ];
 
-dialogs.chapter2.fr = [``, ``, ``];
-dialogs.chapter2.en = [``, ``, ``];
+dialogs.chapter2.fr = [`
+Pffiou !!! Enfin, nous sommes arrivés.
+
+A mon âge, on ne devrait pas faire de si long voyage,
+c'est mauvais pour mon dos.
+
+Bon, je suppose que nous devons trouver et 
+"interroger" ces hommes de pierre ...
+
+Va les chercher dans le désert, je te rejoins dès que
+mon dos ira mieux.
+`, 
+`
+Alors jeune apprenti, as-tu trouvé des indices ? 
+Leur chef est par là ? Et bien, allons lui rendre une
+petite ...
+
+Mais c'est une Datura wrightii ! C'est très rare de 
+tomber sur une telle plante. 
+
+Il faut absolument que je l'étudie ! Pars devant, 
+j'ai à faire ...
+`, 
+`
+Crrrrack ... Crrrrack ... Homme en noir mentir ...
+Crrrrack ... Humains pas utiles ... Crrrrack ... 
+Contre rhumatismes ... Crrrrack ... Peut-être que 
+ceux en robe plus efficaces ? ... Crrrrack ...
+
+VENEZ ICI !
+`];
+dialogs.chapter2.en = [`
+Pffiou !!! At least, we are here.
+
+At my age, we should not make such a long trip,
+it's bad for my back.
+
+Well, I guess we have to find and "interrogate" 
+these stone men...
+
+Go look for them in the desert, I'll join you as 
+soon as my back gets better.
+`, 
+`
+So young apprentice, did you find any clues ? 
+Their boss is this way ? Let's pay him a little ...
+
+But wait, it is a Datura wrightii ! It's very rare to 
+come across such a plant. 
+
+It is absolutely necessary that I study it ! 
+Go ahead, I have to do ...
+`, 
+`
+Crrrrack ... Crrrrack ... Man in black lied ...
+Crrrrack ... Humans useless ... Crrrrack ...
+Against rheumatisms ... Crrrrack ... Perhaps those
+in a dress are more effective ? ... Crrrrack ...
+
+COME HERE !
+`];
 
 dialogs.chapter3.fr = [``, ``, ``];
 dialogs.chapter3.en = [``, ``, ``];
@@ -185,9 +244,25 @@ what is going on...
 
 story.chapter3.fr =`
 Chapitre 3 : Les troubles multipliés
+
+Après votre aventure dans le désert, vous retournez
+au palais pour faire votre rapport au roi. 
+Mais tout ne se passe pas comme prévu :
+bizarrement, les gardes vous barrent la route 
+et semblent prêts à en découdre ...
+
+Il va falloir forcer le passage pour voir le roi ...
 `;
 story.chapter3.en =`
 Chapter 3 : The multiplicated troubles
+
+After your adventure into the desert, you return
+to the palace to report to the king.
+But not everything is going as planned :
+oddly, guards block your way and seem ready 
+to fight ...
+
+You will have to force the way to see the king ...
 `;
 
 story.chapter4.fr =`
