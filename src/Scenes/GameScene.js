@@ -1,7 +1,7 @@
 import PHASER from 'phaser';
 import config from '../Config/config';
 
-import { dialogs } from '../text.js'; 
+import { dialogs } from '../text.js';
 
 export default class GameScene extends Phaser.Scene {
   constructor() {
@@ -268,7 +268,18 @@ export default class GameScene extends Phaser.Scene {
   }
 
   generateLastLevel(lvlTileLine) {
+    let middle = Math.floor(this.dungeon.height / 2);
 
+    // Fill half of the whole map with obstacles
+    this.playerLayer.fill(9 + lvlTileLine, 0, 0, this.dungeon.width, this.dungeon.height);
+
+    // Last level start with a path ...
+    this.groundLayer.fill(4 + lvlTileLine, 0, middle - 1, middle, 3);
+    this.playerLayer.fill(-1, 0, middle - 1, middle, 3);
+
+    // Then a big room ...
+    this.groundLayer.fill(4 + lvlTileLine, middle - 2, middle / 4, middle, middle * 1.5);
+    this.playerLayer.fill(-1, middle - 2, middle / 4, middle, middle * 1.5);
   }
 
   generateRandomPath(start, goal, lvlTileLine) {
@@ -417,7 +428,7 @@ export default class GameScene extends Phaser.Scene {
     enemy.destroy();
 
     this.enemyRoar.play();
-    
+
     this.cameras.main.shake(1000, 0.05, false, (camera, animationCompletion) => {
       this.music.pause();
 
