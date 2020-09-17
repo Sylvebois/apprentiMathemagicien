@@ -22,29 +22,31 @@ export default class GameScene extends Phaser.Scene {
     this.sys.game.globals.model.bgMusicPlaying = false;
 
     if (this.sys.game.globals.model.musicOn) {
-      this.music = this.sys.game.globals.bgMusic;
+      let musicToPlay = '';
 
       switch (this.chapter) {
         case 0:
-          this.music.play('forest');
+          musicToPlay = 'forestMusic';
           break;
         case 1:
-          this.music.play('desert');
+          musicToPlay = 'desertMusic';
           break;
         case 2:
-          this.music.play('city');
+          musicToPlay = 'cityMusic';
           break;
         case 3:
-          this.music.play('swamp');
+          musicToPlay = 'swampMusic';
           break;
         case 4:
-          this.music.play('fortress');
+          musicToPlay = 'fortressMusic';
           break;
         case 5:
-          this.music.play('rootOfTheWorld');
+          musicToPlay = 'rootMusic';
           break;
       }
 
+      this.music = this.sound.add(musicToPlay, { volume: 0.1, loop: true });
+      this.music.play();
     }
 
     // Sounds initialization

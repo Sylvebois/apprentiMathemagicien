@@ -13,15 +13,6 @@ export default class BattleScene extends Phaser.Scene {
   }
 
   create() {
-    // Music initialization
-    this.sys.game.globals.bgMusic.stop();
-    this.sys.game.globals.model.bgMusicPlaying = false;
-
-    if (this.sys.game.globals.model.musicOn) {
-      this.music = this.sys.game.globals.bgMusic;
-      this.music.play('battle1');
-    }
-
     this.tilesize = this.game.globals.tilesize;
 
     this.graphics = this.add.graphics();
