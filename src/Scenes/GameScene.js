@@ -70,7 +70,7 @@ export default class GameScene extends Phaser.Scene {
     this.createDungeonMap();
 
     // Player initialization
-    this.player = this.physics.add.sprite(0, Math.floor(this.dungeon.heightInPixels / 2), 'tileset', 51);
+    this.player = this.physics.add.sprite(0, Math.floor(this.dungeon.heightInPixels / 2), 'tileset', 54);
     this.player.setCollideWorldBounds(true);
 
     // Enemies initialization
@@ -170,7 +170,7 @@ export default class GameScene extends Phaser.Scene {
     this.graphics.strokeRect(3, 3, config.width - 6, config.height / 2 - 6);
     this.graphics.strokeRect(3, 3, this.game.globals.tilesize * 4 + 3, this.game.globals.tilesize * 4 + 6);
 
-    this.pnj = this.add.image(6, 6, 'tileset', (this.chapterProgress === 9) ? 17 * this.chapter + 13 : 52);
+    this.pnj = this.add.image(6, 6, 'tileset', (this.chapterProgress === 9) ? 18 * this.chapter + 13 : 55);
     this.pnj.setOrigin(0, 0);
     this.pnj.setScale(4);
 
@@ -194,7 +194,7 @@ export default class GameScene extends Phaser.Scene {
       }
     }
     else {
-      let lvlTileLine = 17 * this.chapter;
+      let lvlTileLine = 18 * this.chapter;
       let middle = Math.floor(this.dungeon.height / 2);
 
       // Fill the floor with random ground tiles
@@ -377,7 +377,7 @@ export default class GameScene extends Phaser.Scene {
       }
     }
     else {
-      let lvlTileLine = 17 * this.chapter;
+      let lvlTileLine = 18 * this.chapter;
 
       while (this.enemies.getLength() < 10) {
         let x = Phaser.Math.Between(1, this.dungeon.width - 1);

@@ -28,15 +28,15 @@ export default class BattleScene extends Phaser.Scene {
     this.graphics.fillRect(0, 0, config.width, config.height);
     this.graphics.strokeRect(3, 3, config.width - 6, config.height - 6);
 
-    this.player = this.physics.add.sprite(0, 0, 'tileset', 51);
+    this.player = this.physics.add.sprite(0, 0, 'tileset', 54);
     this.player.setPosition(3 * this.tilesize, config.height / 2 + this.player.height);
     this.player.setScale(3);
 
-    this.playerShot = this.add.sprite(this.player.x, this.player.y, 'tileset', 54);
+    this.playerShot = this.add.sprite(this.player.x, this.player.y, 'tileset', 57);
     this.playerShot.setScale(3);
     this.playerShot.alpha = 0;
 
-    this.playerLifeImg = this.add.image(0, 0, 'tileset', 53);
+    this.playerLifeImg = this.add.image(0, 0, 'tileset', 56);
     this.playerLifeImg.setPosition(this.player.x, this.player.y + this.player.height + this.playerLifeImg.height + 5);
     this.playerLifeText = this.add.text(0, 0, this.remainingTries, { fontSize: '32px' });
     this.playerLifeText.setPosition(this.playerLifeImg.x + this.playerLifeImg.width / 2 + 5, this.playerLifeImg.y - this.playerLifeText.height / 2);
@@ -338,7 +338,10 @@ export default class BattleScene extends Phaser.Scene {
       rotation: -0.5,
       ease: 'Sine.easeInOut',
       yoyo: true,
-      onComplete: () => this.enemyShotTween.play(),
+      onComplete: () => {
+        this.enemyShot.alpha = 1;
+        this.enemyShotTween.play()
+      },
       paused: true
     });
 
@@ -348,7 +351,7 @@ export default class BattleScene extends Phaser.Scene {
       rotation: 10,
       x: this.player.x,
       ease: 'Sine.easeInOut',
-      onStart: () => this.enemyShot.alpha = 1,
+      //onStart: () => this.enemyShot.alpha = 1,
       onComplete: () => {
         this.enemyShot.alpha = 0;
         (this.remainingTries) ? this.playerGetsHitTween.play() : this.playerDiesTween.play();
