@@ -1,14 +1,14 @@
-import * as PHASER from './phaser.min.js';
-import config from './Config/config.js';
-import BootScene from './Scenes/BootScene.js';
-import PreloaderScene from './Scenes/PreloaderScene.js';
-import TitleScene from './Scenes/TitleScene.js';
-import OptionsScene from './Scenes/OptionsScene.js';
-import CreditsScene from './Scenes/CreditsScene.js';
-import StoryScene from './Scenes/StoryScene.js';
-import GameScene from './Scenes/GameScene.js';
-import BattleScene from './Scenes/BattleScene.js';
-import Model from './Model.js';
+import PHASER from 'phaser';
+import config from './Config/config';
+import BootScene from './Scenes/BootScene';
+import PreloaderScene from './Scenes/PreloaderScene';
+import TitleScene from './Scenes/TitleScene';
+import OptionsScene from './Scenes/OptionsScene';
+import CreditsScene from './Scenes/CreditsScene';
+import StoryScene from './Scenes/StoryScene';
+import GameScene from './Scenes/GameScene';
+import BattleScene from './Scenes/BattleScene';
+import Model from './Model';
 
 /* template from : https://phasertutorials.com/creating-a-phaser-3-template-part-1/ */
 

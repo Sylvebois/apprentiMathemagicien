@@ -1,6 +1,7 @@
-import * as PHASER from '../phaser.min.js';
-import { dialogs } from '../text.js';
-import config from '../Config/config.js';
+import PHASER from 'phaser';
+import config from '../Config/config';
+
+import { dialogs } from '../text.js'; 
 
 export default class GameScene extends Phaser.Scene {
   constructor() {

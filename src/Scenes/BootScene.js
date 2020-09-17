@@ -1,4 +1,4 @@
-import * as PHASER from '../phaser.min.js';
+import PHASER from 'phaser';
 
 export default class BootScene extends Phaser.Scene {
   constructor () {

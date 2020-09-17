@@ -1,7 +1,8 @@
-import * as PHASER from '../phaser.min.js';
+import PHASER from 'phaser';
+import config from '../Config/config';
+import Button from '../Objects/Button';
+
 import { interfaceText } from '../text.js';
-import config from '../Config/config.js';
-import Button from '../Objects/Button.js';
 
 export default class OptionsScene extends Phaser.Scene {
   constructor() {

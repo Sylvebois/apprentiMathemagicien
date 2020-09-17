@@ -1,7 +1,7 @@
-import * as PHASER from '../phaser.min.js';
+import PHASER from 'phaser';
 
 import '../assets/logo.png';
-import '../assets/tkucza-lullibulero.mp3';
+import '../assets/menu.mp3';
 
 import '../assets/ui/blue_boxCheckmark.png';
 import '../assets/ui/grey_box.png';
@@ -9,7 +9,10 @@ import '../assets/ui/scroll.png';
 
 import '../assets/game/tileset.png';
 import '../assets/game/forest.mp3';
+import '../assets/game/desert.mp3';
+import '../assets/game/city.mp3';
 import '../assets/game/swamp.mp3';
+import '../assets/game/battle.mp3';
 
 export default class PreloaderScene extends Phaser.Scene {
   constructor() {
@@ -102,9 +105,12 @@ export default class PreloaderScene extends Phaser.Scene {
       frameHeight: 32
     });
 
-    this.load.audio('homeMusic', require('../assets/tkucza-lullibulero.mp3'));
+    this.load.audio('homeMusic', require('../assets/menu.mp3'));
     this.load.audio('forestMusic', require('../assets/game/forest.mp3'));
+    this.load.audio('desertMusic', require('../assets/game/desert.mp3'));
+    this.load.audio('cityMusic', require('../assets/game/city.mp3'));
     this.load.audio('swampMusic', require('../assets/game/swamp.mp3'));
+    this.load.audio('battleMusic', require('../assets/game/battle.mp3'));
     this.load.audio('roar', require('../assets/game/creature_roar_02.ogg'));
   }
 

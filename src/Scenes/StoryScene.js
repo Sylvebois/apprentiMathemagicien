@@ -1,6 +1,7 @@
-import * as PHASER from '../phaser.min.js';
+import PHASER from 'phaser';
+import config from '../Config/config';
+
 import { story } from '../text.js';
-import config from '../Config/config.js';
 
 export default class TitleScene extends Phaser.Scene {
   constructor() {

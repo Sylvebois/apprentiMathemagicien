@@ -1,5 +1,5 @@
-import * as PHASER from '../phaser.min.js';
-import config from '../Config/config.js';
+import PHASER from 'phaser';
+import config from '../Config/config';
 
 export default class BattleScene extends Phaser.Scene {
   constructor() {
@@ -13,6 +13,12 @@ export default class BattleScene extends Phaser.Scene {
   }
 
   create() {
+    // Music initialization
+    if (this.sys.game.globals.model.musicOn) {
+      this.music = this.sound.add('battleMusic', { volume: 0.3, loop: true });
+      this.music.play();
+    }
+
     this.tilesize = this.game.globals.tilesize;
 
     this.graphics = this.add.graphics();
