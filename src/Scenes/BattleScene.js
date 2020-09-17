@@ -101,8 +101,8 @@ export default class BattleScene extends Phaser.Scene {
 
     if (level < 10) {
       // Add
-      a = Phaser.Math.Between(0, 10 * (1 + ((level)? level : 0)));
-      b = Phaser.Math.Between(0, 10 * (1 + ((level)? level : 0)));
+      a = Phaser.Math.Between(0, 10 * (1 + ((level) ? level : 0)));
+      b = Phaser.Math.Between(0, 10 * (1 + ((level) ? level : 0)));
       c = (level === 9) ? Phaser.Math.Between(0, 100) : null;
 
       result = a + b + ((level === 9) ? c : 0);
@@ -324,7 +324,10 @@ export default class BattleScene extends Phaser.Scene {
       rotation: 10,
       scale: 0,
       ease: 'Power1',
-      onComplete: () => { this.scene.resume('Game').stop('Battle') },
+      onComplete: () => {
+        this.music.stop();
+        this.scene.resume('Game').stop('Battle');
+      },
       paused: true
     });
 
@@ -367,7 +370,10 @@ export default class BattleScene extends Phaser.Scene {
       rotation: 10,
       scale: 0,
       ease: 'Power1',
-      onComplete: () => this.gameOverTween.play(),
+      onComplete: () => {
+        this.music.stop();
+        this.gameOverTween.play()
+      },
       paused: true,
     });
 
