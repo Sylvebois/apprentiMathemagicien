@@ -229,7 +229,7 @@ de roche et emmené dans le désert.
 Le roi vous demande d'enquêter et de découvrir
 ce qu'il se passe ...
 `;
-story.chapter2.fr =`
+story.chapter2.en =`
 Chapter 2 : The Recluded Desert
 
 Near the border of the kingdom, a city has
