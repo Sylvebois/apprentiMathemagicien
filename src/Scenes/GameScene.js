@@ -11,6 +11,7 @@ export default class GameScene extends Phaser.Scene {
   init() {
     this.level = this.game.globals.level;
     this.chapter = this.game.globals.chapter;
+    this.lvlTileLine = 18 * (this.chapter - 1);
 
     this.loadLevel = (this.chapter == localStorage.getItem('chapter') && this.level == localStorage.getItem('level')) ? true : false;
 
@@ -170,7 +171,7 @@ export default class GameScene extends Phaser.Scene {
     this.graphics.strokeRect(3, 3, config.width - 6, config.height / 2 - 6);
     this.graphics.strokeRect(3, 3, this.game.globals.tilesize * 4 + 3, this.game.globals.tilesize * 4 + 6);
 
-    this.pnj = this.add.image(6, 6, 'tileset', (this.level === 5) ? 18 * this.chapter + 13 : 55);
+    this.pnj = this.add.image(6, 6, 'tileset', (this.level === 5) ? this.lvlTileLine + 13 : 55);
     this.pnj.setOrigin(0, 0);
     this.pnj.setScale(4);
 
@@ -194,19 +195,18 @@ export default class GameScene extends Phaser.Scene {
       }
     }
     else {
-      let lvlTileLine = 18 * (this.chapter - 1);
       let middle = Math.floor(this.dungeon.height / 2);
 
       // Fill the floor with random ground tiles
       this.groundLayer.weightedRandomize(0, 0, this.dungeon.width, this.dungeon.height, [
-        { index: 3 + lvlTileLine, weight: 1 },
-        { index: 4 + lvlTileLine, weight: 1 },
-        { index: 5 + lvlTileLine, weight: 1 },
-        { index: 6 + lvlTileLine, weight: 1 }
+        { index: 3 + this.lvlTileLine, weight: 1 },
+        { index: 4 + this.lvlTileLine, weight: 1 },
+        { index: 5 + this.lvlTileLine, weight: 1 },
+        { index: 6 + this.lvlTileLine, weight: 1 }
       ]);
 
       if (this.level === 1) {
-        this.generateFirstLevel(lvlTileLine);
+        this.generateFirstLevel();
       }
       else if (this.level !== 5) {
         let start = [0, middle];
@@ -214,27 +214,27 @@ export default class GameScene extends Phaser.Scene {
 
         switch (this.chapter) {
           case 1:
-            this.generateRandomPath(start, goal, lvlTileLine);
+            this.generateRandomPath(start, goal);
             break;
           case 2:
-            this.generateRandomDesert(start, goal, lvlTileLine);
+            this.generateRandomDesert(start, goal);
             break;
           case 3:
-            this.generateRandomCity(start, goal, lvlTileLine);
+            this.generateRandomCity(start, goal);
             break;
           case 4:
-            this.generateRandomSwamp(start, goal, lvlTileLine);
+            this.generateRandomSwamp(start, goal);
             break;
           case 5:
-            this.generateRandomFortress(start, goal, lvlTileLine);
+            this.generateRandomFortress(start, goal);
             break;
           case 6:
-            this.generateRandomRootWorld(start, goal, lvlTileLine);
+            this.generateRandomRootWorld(start, goal);
             break;
         }
       }
       else {
-        this.generateLastLevel(lvlTileLine)
+        this.generateLastLevel()
       }
     }
 
@@ -242,55 +242,55 @@ export default class GameScene extends Phaser.Scene {
     this.playerLayer.setCollisionByExclusion([-1]);
   }
 
-  generateFirstLevel(lvlTileLine) {
+  generateFirstLevel() {
     let middle = Math.floor(this.dungeon.height / 2);
 
     // Border of the scene
-    this.playerLayer.fill(9 + lvlTileLine, 0, 0, this.dungeon.width, 1);
-    this.playerLayer.fill(9 + lvlTileLine, 0, this.dungeon.height - 1, this.dungeon.width, 1);
-    this.playerLayer.fill(9 + lvlTileLine, 0, 0, 1, this.dungeon.height);
-    this.playerLayer.fill(9 + lvlTileLine, this.dungeon.width - 1, 0, 1, this.dungeon.height);
+    this.playerLayer.fill(9 + this.lvlTileLine, 0, 0, this.dungeon.width, 1);
+    this.playerLayer.fill(9 + this.lvlTileLine, 0, this.dungeon.height - 1, this.dungeon.width, 1);
+    this.playerLayer.fill(9 + this.lvlTileLine, 0, 0, 1, this.dungeon.height);
+    this.playerLayer.fill(9 + this.lvlTileLine, this.dungeon.width - 1, 0, 1, this.dungeon.height);
 
     // Fill the floor of the map with random, weighted obstacles
     this.playerLayer.weightedRandomize(1, 1, this.dungeon.width - 2, this.dungeon.height - 2, [
       { index: -1, weight: 50 }, // Place an empty tile most of the tile
-      { index: 7 + lvlTileLine, weight: 3 },
-      { index: 8 + lvlTileLine, weight: 2 },
-      { index: 9 + lvlTileLine, weight: 2 },
+      { index: 7 + this.lvlTileLine, weight: 3 },
+      { index: 8 + this.lvlTileLine, weight: 2 },
+      { index: 9 + this.lvlTileLine, weight: 2 },
     ]);
 
     // First level always get a path in the middle
-    this.groundLayer.fill(1 + lvlTileLine, 0, middle - 1, this.dungeon.width, 1);
-    this.groundLayer.fill(0 + lvlTileLine, 0, middle, this.dungeon.width, 1);
-    this.groundLayer.fill(2 + lvlTileLine, 0, middle + 1, this.dungeon.width, 1);
+    this.groundLayer.fill(1 + this.lvlTileLine, 0, middle - 1, this.dungeon.width, 1);
+    this.groundLayer.fill(0 + this.lvlTileLine, 0, middle, this.dungeon.width, 1);
+    this.groundLayer.fill(2 + this.lvlTileLine, 0, middle + 1, this.dungeon.width, 1);
 
     this.playerLayer.fill(-1, 0, middle - 1, this.dungeon.width, 3);
   }
 
-  generateLastLevel(lvlTileLine) {
+  generateLastLevel() {
     let middle = Math.floor(this.dungeon.height / 2);
 
     // Fill half of the whole map with obstacles
-    this.playerLayer.fill(9 + lvlTileLine, 0, 0, this.dungeon.width, this.dungeon.height);
+    this.playerLayer.fill(9 + this.lvlTileLine, 0, 0, this.dungeon.width, this.dungeon.height);
 
     // Last level start with a path ...
-    this.groundLayer.fill(4 + lvlTileLine, 0, middle - 1, middle, 3);
+    this.groundLayer.fill(4 + this.lvlTileLine, 0, middle - 1, middle, 3);
     this.playerLayer.fill(-1, 0, middle - 1, middle, 3);
 
     // Then a big room ...
-    this.groundLayer.fill(4 + lvlTileLine, middle - 2, middle / 4, middle, middle * 1.5);
+    this.groundLayer.fill(4 + this.lvlTileLine, middle - 2, middle / 4, middle, middle * 1.5);
     this.playerLayer.fill(-1, middle - 2, middle / 4, middle, middle * 1.5);
   }
 
-  generateRandomPath(start, goal, lvlTileLine) {
+  generateRandomPath(start, goal) {
     let cmp = 0;
     let currentPos = start;
 
     // Fill the whole map with obstacles
     this.playerLayer.weightedRandomize(0, 0, this.dungeon.width, this.dungeon.height, [
-      { index: 7 + lvlTileLine, weight: 3 },
-      { index: 8 + lvlTileLine, weight: 2 },
-      { index: 9 + lvlTileLine, weight: 2 },
+      { index: 7 + this.lvlTileLine, weight: 3 },
+      { index: 8 + this.lvlTileLine, weight: 2 },
+      { index: 9 + this.lvlTileLine, weight: 2 },
     ]);
 
     // Carving the path
@@ -325,57 +325,57 @@ export default class GameScene extends Phaser.Scene {
     }
 
     // Entrance and exit
-    this.groundLayer.fill(0 + lvlTileLine, start[0], start[1] - 1, 1, 3);
-    this.groundLayer.fill(0 + lvlTileLine, goal[0], goal[1] - 1, 1, 3);
+    this.groundLayer.fill(0 + this.lvlTileLine, start[0], start[1] - 1, 1, 3);
+    this.groundLayer.fill(0 + this.lvlTileLine, goal[0], goal[1] - 1, 1, 3);
 
     this.playerLayer.fill(-1, start[0], start[1] - 1, 1, 3);
     this.playerLayer.fill(-1, goal[0], goal[1] - 1, 1, 3);
   }
 
-  generateRandomDesert(start, goal, lvlTileLine) {
+  generateRandomDesert(start, goal) {
     // Border of the scene
-    this.playerLayer.fill(9 + lvlTileLine, 0, 0, this.dungeon.width, 1);
-    this.playerLayer.fill(9 + lvlTileLine, 0, this.dungeon.height - 1, this.dungeon.width, 1);
-    this.playerLayer.fill(9 + lvlTileLine, 0, 0, 1, this.dungeon.height);
-    this.playerLayer.fill(9 + lvlTileLine, this.dungeon.width - 1, 0, 1, this.dungeon.height);
+    this.playerLayer.fill(9 + this.lvlTileLine, 0, 0, this.dungeon.width, 1);
+    this.playerLayer.fill(9 + this.lvlTileLine, 0, this.dungeon.height - 1, this.dungeon.width, 1);
+    this.playerLayer.fill(9 + this.lvlTileLine, 0, 0, 1, this.dungeon.height);
+    this.playerLayer.fill(9 + this.lvlTileLine, this.dungeon.width - 1, 0, 1, this.dungeon.height);
 
     // Fill the floor with random ground tiles
     this.groundLayer.weightedRandomize(1, 1, this.dungeon.width - 2, this.dungeon.height - 2, [
-      { index: 3 + lvlTileLine, weight: 1 },
-      { index: 4 + lvlTileLine, weight: 1 },
-      { index: 5 + lvlTileLine, weight: 1 },
-      { index: 6 + lvlTileLine, weight: 1 }
+      { index: 3 + this.lvlTileLine, weight: 1 },
+      { index: 4 + this.lvlTileLine, weight: 1 },
+      { index: 5 + this.lvlTileLine, weight: 1 },
+      { index: 6 + this.lvlTileLine, weight: 1 }
     ]);
 
     // Fill the floor of the map with random, weighted obstacles
     this.playerLayer.weightedRandomize(1, 1, this.dungeon.width - 2, this.dungeon.height - 2, [
       { index: -1, weight: 50 }, // Place an empty tile most of the tile
-      { index: 7 + lvlTileLine, weight: 3 },
-      { index: 8 + lvlTileLine, weight: 2 },
-      { index: 9 + lvlTileLine, weight: 2 },
+      { index: 7 + this.lvlTileLine, weight: 3 },
+      { index: 8 + this.lvlTileLine, weight: 2 },
+      { index: 9 + this.lvlTileLine, weight: 2 },
     ]);
 
     // Entrance and exit
-    this.groundLayer.fill(0 + lvlTileLine, start[0], start[1] - 1, 1, 3);
-    this.groundLayer.fill(0 + lvlTileLine, goal[0], goal[1] - 1, 1, 3);
+    this.groundLayer.fill(0 + this.lvlTileLine, start[0], start[1] - 1, 1, 3);
+    this.groundLayer.fill(0 + this.lvlTileLine, goal[0], goal[1] - 1, 1, 3);
 
     this.playerLayer.fill(-1, start[0], start[1] - 1, 1, 3);
     this.playerLayer.fill(-1, goal[0], goal[1] - 1, 1, 3);
   }
 
-  generateRandomCity(start, goal, lvlTileLine) {
+  generateRandomCity(start, goal) {
 
   }
 
-  generateRandomSwamp(start, goal, lvlTileLine) {
+  generateRandomSwamp(start, goal) {
 
   }
 
-  generateRandomFortress(start, goal, lvlTileLine) {
+  generateRandomFortress(start, goal) {
 
   }
 
-  generateRandomRootWorld(start, goal, lvlTileLine) {
+  generateRandomRootWorld(start, goal) {
 
   }
 
@@ -388,8 +388,6 @@ export default class GameScene extends Phaser.Scene {
       }
     }
     else {
-      let lvlTileLine = 18 * (this.chapter - 1);
-
       while (this.enemies.getLength() < 10) {
         let x = Phaser.Math.Between(1, this.dungeon.width - 1);
         let y = Phaser.Math.Between(1, this.dungeon.height - 1);
@@ -400,10 +398,10 @@ export default class GameScene extends Phaser.Scene {
 
           // Add a boss at the end of the chapter
           if (this.level === 5 && this.enemies.getLength() === 9) {
-            this.playerLayer.fill(13 + lvlTileLine, x, y, 1, 1);
+            this.playerLayer.fill(13 + this.lvlTileLine, x, y, 1, 1);
           }
           else {
-            this.playerLayer.fill(Phaser.Math.Between(10, 12) + lvlTileLine, x, y, 1, 1);
+            this.playerLayer.fill(Phaser.Math.Between(10, 12) + this.lvlTileLine, x, y, 1, 1);
           }
           this.enemies.create(worldX, worldY, this.dungeon.tileWidth, this.dungeon.tileHeight);
         }
