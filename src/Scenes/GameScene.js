@@ -9,12 +9,12 @@ export default class GameScene extends Phaser.Scene {
   }
 
   init() {
-    this.loadLevel = (this.game.globals.level == localStorage.getItem('level')) ? true : false;
+    this.level = this.game.globals.level;
+    this.chapter = this.game.globals.chapter;
 
-    this.chapterProgress = this.game.globals.level % 10;
-    this.chapter = Math.floor(this.game.globals.level / 10);
+    this.loadLevel = (this.chapter == localStorage.getItem('chapter') && this.level == localStorage.getItem('level')) ? true : false;
 
-    this.showTextBox = (this.chapterProgress === 0 || this.chapterProgress === 4 || this.chapterProgress === 9) ? true : false;
+    this.showTextBox = (this.level === 1 || this.level === 3 || this.level === 5) ? true : false;
   }
 
   create() {
@@ -170,14 +170,14 @@ export default class GameScene extends Phaser.Scene {
     this.graphics.strokeRect(3, 3, config.width - 6, config.height / 2 - 6);
     this.graphics.strokeRect(3, 3, this.game.globals.tilesize * 4 + 3, this.game.globals.tilesize * 4 + 6);
 
-    this.pnj = this.add.image(6, 6, 'tileset', (this.chapterProgress === 9) ? 18 * this.chapter + 13 : 55);
+    this.pnj = this.add.image(6, 6, 'tileset', (this.level === 5) ? 18 * this.chapter + 13 : 55);
     this.pnj.setOrigin(0, 0);
     this.pnj.setScale(4);
 
     let textPosX = this.pnj.width * this.pnj._scaleX + this.pnj.x + 6;
-    let textNum = (this.chapterProgress === 0) ? 0 : (this.chapterProgress === 4) ? 1 : 2;
+    let textNum = (this.level === 1) ? 0 : (this.level === 3) ? 1 : 2;
 
-    this.dialogText = this.add.text(textPosX, 0, dialogs[`chapter${this.chapter + 1}`][this.language][textNum], { fontSize: '20px', fill: '#fff' });
+    this.dialogText = this.add.text(textPosX, 0, dialogs[`chapter${this.chapter}`][this.language][textNum], { fontSize: '20px', fill: '#fff' });
   }
 
   createDungeonMap() {
@@ -194,7 +194,7 @@ export default class GameScene extends Phaser.Scene {
       }
     }
     else {
-      let lvlTileLine = 18 * this.chapter;
+      let lvlTileLine = 18 * (this.chapter - 1);
       let middle = Math.floor(this.dungeon.height / 2);
 
       // Fill the floor with random ground tiles
@@ -205,30 +205,30 @@ export default class GameScene extends Phaser.Scene {
         { index: 6 + lvlTileLine, weight: 1 }
       ]);
 
-      if (this.chapterProgress === 0) {
+      if (this.level === 1) {
         this.generateFirstLevel(lvlTileLine);
       }
-      else if (this.chapterProgress !== 9) {
+      else if (this.level !== 5) {
         let start = [0, middle];
         let goal = [this.dungeon.width - 1, middle];
 
         switch (this.chapter) {
-          case 0:
+          case 1:
             this.generateRandomPath(start, goal, lvlTileLine);
             break;
-          case 1:
+          case 2:
             this.generateRandomDesert(start, goal, lvlTileLine);
             break;
-          case 2:
+          case 3:
             this.generateRandomCity(start, goal, lvlTileLine);
             break;
-          case 3:
+          case 4:
             this.generateRandomSwamp(start, goal, lvlTileLine);
             break;
-          case 4:
+          case 5:
             this.generateRandomFortress(start, goal, lvlTileLine);
             break;
-          case 5:
+          case 6:
             this.generateRandomRootWorld(start, goal, lvlTileLine);
             break;
         }
@@ -388,7 +388,7 @@ export default class GameScene extends Phaser.Scene {
       }
     }
     else {
-      let lvlTileLine = 18 * this.chapter;
+      let lvlTileLine = 18 * (this.chapter - 1);
 
       while (this.enemies.getLength() < 10) {
         let x = Phaser.Math.Between(1, this.dungeon.width - 1);
@@ -399,7 +399,7 @@ export default class GameScene extends Phaser.Scene {
           let worldY = this.dungeon.tileToWorldY(y) + this.dungeon.tileHeight / 2;
 
           // Add a boss at the end of the chapter
-          if (this.chapterProgress === 9 && this.enemies.getLength() === 9) {
+          if (this.level === 5 && this.enemies.getLength() === 9) {
             this.playerLayer.fill(13 + lvlTileLine, x, y, 1, 1);
           }
           else {
@@ -449,13 +449,17 @@ export default class GameScene extends Phaser.Scene {
     }
 
     if (!this.enemies.children.entries.length) {
-      this.game.globals.level++;
+      if (this.game.globals.level === 5) {
+        this.game.globals.level = 1;
+        this.game.globals.chapter++;
 
-      if (this.game.globals.level > 9 && this.chapterProgress === 0) {
         this.scene.start('Story').stop('Game');
       }
       else {
+        this.game.globals.level++;
+
         this.scene.restart();
+
       }
     }
     else {
@@ -489,6 +493,7 @@ export default class GameScene extends Phaser.Scene {
       });
     }
 
+    localStorage.setItem('chapter', this.game.globals.chapter);
     localStorage.setItem('level', this.game.globals.level);
     localStorage.setItem('groundLayer', JSON.stringify(groundLayerArray));
     localStorage.setItem('playerLayer', JSON.stringify(playerLayerArray));

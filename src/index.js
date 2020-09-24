@@ -21,7 +21,8 @@ class Game extends Phaser.Game {
       bgMusic: null,
       language: 'fr',
       tilesize: 32,
-      level: localStorage.getItem('level') | 0
+      chapter: localStorage.getItem('chapter') | 1,
+      level: localStorage.getItem('level') | 1
     };
     this.scene.add('Boot', BootScene);
     this.scene.add('Preloader', PreloaderScene);

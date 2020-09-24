@@ -14,9 +14,9 @@ export default class TitleScene extends Phaser.Scene {
     // Background
     this.add.image(config.width / 2, config.height / 2, 'bgScroll');
 
-    this.level = Math.floor(this.game.globals.level / 10);
+    this.chapter = this.game.globals.chapter;
 
-    if (this.level === 0) {
+    if (this.chapter === 1) {
       this.introText = this.add.text(120, 100, story.intro[this.language], { fontSize: '20px', fill: '#fff' });
 
       this.introTween = this.tweens.add({
@@ -32,7 +32,7 @@ export default class TitleScene extends Phaser.Scene {
       });
     }
 
-    this.chapterText = this.add.text(120, 100, story[`chapter${this.level + 1}`][this.language], { fontSize: '20px', fill: '#fff' });
+    this.chapterText = this.add.text(120, 100, story[`chapter${this.chapter}`][this.language], { fontSize: '20px', fill: '#fff' });
     this.chapterText.alpha = 0;
 
     this.chapterTween = this.tweens.add({
@@ -40,12 +40,12 @@ export default class TitleScene extends Phaser.Scene {
       alpha: 1,
       ease: 'Power1',
       duration: 750,
-      paused: (this.level === 0) ? true : false,
+      paused: (this.chapter === 1) ? true : false,
       onComplete: () => { this.destroy }
     });
 
     this.input.on('pointerdown', () => {
-      if (this.level === 0 && this.introText.alpha === 1) {
+      if (this.chapter === 1 && this.introText.alpha === 1) {
         this.introTween.play();
       }
       else {

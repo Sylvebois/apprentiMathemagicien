@@ -92,44 +92,45 @@ export default class BattleScene extends Phaser.Scene {
   }
 
   generateEquation() {
-    let level = this.game.globals.level
+    let chapter = this.game.globals.chapter;
+    let level = this.game.globals.level;
     let a = 0;
     let b = 0;
     let c = null;
     let result = 0;
     let text = '';
 
-    if (level < 10) {
+    if (chapter === 1) {
       // Add
-      a = Phaser.Math.Between(0, 10 * (1 + ((level) ? level : 0)));
-      b = Phaser.Math.Between(0, 10 * (1 + ((level) ? level : 0)));
-      c = (level === 9) ? Phaser.Math.Between(0, 100) : null;
+      a = Phaser.Math.Between(0, 10 * level);
+      b = Phaser.Math.Between(0, 10 * level);
+      c = (level === 5) ? Phaser.Math.Between(0, 50) : null;
 
-      result = a + b + ((level === 9) ? c : 0);
-      text = `${a} + ${b} ${(level === 9) ? '+ ' + c : ''}`;
+      result = a + b + ((level === 5) ? c : 0);
+      text = `${a} + ${b} ${(level === 5) ? '+ ' + c : ''}`;
     }
-    else if (level >= 10 && level < 20) {
+    else if (chapter === 2) {
       // Substract
-      a = Phaser.Math.Between(0, 10 * (1 + (level % 10)));
+      a = Phaser.Math.Between(0, 10 * level);
       b = Phaser.Math.Between(0, a);
-      c = (level === 19) ? Phaser.Math.Between(0, a - b) : null;
+      c = (level === 5) ? Phaser.Math.Between(0, a - b) : null;
 
-      result = a - b - ((level === 19) ? c : 0);
-      text = `${a} - ${b} ${(level === 19) ? '- ' + c : ''}`;
+      result = a - b - ((level === 5) ? c : 0);
+      text = `${a} - ${b} ${(level === 5) ? '- ' + c : ''}`;
     }
-    else if (level >= 20 && level < 30) {
+    else if (chapter === 3) {
       // Multiply
-      a = Phaser.Math.Between(0, 10 + (level % 10));
-      b = Phaser.Math.Between(1, 10 + (level % 10));
-      c = (level === 29) ? Phaser.Math.Between(1, 10) : null;
+      a = Phaser.Math.Between(0, 10 + level);
+      b = Phaser.Math.Between(1, 10 + level);
+      c = (level === 5) ? Phaser.Math.Between(1, 10) : null;
 
-      result = a * b * ((level === 29) ? c : 1);
-      text = `${a} x ${b} ${(level === 29) ? 'x ' + c : ''}`;
+      result = a * b * ((level === 5) ? c : 1);
+      text = `${a} x ${b} ${(level === 5) ? 'x ' + c : ''}`;
     }
-    else if (level >= 30 && level < 40) {
+    else if (chapter === 4) {
       // Divide
-      a = Phaser.Math.Between(0, 10 + (level % 10));
-      b = Phaser.Math.Between(1, 10 + (level % 10));
+      a = Phaser.Math.Between(0, 10 + level);
+      b = Phaser.Math.Between(1, 10 + level);
       c = a * b;
 
       result = a;
@@ -146,10 +147,10 @@ export default class BattleScene extends Phaser.Scene {
       text = `${a} / ${b[indexB]} ${(level === 39) ? '/ ' + c[indexC] : ''}`;
       */
     }
-    else if (level >= 40 && level < 50) {
+    else if (chapter === 5) {
       // Exponant
     }
-    else if (level >= 50 && level < 60) {
+    else if (chapter === 6) {
       // Square root
     }
 
@@ -391,7 +392,8 @@ export default class BattleScene extends Phaser.Scene {
         let delay = new Promise((res, rej) => setTimeout(res, 2000));
         delay.then(() => {
           localStorage.clear();
-          this.game.globals.level = 0;
+          this.game.globals.chapter = 1;
+          this.game.globals.level = 1;
           this.scene.stop('Game').stop('Battle').start('Title');
         });
       }
