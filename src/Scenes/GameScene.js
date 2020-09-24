@@ -27,22 +27,22 @@ export default class GameScene extends Phaser.Scene {
       let musicToPlay = '';
 
       switch (this.chapter) {
-        case 0:
+        case 1:
           musicToPlay = 'forestMusic';
           break;
-        case 1:
+        case 2:
           musicToPlay = 'desertMusic';
           break;
-        case 2:
+        case 3:
           musicToPlay = 'cityMusic';
           break;
-        case 3:
+        case 4:
           musicToPlay = 'swampMusic';
           break;
-        case 4:
+        case 5:
           musicToPlay = 'fortressMusic';
           break;
-        case 5:
+        case 6:
           musicToPlay = 'rootMusic';
           break;
       }
