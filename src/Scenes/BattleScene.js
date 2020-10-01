@@ -96,62 +96,66 @@ export default class BattleScene extends Phaser.Scene {
     let level = this.game.globals.level;
     let a = 0;
     let b = 0;
-    let c = null;
+    let c = 0;
     let result = 0;
     let text = '';
 
-    if (chapter === 1) {
-      // Add
-      a = Phaser.Math.Between(0, 10 * level);
-      b = Phaser.Math.Between(0, 10 * level);
-      c = (level === 5) ? Phaser.Math.Between(0, 50) : null;
+    let operationToDo = (level === 1 || level === 5) ? chapter : Phaser.Math.Between(1, chapter);
 
-      result = a + b + ((level === 5) ? c : 0);
-      text = `${a} + ${b} ${(level === 5) ? '+ ' + c : ''}`;
-    }
-    else if (chapter === 2) {
-      // Substract
-      a = Phaser.Math.Between(0, 10 * level);
-      b = Phaser.Math.Between(0, a);
-      c = (level === 5) ? Phaser.Math.Between(0, a - b) : null;
+    switch (operationToDo) {
+      case 1:
+        // Add
+        a = Phaser.Math.Between(0, 10 * level);
+        b = Phaser.Math.Between(0, 10 * level);
+        c = (level === 5) ? Phaser.Math.Between(0, 50) : 0;
 
-      result = a - b - ((level === 5) ? c : 0);
-      text = `${a} - ${b} ${(level === 5) ? '- ' + c : ''}`;
-    }
-    else if (chapter === 3) {
-      // Multiply
-      a = Phaser.Math.Between(0, 10 + level);
-      b = Phaser.Math.Between(1, 10 + level);
-      c = (level === 5) ? Phaser.Math.Between(1, 10) : null;
+        result = a + b + ((level === 5) ? c : 0);
+        text = `${a} + ${b} ${(level === 5) ? '+ ' + c : ''}`;
+        break;
+      case 2:
+        // Substract
+        a = Phaser.Math.Between(0, 10 * level);
+        b = Phaser.Math.Between(0, a);
+        c = (level === 5) ? Phaser.Math.Between(0, a - b) : 0;
 
-      result = a * b * ((level === 5) ? c : 1);
-      text = `${a} x ${b} ${(level === 5) ? 'x ' + c : ''}`;
-    }
-    else if (chapter === 4) {
-      // Divide
-      a = Phaser.Math.Between(0, 10 + level);
-      b = Phaser.Math.Between(1, 10 + level);
-      c = a * b;
+        result = a - b - ((level === 5) ? c : 0);
+        text = `${a} - ${b} ${(level === 5) ? '- ' + c : ''}`;
+        break;
+      case 3:
+        // Multiply
+        a = Phaser.Math.Between(0, 10 + level);
+        b = Phaser.Math.Between(1, 10 + level);
+        c = (level === 5) ? Phaser.Math.Between(1, 10) : 0;
 
-      result = a;
-      text = `${c} / ${b}`;
+        result = a * b * ((level === 5) ? c : 1);
+        text = `${a} x ${b} ${(level === 5) ? 'x ' + c : ''}`;
+        break;
+      case 4:
+        // Divide
+        a = Phaser.Math.Between(0, 10 + level);
+        b = Phaser.Math.Between(1, 10 + level);
+        c = a * b;
 
-      /*
-      a = Phaser.Math.Between(2, 10 * (1 + level % 10));
-      b = Array.from(this.decomposeNumber(a));
-      let indexB = Phaser.Math.Between(0, b.length - 1);
-      c = (level === 39) ? Array.from(this.decomposeNumber(a / b[indexB])) : [];
-      let indexC = Phaser.Math.Between(0, c.length - 1);
+        result = a;
+        text = `${c} / ${b}`;
 
-      result = a / b[indexB] / ((level === 39) ? c[indexC] : 1);
-      text = `${a} / ${b[indexB]} ${(level === 39) ? '/ ' + c[indexC] : ''}`;
-      */
-    }
-    else if (chapter === 5) {
-      // Exponant
-    }
-    else if (chapter === 6) {
-      // Square root
+        /*
+        a = Phaser.Math.Between(2, 10 * (1 + level % 10));
+        b = Array.from(this.decomposeNumber(a));
+        let indexB = Phaser.Math.Between(0, b.length - 1);
+        c = (level === 39) ? Array.from(this.decomposeNumber(a / b[indexB])) : [];
+        let indexC = Phaser.Math.Between(0, c.length - 1);
+  
+        result = a / b[indexB] / ((level === 39) ? c[indexC] : 1);
+        text = `${a} / ${b[indexB]} ${(level === 39) ? '/ ' + c[indexC] : ''}`;
+        */
+        break;
+      case 5:
+        // Exponant
+        break;
+      case 6:
+        // Square root
+        break;
     }
 
     result = result.toString();
