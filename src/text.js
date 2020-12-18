@@ -19,7 +19,7 @@ donc falloir que quelqu'un élimine tous ces bandits
 et animaux sauvages ...
 
 Déplace toi en utilisant les flèches ou en touchant
-un des bords de l'écran.
+ta destination sur l'écran.
 Lors d'un combat, tu dois résoudre l'équation en
 tapant le résultat (et en validant avec ENTER) ou en
 touchant les chiffres correspondants.
