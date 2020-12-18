@@ -1,4 +1,5 @@
 import PHASER from 'phaser';
+import EasyStar from 'easystarjs';
 import config from '../Config/config';
 
 import { dialogs } from '../text.js';
@@ -65,9 +66,12 @@ export default class GameScene extends Phaser.Scene {
 
     let tiles = this.dungeon.addTilesetImage('tileset');
 
+    this.finder = new EasyStar.js();
+    this.finder.enableDiagonals();
+
     // Layers initialization
-    this.groundLayer = this.dungeon.createBlankDynamicLayer('Ground Layer', tiles);
-    this.playerLayer = this.dungeon.createBlankDynamicLayer('Player Layer', tiles);
+    this.groundLayer = this.dungeon.createBlankLayer('Ground Layer', tiles);
+    this.playerLayer = this.dungeon.createBlankLayer('Player Layer', tiles);
     this.createDungeonMap();
 
     // Player initialization
@@ -94,10 +98,10 @@ export default class GameScene extends Phaser.Scene {
 
     // Checking for input
     this.pointer = new Object();
-    this.createMouseController();
     this.cursors = this.createKeyboardController();
 
     this.events.on('resume', this.resumeAfterFight, this);
+    this.input.on('pointerup', this.handleClick, this);
 
     this.autosave();
   }
@@ -105,37 +109,83 @@ export default class GameScene extends Phaser.Scene {
   update() {
     this.player.body.setVelocity(0);
 
-    if (this.showTextBox && (this.input.keyboard.keys.some(elem => elem.isDown) || this.pointer.isDown)) {
-      this.showTextBox = false;
-      this.graphics.alpha = 0;
-      this.pnj.destroy();
-      this.dialogText.destroy();
+    if (this.showTextBox && this.input.keyboard.keys.some(elem => elem.isDown)) {
+      this.hideTextBox();
     }
 
     if (this.input.keyboard.enabled) {
       // Horizontal movement
-      if (this.cursors.left.isDown || this.cursors.numFour.isDown ||
-        (this.pointer.isDown && this.touchTriangles.left.contains(this.pointer.x, this.pointer.y))) {
+      if (this.cursors.left.isDown || this.cursors.numFour.isDown) {
         this.player.body.setVelocityX(-160);
       }
-      else if (this.cursors.right.isDown || this.cursors.numSix.isDown ||
-        (this.pointer.isDown && this.touchTriangles.right.contains(this.pointer.x, this.pointer.y))) {
+      else if (this.cursors.right.isDown || this.cursors.numSix.isDown) {
         this.player.body.setVelocityX(160);
       }
 
       // Vertical movement
-      if (this.cursors.up.isDown || this.cursors.numEight.isDown ||
-        (this.pointer.isDown && this.touchTriangles.top.contains(this.pointer.x, this.pointer.y))) {
+      if (this.cursors.up.isDown || this.cursors.numEight.isDown) {
         this.player.body.setVelocityY(-160);
       }
-      else if (this.cursors.down.isDown || this.cursors.numTwo.isDown ||
-        (this.pointer.isDown && this.touchTriangles.bottom.contains(this.pointer.x, this.pointer.y))) {
+      else if (this.cursors.down.isDown || this.cursors.numTwo.isDown) {
         this.player.body.setVelocityY(160);
       }
     }
     else {
       this.player.body.setVelocity(0, 0);
     }
+  }
+
+  hideTextBox() {
+    this.showTextBox = false;
+    this.graphics.alpha = 0;
+    this.pnj.destroy();
+    this.dialogText.destroy();
+  }
+  
+  handleClick(pointer) {
+    // Delaying the pointer event listener so the dialog window stay on screen
+    if (this.showTextBox) {
+      let delay = new Promise((res, rej) => setTimeout(res, 5000)).then(() => this.hideTextBox());
+    }
+    else {
+      let toX = Math.floor(pointer.worldX / this.dungeon.tileWidth);
+      let toY = Math.floor(pointer.worldY / this.dungeon.tileHeight);
+      let fromX = Math.floor(this.player.x / this.dungeon.tileWidth);
+      let fromY = Math.floor(this.player.y / this.dungeon.tileHeight);
+      console.log(`going from (${fromX}, ${fromY}) to (${toX}, ${toY})`);
+
+      this.finder.findPath(fromX, fromY, toX, toY, (path) => {
+        if (path === null) {
+          console.warn('Path not found')
+        }
+        else {
+          console.log(path);
+          this.moveHeroTo(path);
+        }
+      });
+      this.finder.calculate();
+    } 
+  }
+
+  moveHeroTo(path) {
+    let tweens = [];
+
+    for (let i = 0; i < path.length - 1; i++) {
+      let ex = path[i + 1].x;
+      let ey = path[i + 1].y;
+
+      if (this.playerLayer.getTileAt(ex, ey)) {
+        break;
+      }
+
+      tweens.push({
+        targets: this.player,
+        x: { value: ex * this.dungeon.tileWidth, duration: 200 },
+        y: { value: ey * this.dungeon.tileHeight, duration: 200 }
+      });
+    }
+
+    this.tweens.timeline({ tweens: tweens });
   }
 
   createMouseController() {
@@ -240,6 +290,24 @@ export default class GameScene extends Phaser.Scene {
 
     // Every tiles with an index of -1 won't use the collision system
     this.playerLayer.setCollisionByExclusion([-1]);
+
+    // Used for the pathfinding
+    let grid = [];
+    for (let y = 0; y < this.dungeon.height; y++) {
+      let col = [];
+      for (let x = 0; x < this.dungeon.width; x++) {
+        let tile = this.playerLayer.getTileAt(x, y);
+        col.push((tile === null) ? -1 : tile.index);
+      }
+      grid.push(col);
+    }
+    let acceptableTiles = [-1];
+    for (let i = this.lvlTileLine + 10; i <= this.lvlTileLine + 13; i++) {
+      acceptableTiles.push(i);
+    }
+
+    this.finder.setGrid(grid);
+    this.finder.setAcceptableTiles(acceptableTiles);
   }
 
   generateFirstLevel() {
