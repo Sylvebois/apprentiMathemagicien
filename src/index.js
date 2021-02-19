@@ -19,6 +19,7 @@ class Game extends Phaser.Game {
     this.globals = {
       model,
       bgMusic: null,
+      defaultTextParams: { fontFamily: 'Arial, sans-serif', fontSize: '20px', fill: '#fff', lineSpacing: 5},
       language: 'fr',
       tilesize: 32,
       chapter: localStorage.getItem('chapter') | 1,

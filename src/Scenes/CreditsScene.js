@@ -11,9 +11,9 @@ export default class CreditsScene extends Phaser.Scene {
     this.add.image(config.width / 2, config.height / 2, 'bgScroll');
 
     //Credits
-    this.creditsText = this.add.text(0, 0, 'Credits', { fontSize: '32px', fill: '#fff' });
-    this.madeByText = this.add.text(0, 0, 'Created By: Sylvebois', { fontSize: '26px', fill: '#fff' });
-    this.otherThanksText = this.add.text(0, 0, 'Graphics and Sounds: Open Game Art\r\nFramework: Phaser 3', { fontSize: '26px', fill: '#fff' });
+    this.creditsText = this.add.text(0, 0, 'Credits', { fontFamily: 'Arial, sans-serif', fontSize: '32px', fill: '#fff' });
+    this.madeByText = this.add.text(0, 0, 'Created By: Sylvebois', { fontFamily: 'Arial, sans-serif', fontSize: '26px', fill: '#fff' });
+    this.otherThanksText = this.add.text(0, 0, 'Graphics and Sounds: Open Game Art\r\nFramework: Phaser 3', { fontFamily: 'Arial, sans-serif', fontSize: '26px', fill: '#fff' });
 
     this.madeByText.alpha = 0;
     this.otherThanksText.alpha = 0;

@@ -13,29 +13,31 @@ export default class OptionsScene extends Phaser.Scene {
     this.model = this.game.globals.model;
     this.language = this.game.globals.language;
 
+    this.textParams = { fontFamily: 'Arial, sans-serif', fontSize: '24px' };
+
     // Background
     this.add.image(config.width / 2, config.height / 2, 'bgScroll');
 
     // Title
-    let title = this.add.text(0, 0, interfaceText.buttons.fr[2], { fontSize: '40px' });
+    let title = this.add.text(0, 0, interfaceText.buttons.fr[2], { fontFamily: 'Arial, sans-serif', fontSize: '40px' });
     title.setPosition(config.width / 2 - title.width / 2, title.height * 3);
 
     // Music
     this.musicButton = this.add.image(200, 200, 'checkedBox').setInteractive();
-    this.musicText = this.add.text(this.musicButton.x + this.musicButton.width + 20, this.musicButton.y - 10, interfaceText.buttons[this.language][4], { fontSize: '24px' });
+    this.musicText = this.add.text(this.musicButton.x + this.musicButton.width + 20, this.musicButton.y - 10, interfaceText.buttons[this.language][4], this.textParams);
 
     // Sound
     this.soundButton = this.add.image(200, 275, 'checkedBox').setInteractive();
-    this.soundText = this.add.text(this.soundButton.x + this.soundButton.width + 20, this.soundButton.y - 10, interfaceText.buttons[this.language][5], { fontSize: '24px' });
+    this.soundText = this.add.text(this.soundButton.x + this.soundButton.width + 20, this.soundButton.y - 10, interfaceText.buttons[this.language][5], this.textParams);
 
     // Language selection
-    let frText = this.add.text(0, 0, 'FRA', { fontSize: '24px' });
+    let frText = this.add.text(0, 0, 'FRA', this.textParams);
     frText.setPosition(config.width / 2 - frText.width - 5, 350);
 
-    let enText = this.add.text(0, 0, 'ENG', { fontSize: '24px' });
+    let enText = this.add.text(0, 0, 'ENG', this.textParams);
     enText.setPosition(config.width / 2 + enText.width + 5, 350);
 
-    let languageText = this.add.text(150, 400, interfaceText.buttons[this.language][6], { fontSize: '24px' });
+    let languageText = this.add.text(150, 400, interfaceText.buttons[this.language][6], this.textParams);
 
     this.frButton = this.add.image(frText.x + frText.width / 2, languageText.y + 10, (this.game.globals.language === 'fr') ? 'checkedBox' : 'box').setInteractive();
     this.enButton = this.add.image(enText.x + enText.width / 2, languageText.y + 10, (this.game.globals.language === 'en') ? 'checkedBox' : 'box').setInteractive();

@@ -38,7 +38,7 @@ export default class BattleScene extends Phaser.Scene {
 
     this.playerLifeImg = this.add.image(0, 0, 'tileset', 56);
     this.playerLifeImg.setPosition(this.player.x, this.player.y + this.player.height + this.playerLifeImg.height + 5);
-    this.playerLifeText = this.add.text(0, 0, this.remainingTries, { fontSize: '32px' });
+    this.playerLifeText = this.add.text(0, 0, this.remainingTries, { fontFamily: 'Arial, sans-serif', fontSize: '32px' });
     this.playerLifeText.setPosition(this.playerLifeImg.x + this.playerLifeImg.width / 2 + 5, this.playerLifeImg.y - this.playerLifeText.height / 2);
 
     this.enemy = this.physics.add.sprite(0, 0, 'tileset', this.enemyInfo.index);
@@ -49,12 +49,12 @@ export default class BattleScene extends Phaser.Scene {
     this.enemyShot.setScale(3);
     this.enemyShot.alpha = 0;
 
-    this.gameOverText = this.add.text(0, 0, 'GAME OVER', { fontSize: '100px', fontFamily: 'sans-serif' });
+    this.gameOverText = this.add.text(0, 0, 'GAME OVER', { fontFamily: 'Arial, sans-serif', fontSize: '100px' });
     this.gameOverText.alpha = 0;
     this.gameOverText.setScale(0);
     this.gameOverText.setPosition(config.width / 2 - this.gameOverText.width / 2, config.height / 2);
 
-    let answerText = this.add.text(0, 0, this.answer.text, { fontSize: '60px' });
+    let answerText = this.add.text(0, 0, this.answer.text, { fontFamily: 'Arial, sans-serif', fontSize: '60px' });
     answerText.setPosition(config.width / 2 - answerText.width / 2, 120);
 
     // Virtual Keyboard
@@ -68,7 +68,7 @@ export default class BattleScene extends Phaser.Scene {
     this.input.on('gameobjectdown', this.mouseAction);
 
     this.userAnswer = '';
-    this.userAnswerText = this.add.text(0, 0, this.userAnswer, { fontSize: '80px', fill: '#f00' });
+    this.userAnswerText = this.add.text(0, 0, this.userAnswer, { fontFamily: 'Arial, sans-serif', fontSize: '80px', fill: '#f00' });
   }
 
   update() {
@@ -264,9 +264,11 @@ export default class BattleScene extends Phaser.Scene {
 
       this.graphics.moveTo(x - this.tilesize, config.height);
       this.graphics.lineTo(x - this.tilesize, y - 2 * this.tilesize + radius);
+      this.graphics.moveTo(x - this.tilesize, y - 2 * this.tilesize + radius);
       this.graphics.arc(x - this.tilesize + radius, y - 2 * this.tilesize + radius, radius, Math.PI, 3 * Math.PI / 2);
 
       this.graphics.lineTo(x + this.tilesize - radius, y - 2 * this.tilesize);
+      //this.graphics.moveTo(x + this.tilesize - radius, y - 2 * this.tilesize);
       this.graphics.arc(x + this.tilesize - radius, y - 2 * this.tilesize + radius, radius, 3 * Math.PI / 2, 0);
 
       this.graphics.lineTo(x + this.tilesize, config.height);
@@ -292,7 +294,7 @@ export default class BattleScene extends Phaser.Scene {
         button.textColor = 'white';
       }
 
-      let text = this.add.text(0, 0, button.textValue, { fontSize: '64px', fontFamily: 'sans-serif', color: button.textColor });
+      let text = this.add.text(0, 0, button.textValue, { fontFamily: 'Arial, sans-serif', fontSize: '64px', color: button.textColor });
       Phaser.Display.Align.In.Center(text, button);
     }
   }

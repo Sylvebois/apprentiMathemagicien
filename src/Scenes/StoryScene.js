@@ -17,8 +17,8 @@ export default class TitleScene extends Phaser.Scene {
     this.chapter = this.game.globals.chapter;
 
     if (this.chapter === 1) {
-      this.introText = this.add.text(120, 100, story.intro[this.language], { fontSize: '20px', fill: '#fff' });
-
+      this.introText = this.add.text(150, 100, story.intro[this.language], this.game.globals.defaultTextParams);
+console.log(this.introText);
       this.introTween = this.tweens.add({
         targets: this.introText,
         alpha: 0,
@@ -32,7 +32,7 @@ export default class TitleScene extends Phaser.Scene {
       });
     }
 
-    this.chapterText = this.add.text(120, 100, story[`chapter${this.chapter}`][this.language], { fontSize: '20px', fill: '#fff' });
+    this.chapterText = this.add.text(150, 100, story[`chapter${this.chapter}`][this.language], this.game.globals.defaultTextParams);
     this.chapterText.alpha = 0;
 
     this.chapterTween = this.tweens.add({

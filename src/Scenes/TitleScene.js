@@ -16,7 +16,7 @@ export default class TitleScene extends Phaser.Scene {
     this.add.image(config.width / 2, config.height / 2, 'bgScroll');
 
     // Title
-    let title = this.add.text(0, 0, 'L\'apprenti mathémagicien', { fontSize: '40px' });
+    let title = this.add.text(0, 0, 'L\'apprenti mathémagicien', { fontFamily: 'Arial, sans-serif', fontSize: '40px', fontStyle: 'bold' });
     title.setPosition(config.width / 2 - title.width / 2, title.height * 3);
 
     let titleUnderline = this.add.text(0, 0, '/+-*+-*+-*+-*+-*+-*+-*+-*+-*+-*+-*+-*+-*+-*+-*+-*+-*+-*+-*/', { fontsize: '40px', fill: '#000' });

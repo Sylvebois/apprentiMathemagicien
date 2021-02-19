@@ -219,7 +219,7 @@ export default class GameScene extends Phaser.Scene {
     let textPosX = this.pnj.width * this.pnj._scaleX + this.pnj.x + 6;
     let textNum = (this.level === 1) ? 0 : (this.level === 3) ? 1 : 2;
 
-    this.dialogText = this.add.text(textPosX, 0, dialogs[`chapter${this.chapter}`][this.language][textNum], { fontSize: '20px', fill: '#fff' });
+    this.dialogText = this.add.text(textPosX, 0, dialogs[`chapter${this.chapter}`][this.language][textNum], this.game.globals.defaultTextParams);
   }
 
   createDungeonMap() {
@@ -239,12 +239,12 @@ export default class GameScene extends Phaser.Scene {
       let middle = Math.floor(this.dungeon.height / 2);
 
       // Fill the floor with random ground tiles
-      this.groundLayer.weightedRandomize(0, 0, this.dungeon.width, this.dungeon.height, [
+      this.groundLayer.weightedRandomize([
         { index: 3 + this.lvlTileLine, weight: 1 },
         { index: 4 + this.lvlTileLine, weight: 1 },
         { index: 5 + this.lvlTileLine, weight: 1 },
         { index: 6 + this.lvlTileLine, weight: 1 }
-      ]);
+      ], 0, 0, this.dungeon.width, this.dungeon.height);
 
       if (this.level === 1) {
         this.generateFirstLevel();
@@ -311,12 +311,12 @@ export default class GameScene extends Phaser.Scene {
     this.playerLayer.fill(9 + this.lvlTileLine, this.dungeon.width - 1, 0, 1, this.dungeon.height);
 
     // Fill the floor of the map with random, weighted obstacles
-    this.playerLayer.weightedRandomize(1, 1, this.dungeon.width - 2, this.dungeon.height - 2, [
-      { index: -1, weight: 50 }, // Place an empty tile most of the tile
+    this.playerLayer.weightedRandomize([
+      { index: -1, weight: 25 }, // Place an empty tile most of the tile
       { index: 7 + this.lvlTileLine, weight: 3 },
       { index: 8 + this.lvlTileLine, weight: 2 },
       { index: 9 + this.lvlTileLine, weight: 2 },
-    ]);
+    ], 1, 1, this.dungeon.width - 2, this.dungeon.height - 2);
 
     // First level always get a path in the middle
     this.groundLayer.fill(1 + this.lvlTileLine, 0, middle - 1, this.dungeon.width, 1);
@@ -346,11 +346,11 @@ export default class GameScene extends Phaser.Scene {
     let currentPos = start;
 
     // Fill the whole map with obstacles
-    this.playerLayer.weightedRandomize(0, 0, this.dungeon.width, this.dungeon.height, [
+    this.playerLayer.weightedRandomize([
       { index: 7 + this.lvlTileLine, weight: 3 },
       { index: 8 + this.lvlTileLine, weight: 2 },
       { index: 9 + this.lvlTileLine, weight: 2 },
-    ]);
+    ], 0, 0, this.dungeon.width, this.dungeon.height);
 
     // Carving the path
     while (currentPos[0] !== goal[0] || currentPos[1] !== goal[1]) {
@@ -399,20 +399,20 @@ export default class GameScene extends Phaser.Scene {
     this.playerLayer.fill(9 + this.lvlTileLine, this.dungeon.width - 1, 0, 1, this.dungeon.height);
 
     // Fill the floor with random ground tiles
-    this.groundLayer.weightedRandomize(1, 1, this.dungeon.width - 2, this.dungeon.height - 2, [
+    this.groundLayer.weightedRandomize([
       { index: 3 + this.lvlTileLine, weight: 1 },
       { index: 4 + this.lvlTileLine, weight: 1 },
       { index: 5 + this.lvlTileLine, weight: 1 },
       { index: 6 + this.lvlTileLine, weight: 1 }
-    ]);
+    ], 1, 1, this.dungeon.width - 2, this.dungeon.height - 2);
 
     // Fill the floor of the map with random, weighted obstacles
-    this.playerLayer.weightedRandomize(1, 1, this.dungeon.width - 2, this.dungeon.height - 2, [
-      { index: -1, weight: 50 }, // Place an empty tile most of the tile
+    this.playerLayer.weightedRandomize([
+      { index: -1, weight: 25 }, // Place an empty tile most of the tile
       { index: 7 + this.lvlTileLine, weight: 3 },
       { index: 8 + this.lvlTileLine, weight: 2 },
       { index: 9 + this.lvlTileLine, weight: 2 },
-    ]);
+    ], 1, 1, this.dungeon.width - 2, this.dungeon.height - 2);
 
     // Entrance and exit
     this.groundLayer.fill(0 + this.lvlTileLine, start[0], start[1] - 1, 1, 3);
